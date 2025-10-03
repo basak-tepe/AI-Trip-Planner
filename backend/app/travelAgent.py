@@ -1,6 +1,8 @@
-from agents import Agent, handoff, Runner
+from agents import Agent, Runner, handoff
 from agents.mcp import MCPServerStdio
 from models.Message import Content, OutputResponse
+from typing import List, Optional
+import os
 from dotenv import load_dotenv
 from agents import function_tool
 from models.Message import Content
@@ -83,6 +85,8 @@ travel_instructions_old = """You are an AI travel assistant that helps users pla
         - flight_weather_forecast: Get weather forecast for a specific travel. 
         After getting various choices from each tool call pick_options tool to select the most suitable single option from each tool result.(one flight departure and return, one car rental option, one hotel option) based on user preferences and budget.
         Finally plan the whole trip with "trip_plan" tool day by day by dividing the days into 3 parts(morning, afternoon, evening) and suggest activities and food suggestions for each part of the day.( Consider selected flight hours before deciding on the activities for the first and last day)
+        
+        IMPORTANT: You have access to the full conversation history. Use this context to understand the user's preferences, previous requests, and any information that has been discussed. Reference previous messages when making recommendations and planning the trip.
         """
 
 travel_instructions = """You are an AI travel assistant that helps users plan their trips. Todays date is 5 october 2025.
@@ -110,15 +114,34 @@ class TravelAgent(Agent):
 # Convenience instance for import
 travelAgent = TravelAgent()
 
-async def run_travel_agent(input_text: str):
-    """Run the travel agent with the given input text."""
-    result = await Runner.run(travelAgent, input=input_text)
+
+async def run_travel_agent(input_text: str, conversation_history: Optional[List[dict]] = None):
+    """Run the travel agent with the given input text and conversation history."""
+    # Build context from conversation history if provided
+    context = input_text
+    if conversation_history:
+        context_parts = []
+        for message in conversation_history:
+            role = message["role"]
+            content = message["content"]
+            if role == "user":
+                context_parts.append(f"User: {content}")
+            elif role == "assistant":
+                context_parts.append(f"Assistant: {content}")
+        context_parts.append(f"User: {input_text}")
+        context = "\n".join(context_parts)
+    
+    result = await Runner.run(travelAgent, input=context)
     return result.final_output
+
+
 
 if __name__ == "__main__":
     import asyncio
     user_input = "10 kasım ankara-istanbul uçuşlarını göster"
     output = asyncio.run(run_travel_agent(user_input))
     print(output)
+
+
 
 

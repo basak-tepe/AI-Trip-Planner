@@ -17,9 +17,9 @@ export default function App() {
         <Header />
         <main>
           <Hero />
+          <Community />
           <ItineraryBuilder />
           <WowFeatures />
-          <Community />
         </main>
         <Footer />
         <AIChatbot />

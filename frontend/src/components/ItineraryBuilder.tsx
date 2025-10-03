@@ -383,38 +383,6 @@ export function ItineraryBuilder() {
             </TabsContent>
           </Tabs>
         </div>
-
-        {/* Modify Plan Section */}
-        <Card className="mt-12 border-2 border-primary/20">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <CardTitle>Modify Your Plan</CardTitle>
-                <CardDescription>
-                  Tell AI how you'd like to change or enhance your itinerary
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              value={modificationPrompt}
-              onChange={(e) => setModificationPrompt(e.target.value)}
-              placeholder="e.g., 'Add more cultural activities', 'Make it more budget-friendly', 'Include a day trip to Ayutthaya', 'Swap the rooftop bar with a spa visit'..."
-              className="min-h-[100px] mb-4"
-            />
-            <div className="flex gap-3">
-              <Button className="flex-1 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                <Sparkles className="w-4 h-4 mr-2" />
-                {t('itinerary.modifyPlan')}
-              </Button>
-              <Button variant="outline">{t('common.clear')}</Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </section>
   );
