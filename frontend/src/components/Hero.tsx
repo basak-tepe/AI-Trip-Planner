@@ -40,6 +40,33 @@ export function Hero() {
     }
   };
 
+  // Function to format assistant message content
+  const formatAssistantContent = (content: any): string => {
+    if (typeof content === 'string') {
+      return content;
+    }
+    
+    if (Array.isArray(content)) {
+      return content.map((item: any) => {
+        if (typeof item === 'object' && item.text) {
+          return item.text;
+        }
+        return String(item);
+      }).join('\n\n');
+    }
+    
+    if (typeof content === 'object' && content !== null) {
+      // Handle structured content
+      if (content.text) {
+        return content.text;
+      }
+      // Fallback to JSON string for other objects
+      return JSON.stringify(content, null, 2);
+    }
+    
+    return String(content);
+  };
+
   // Auto-scroll to bottom of chat
   useEffect(() => {
     if (chatEndRef.current) {
@@ -79,10 +106,8 @@ export function Hero() {
         });
       }
       
-      // Use raw response for chat - no formatting needed
-      const assistantContent = typeof response.content === 'string' 
-        ? response.content 
-        : JSON.stringify(response.content, null, 2);
+      // Format the assistant response content
+      const assistantContent = formatAssistantContent(response.content);
 
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
@@ -326,18 +351,22 @@ export function Hero() {
                               <Bot className="w-4 h-4 text-white" />
                             </div>
                           )}
-                          <div
-                            className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                          <div 
+                            className={`max-w-[80%] rounded-lg px-4 py-3 shadow-sm ${
                               message.role === 'user'
                                 ? 'bg-primary text-white'
                                 : 'bg-white border border-gray-200 text-gray-800'
                             }`}
                           >
-                            <div className="whitespace-pre-wrap text-sm">
+                            <div className={`whitespace-pre-wrap text-sm leading-relaxed mt-2 ${
+                              message.role === 'user' ? 'text-right' : 'text-left'
+                            }`}>
                               {message.content}
                             </div>
-                            <div className={`text-xs mt-1 ${
-                              message.role === 'user' ? 'text-white/70' : 'text-gray-500'
+                            <div className={`text-xs mb-2 ${
+                              message.role === 'user' 
+                                ? 'text-white/70 text-right' 
+                                : 'text-gray-500 text-left'
                             }`}>
                               {message.timestamp.toLocaleTimeString()}
                             </div>
