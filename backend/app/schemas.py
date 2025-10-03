@@ -3,6 +3,7 @@ from datetime import datetime
 import uuid
 from typing import List
 from models.Message import Content
+from typing import Union
 from typing import Optional
 
 class RequestMessageSchema(BaseModel):
@@ -18,5 +19,5 @@ class ChatSchema(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4())) 
     created_at: datetime = Field(default_factory=datetime.utcnow) 
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    messages: List[ResponseMessageSchema] = Field(default_factory=list)
+    messages: List[Union[RequestMessageSchema, ResponseMessageSchema]] = Field(default_factory=list)
 

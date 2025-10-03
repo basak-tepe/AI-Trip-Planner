@@ -1,188 +1,335 @@
-import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Sparkles, X } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Bot, MessageSquare, Clock, Trash2, X, Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
-
-type Message = {
-  role: "user" | "ai";
-  content: string;
-  timestamp: Date;
-};
-
-const initialMessages: Message[] = [
-  {
-    role: "ai",
-    content: "Hi! I'm your AI travel concierge. Ask me anything about your trip - from restaurant recommendations to last-minute changes!",
-    timestamp: new Date(),
-  },
-];
-
-const quickSuggestions = [
-  "Best dinner spots near my hotel?",
-  "What to do if it rains tomorrow?",
-  "Kid-friendly activities in the area",
-  "Local transportation tips",
-];
+import { Badge } from "./ui/badge";
+import { ApiService, Chat } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function AIChatbot() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [chatHistory, setChatHistory] = useState<Chat[]>([]);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [showChatHistory, setShowChatHistory] = useState(true);
+  const { t } = useLanguage();
+  const chatRef = useRef<HTMLDivElement>(null);
 
+  // Check connection and load chat history on mount
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
+    const initializeChat = async () => {
+      try {
+        console.log('Checking backend connection...');
+        await ApiService.healthCheck();
+        console.log('Backend connected successfully');
+        setIsConnected(true);
+        await loadChatHistory();
+      } catch (error) {
+        console.error('Backend connection failed:', error);
+        setIsConnected(false);
+      }
+    };
+    
+    initializeChat();
+  }, []);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-
-    const userMessage: Message = {
-      role: "user",
-      content: input,
-      timestamp: new Date(),
+  // Click outside to close
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      console.log('Click detected, checking if outside...');
+      if (chatRef.current && !chatRef.current.contains(event.target as Node)) {
+        console.log('Click outside detected, closing chatbot');
+        setIsOpen(false);
+      }
     };
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
-        role: "ai",
-        content: getAIResponse(input),
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, aiMessage]);
-    }, 1000);
-  };
-
-  const getAIResponse = (query: string) => {
-    const lowerQuery = query.toLowerCase();
-    if (lowerQuery.includes("dinner") || lowerQuery.includes("restaurant")) {
-      return "Based on your location, I recommend 'The Blue Elephant' - it's a 5-minute walk from your hotel, serves authentic Thai cuisine, and has great reviews for their Pad Thai. They're open until 11 PM. Would you like me to help you book a table?";
-    } else if (lowerQuery.includes("rain") || lowerQuery.includes("weather")) {
-      return "If it rains tomorrow, here are some great indoor alternatives: 1) Jim Thompson House Museum (cultural experience), 2) MBK Shopping Center (shopping & food), 3) SEA LIFE Bangkok Ocean World (family-friendly). I can adjust your itinerary automatically if you'd like!";
-    } else if (lowerQuery.includes("kid") || lowerQuery.includes("child")) {
-      return "Great question! Here are kid-friendly activities nearby: 1) Safari World (animals & shows), 2) KidZania Bangkok (interactive learning), 3) Dream World (theme park). All are within 30 minutes. Would you like detailed timings and costs?";
-    } else if (lowerQuery.includes("transport")) {
-      return "For local transportation: Use the BTS Skytrain (fast & clean) or MRT subway. Get a Rabbit Card for easy payment. Grab is reliable for taxis. Avoid tuk-tuks in tourist areas (overpriced). Let me know if you need directions to specific places!";
+    if (isOpen) {
+      console.log('Adding click outside listener');
+      document.addEventListener('mousedown', handleClickOutside);
     }
-    return "I'd be happy to help with that! Based on your itinerary and location, I can provide personalized recommendations. Could you give me a bit more detail about what you're looking for?";
+
+    return () => {
+      console.log('Removing click outside listener');
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const loadChatHistory = async () => {
+    try {
+      setIsLoading(true);
+      console.log('Loading chat history...');
+      const chats = await ApiService.getChats();
+      console.log('Loaded chats:', chats);
+      setChatHistory(chats);
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleQuickSuggestion = (suggestion: string) => {
-    setInput(suggestion);
+  const loadChat = async (chatId: string) => {
+    try {
+      setIsLoading(true);
+      const chat = await ApiService.getChat(chatId);
+      setSelectedChat(chat);
+      setShowChatHistory(false);
+      console.log('Loaded chat:', chat);
+    } catch (error) {
+      console.error('Error loading chat:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const goBackToHistory = () => {
+    setSelectedChat(null);
+    setShowChatHistory(true);
+  };
+
+  const formatMessageContent = (content: any) => {
+    if (typeof content === 'string') {
+      return content;
+    } else if (Array.isArray(content)) {
+      // Format structured content as readable text
+      return content.map((item, index) => {
+        if (typeof item === 'object' && item.day) {
+          return `Day ${item.day}: ${item.package_advice || 'Travel plan'}`;
+        }
+        return `Item ${index + 1}`;
+      }).join('\n');
+    }
+    return 'Message content';
+  };
+
+  const deleteChat = async (chatId: string) => {
+    try {
+      await ApiService.deleteChat(chatId);
+      await loadChatHistory();
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  };
+
+  const getChatPreview = (chat: Chat) => {
+    if (chat.messages.length === 0) return 'Empty chat';
+    const lastMessage = chat.messages[chat.messages.length - 1];
+    
+    // Handle different content types
+    let content = '';
+    if (typeof lastMessage.content === 'string') {
+      content = lastMessage.content;
+    } else if (Array.isArray(lastMessage.content)) {
+      // If content is an array (structured response), get the first item or create a summary
+      content = 'Structured travel plan';
+    } else {
+      content = 'Message content';
+    }
+    
+    return content.length > 50 
+      ? content.substring(0, 50) + '...'
+      : content;
   };
 
   if (!isOpen) {
     return (
-      <button
+      <div
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform z-50"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-primary to-secondary shadow-lg hover:shadow-xl transition-all duration-300 z-50 cursor-pointer flex items-center justify-center"
+        style={{ width: '56px', height: '56px', borderRadius: '50%' }}
       >
-        <Bot className="w-8 h-8 text-white" />
-      </button>
+        <MessageSquare className="w-6 h-6 text-white" />
+      </div>
     );
   }
 
   return (
-    <Card className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl z-50 flex flex-col">
-      <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bot className="w-5 h-5" />
-            <CardTitle className="text-white">AI Travel Assistant</CardTitle>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsOpen(false)}
-            className="text-white hover:bg-white/20"
+    <Card ref={chatRef} className="fixed bottom-6 right-6 w-96 h-[600px] shadow-2xl z-50 bg-white border-0">
+      <CardHeader className="pb-0 relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsOpen(false)}
+          className="absolute top-2 right-2 text-muted-foreground hover:text-foreground z-10"
+        >
+          <X className="w-4 h-4" />
+        </Button>
+        <div className="flex flex-col items-center gap-2">
+          <div 
+            className="bg-gradient-to-r from-primary to-secondary flex items-center justify-center"
+            style={{ width: '40px', height: '40px', borderRadius: '50%' }}
           >
-            <X className="w-5 h-5" />
-          </Button>
+            <Bot className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-center">
+            <CardTitle className="text-lg">{t('chat.title')}</CardTitle>
+            <p className="text-sm text-muted-foreground">{t('chat.description')}</p>
+          </div>
         </div>
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-          <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {message.role === "ai" && (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-white" />
+        <div className="flex-1 px-4 py-2">
+          {showChatHistory ? (
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-2">
+                {isLoading ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <p className="text-sm">Loading chat history...</p>
                   </div>
-                )}
-                <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-2 ${
-                    message.role === "user"
-                      ? "bg-gradient-to-br from-primary to-secondary text-white"
-                      : "bg-muted text-foreground"
-                  }`}
-                >
-                  <p className="text-sm">{message.content}</p>
-                  <span className="text-xs opacity-70 mt-1 block">
-                    {message.timestamp.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
+                ) : chatHistory.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-sm">No previous chats found</p>
+                    <p className="text-xs">Start a conversation to see it here</p>
+                  </div>
+                ) : (
+                  <>
+                    {chatHistory.slice(0, 4).map((chat) => {
+                      try {
+                        return (
+                          <div
+                            key={chat.id}
+                            className="p-3 rounded-lg border cursor-pointer transition-colors hover:bg-muted"
+                            onClick={() => loadChat(chat.id)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium truncate">
+                                  Chat {chat.id.slice(0, 8)}...
+                                </p>
+                                <p className="text-xs text-muted-foreground mb-1">
+                                  {getChatPreview(chat)}
+                                </p>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                  <Clock className="w-3 h-3" />
+                                  <span>{formatDate(chat.updated_at)}</span>
+                                  <span>•</span>
+                                  <span>{chat.messages?.length || 0} messages</span>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteChat(chat.id);
+                                }}
+                                className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      } catch (error) {
+                        console.error('Error rendering chat:', chat.id, error);
+                        return (
+                          <div key={chat.id} className="p-3 rounded-lg border bg-red-50">
+                            <p className="text-sm text-red-600">Error loading chat</p>
+                          </div>
+                        );
+                      }
                     })}
-                  </span>
-                </div>
-                {message.role === "user" && (
-                  <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center flex-shrink-0">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
+                    
+                    {/* Show "..." if there are more than 4 chats */}
+                    {chatHistory.length > 4 && (
+                      <div className="p-3 rounded-lg border border-dashed border-muted-foreground/30 text-center">
+                        <p className="text-sm text-muted-foreground">
+                          ... and {chatHistory.length - 4} more chats
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
-            ))}
-          </div>
-        </ScrollArea>
-
-        {/* Quick Suggestions */}
-        {messages.length === 1 && (
-          <div className="px-4 pb-2">
-            <p className="text-xs text-muted-foreground mb-2">Quick questions:</p>
-            <div className="flex flex-wrap gap-2">
-              {quickSuggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleQuickSuggestion(suggestion)}
-                  className="text-xs bg-muted hover:bg-muted/80 px-3 py-1 rounded-full transition-colors"
+            </ScrollArea>
+          ) : selectedChat ? (
+            <div className="h-[400px] flex flex-col">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={goBackToHistory}
+                  className="text-muted-foreground"
                 >
-                  {suggestion}
-                </button>
-              ))}
+                  ← Back to chats
+                </Button>
+                <p className="text-sm text-muted-foreground">
+                  {selectedChat.messages?.length || 0} messages
+                </p>
+              </div>
+              <ScrollArea className="flex-1">
+                <div className="space-y-4">
+                  {isLoading ? (
+                    <div className="text-center text-muted-foreground py-8">
+                      <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                      <p className="text-sm">Loading messages...</p>
+                    </div>
+                  ) : selectedChat.messages?.length === 0 ? (
+                    <div className="text-center text-muted-foreground py-8">
+                      <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p className="text-sm">No messages in this chat</p>
+                    </div>
+                  ) : (
+                    <>
+                      {selectedChat.messages.map((message, index) => (
+                        <div
+                          key={index}
+                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`max-w-[80%] p-3 rounded-lg ${
+                              message.role === 'user'
+                                ? 'bg-primary text-white'
+                                : 'bg-muted'
+                            }`}
+                          >
+                            <p className="text-sm whitespace-pre-wrap">
+                              {formatMessageContent(message.content)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {/* Premium Lock Section */}
+                      <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
+                            <Lock className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-amber-800">Premium Required</h4>
+                            <p className="text-sm text-amber-700">Switch to premium plan to continue with chat history</p>
+                          </div>
+                        </div>
+                        <Button 
+                          className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white"
+                          size="sm"
+                        >
+                          Upgrade to Premium
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </ScrollArea>
             </div>
-          </div>
-        )}
-
-        {/* Input */}
-        <div className="p-4 border-t">
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Ask me anything..."
-              className="flex-1"
-            />
-            <Button
-              onClick={handleSend}
-              className="bg-gradient-to-r from-primary to-secondary"
-              size="icon"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
-          </div>
+          ) : null}
         </div>
       </CardContent>
     </Card>

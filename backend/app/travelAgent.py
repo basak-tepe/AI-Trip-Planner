@@ -50,6 +50,7 @@ class MCPAgentRunner:
         self.instructions = instructions
         self.mcp_server: Optional[MCPServerStdio] = None
         self.agent: Optional[Agent] = None
+        self.conversation_history: List[dict] = []
 
     async def _setup(self):
         """Initialize MCP server and agent."""
@@ -70,23 +71,55 @@ class MCPAgentRunner:
             tools = [pick_options,trip_plan],
             output_type=OutputResponse
         )
-    async def run(self, input_text: str):
-        """Run the agent with the given input text."""
+
+    async def run(self, input_text: str, conversation_history: Optional[List[dict]] = None):
+        """Run the agent with the given input text and conversation history."""
         if self.mcp_server is None or self.agent is None:
             await self._setup()
-            result=await self.agent.get_mcp_tools(run_context=None)
-            for tool in result:
-                print(f"Available tool: {tool.name}")
-                print(f"Description: {tool.description}")
-                print(f"Input schema: {tool.params_json_schema}")
-                print("-----")
-                
-            
+        
+        # Update conversation history if provided
+        if conversation_history is not None:
+            self.conversation_history = conversation_history
+        
+        # Add current user message to history
+        self.conversation_history.append({"role": "user", "content": input_text})
+        
         try:
-            result = await Runner.run(starting_agent=self.agent, input=input_text)
+            # Create context from conversation history
+            context = self._build_context_from_history()
+            result = await Runner.run(starting_agent=self.agent, input=context)
+            
+            # Add assistant response to history
+            assistant_content = result.final_output
+            self.conversation_history.append({"role": "assistant", "content": assistant_content})
+            
             return result.final_output
         finally:
             await self.close()
+    
+    def _build_context_from_history(self) -> str:
+        """Build context string from conversation history."""
+        if not self.conversation_history:
+            return ""
+        
+        context_parts = []
+        for message in self.conversation_history:
+            role = message["role"]
+            content = message["content"]
+            if role == "user":
+                context_parts.append(f"User: {content}")
+            elif role == "assistant":
+                context_parts.append(f"Assistant: {content}")
+        
+        return "\n".join(context_parts)
+    
+    def get_conversation_history(self) -> List[dict]:
+        """Get the current conversation history."""
+        return self.conversation_history.copy()
+    
+    def clear_history(self):
+        """Clear the conversation history."""
+        self.conversation_history = []
 
     async def close(self):
         """Clean up MCP server properly."""

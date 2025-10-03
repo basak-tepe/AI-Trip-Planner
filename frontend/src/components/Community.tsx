@@ -5,54 +5,107 @@ import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useLanguage } from "../contexts/LanguageContext";
 
-const communityPosts = [
-  {
-    id: 1,
-    author: "Sarah Chen",
-    avatar: "SC",
-    location: "Bali, Indonesia",
-    title: "7-Day Bali Hidden Gems Guide",
-    description: "Discovered amazing spots away from tourist crowds. Perfect for digital nomads!",
-    image: "https://images.unsplash.com/photo-1713992852903-d8d78192e16e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGJlYWNoJTIwYWVyaWFsJTIwdmlld3xlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    likes: 342,
-    comments: 45,
-    rating: 4.9,
-    budget: "$$",
-    duration: "7 days",
-    tags: ["Beach", "Culture", "Food"],
-  },
-  {
-    id: 2,
-    author: "Marcus Rodriguez",
-    avatar: "MR",
-    location: "Patagonia, Chile",
-    title: "Epic Hiking Adventure",
-    description: "3-week trek through Torres del Paine. Best trails, camping spots, and gear tips.",
-    image: "https://images.unsplash.com/photo-1595248588362-18a894e156d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZHZlbnR1cmUlMjBoaWtpbmclMjBtb3VudGFpbnxlbnwxfHx8fDE3NTkxODQxODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    likes: 567,
-    comments: 89,
-    rating: 5.0,
-    budget: "$$$",
-    duration: "21 days",
-    tags: ["Adventure", "Nature", "Hiking"],
-  },
-  {
-    id: 3,
-    author: "Emma Thompson",
-    avatar: "ET",
-    location: "Tokyo, Japan",
-    title: "Tokyo on a Budget",
-    description: "Experience Tokyo's best without breaking the bank. Under $50/day including accommodation!",
-    image: "https://images.unsplash.com/photo-1706823871410-ed8b01faef7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmF2ZWwlMjBkZXN0aW5hdGlvbiUyMHdvcmxkJTIwbWFwfGVufDF8fHx8MTc1OTI0MjYxNnww&ixlib=rb-4.1.0&q=80&w=1080",
-    likes: 891,
-    comments: 123,
-    rating: 4.8,
-    budget: "$",
-    duration: "5 days",
-    tags: ["Budget", "City", "Food"],
-  },
-];
+const getCommunityPosts = (language: string) => {
+  if (language === 'tr') {
+    return [
+      {
+        id: 1,
+        author: "Sarah Chen",
+        avatar: "SC",
+        location: "Bali, Endonezya",
+        title: "7 Günlük Bali Gizli Hazineler Rehberi",
+        description: "Turist kalabalığından uzak muhteşem yerler keşfettim. Dijital göçebeler için mükemmel!",
+        image: "https://images.unsplash.com/photo-1713992852903-d8d78192e16e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGJlYWNoJTIwYWVyaWFsJTIwdmlld3xlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+        likes: 342,
+        comments: 45,
+        rating: 4.9,
+        budget: "$$",
+        duration: "7 gün",
+        tags: ["Plaj", "Kültür", "Yemek"],
+      },
+      {
+        id: 2,
+        author: "Marcus Rodriguez",
+        avatar: "MR",
+        location: "Patagonya, Şili",
+        title: "Epik Yürüyüş Macerası",
+        description: "Torres del Paine boyunca 3 haftalık trek. En iyi parkurlar, kamp alanları ve ekipman ipuçları.",
+        image: "https://images.unsplash.com/photo-1595248588362-18a894e156d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZHZlbnR1cmUlMjBoaWtpbmclMjBtb3VudGFpbnxlbnwxfHx8fDE3NTkxODQxODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+        likes: 567,
+        comments: 89,
+        rating: 5.0,
+        budget: "$$$",
+        duration: "21 gün",
+        tags: ["Macera", "Doğa", "Yürüyüş"],
+      },
+      {
+        id: 3,
+        author: "Emma Thompson",
+        avatar: "ET",
+        location: "Tokyo, Japonya",
+        title: "Bütçeli Tokyo",
+        description: "Bankayı kırmadan Tokyo'nun en iyilerini deneyimleyin. Konaklama dahil günde 50$'ın altında!",
+        image: "https://images.unsplash.com/photo-1706823871410-ed8b01faef7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmF2ZWwlMjBkZXN0aW5hdGlvbiUyMHdvcmxkJTIwbWFwfGVufDF8fHx8MTc1OTI0MjYxNnww&ixlib=rb-4.1.0&q=80&w=1080",
+        likes: 891,
+        comments: 123,
+        rating: 4.8,
+        budget: "$",
+        duration: "5 gün",
+        tags: ["Bütçe", "Şehir", "Yemek"],
+      },
+    ];
+  }
+  
+  return [
+    {
+      id: 1,
+      author: "Sarah Chen",
+      avatar: "SC",
+      location: "Bali, Indonesia",
+      title: "7-Day Bali Hidden Gems Guide",
+      description: "Discovered amazing spots away from tourist crowds. Perfect for digital nomads!",
+      image: "https://images.unsplash.com/photo-1713992852903-d8d78192e16e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cm9waWNhbCUyMGJlYWNoJTIwYWVyaWFsJTIwdmlld3xlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      likes: 342,
+      comments: 45,
+      rating: 4.9,
+      budget: "$$",
+      duration: "7 days",
+      tags: ["Beach", "Culture", "Food"],
+    },
+    {
+      id: 2,
+      author: "Marcus Rodriguez",
+      avatar: "MR",
+      location: "Patagonia, Chile",
+      title: "Epic Hiking Adventure",
+      description: "3-week trek through Torres del Paine. Best trails, camping spots, and gear tips.",
+      image: "https://images.unsplash.com/photo-1595248588362-18a894e156d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZHZlbnR1cmUlMjBoaWtpbmclMjBtb3VudGFpbnxlbnwxfHx8fDE3NTkxODQxODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      likes: 567,
+      comments: 89,
+      rating: 5.0,
+      budget: "$$$",
+      duration: "21 days",
+      tags: ["Adventure", "Nature", "Hiking"],
+    },
+    {
+      id: 3,
+      author: "Emma Thompson",
+      avatar: "ET",
+      location: "Tokyo, Japan",
+      title: "Tokyo on a Budget",
+      description: "Experience Tokyo's best without breaking the bank. Under $50/day including accommodation!",
+      image: "https://images.unsplash.com/photo-1706823871410-ed8b01faef7e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0cmF2ZWwlMjBkZXN0aW5hdGlvbiUyMHdvcmxkJTIwbWFwfGVufDF8fHx8MTc1OTI0MjYxNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      likes: 891,
+      comments: 123,
+      rating: 4.8,
+      budget: "$",
+      duration: "5 days",
+      tags: ["Budget", "City", "Food"],
+    },
+  ];
+};
 
 const trendingDestinations = [
   { name: "Santorini", country: "Greece", trips: 1240, trend: "+15%" },
@@ -62,25 +115,25 @@ const trendingDestinations = [
 ];
 
 export function Community() {
+  const { t, language } = useLanguage();
+  const communityPosts = getCommunityPosts(language);
+  
   return (
     <section id="community" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">
-            Join Our Travel
-            <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Community
-            </span>
+            {t('community.title')}
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Share your adventures, discover hidden gems, and get inspired by fellow travelers
+            {t('community.description')}
           </p>
         </div>
 
         <Tabs defaultValue="guides" className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-            <TabsTrigger value="guides">Travel Guides</TabsTrigger>
-            <TabsTrigger value="trending">Trending</TabsTrigger>
+            <TabsTrigger value="guides">{t('community.travelTips')}</TabsTrigger>
+            <TabsTrigger value="trending">{t('community.popularDestinations')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="guides">
@@ -161,9 +214,9 @@ export function Community() {
             <div className="max-w-4xl mx-auto">
               <Card>
                 <CardHeader>
-                  <h3>Trending Destinations This Month</h3>
+                  <h3>{t('community.trendingTitle')}</h3>
                   <p className="text-sm text-muted-foreground">
-                    Most planned destinations by our community
+                    {t('community.trendingDescription')}
                   </p>
                 </CardHeader>
                 <CardContent>
@@ -187,14 +240,14 @@ export function Community() {
                             <TrendingUp className="w-4 h-4" />
                             <span className="text-sm">{destination.trend}</span>
                           </div>
-                          <p className="text-sm text-muted-foreground">{destination.trips} trips</p>
+                          <p className="text-sm text-muted-foreground">{destination.trips} {t('community.trips')}</p>
                         </div>
                       </div>
                     ))}
                   </div>
 
                   <Button className="w-full mt-6 bg-gradient-to-r from-primary to-secondary">
-                    Explore All Destinations
+                    {t('community.exploreAll')}
                   </Button>
                 </CardContent>
               </Card>

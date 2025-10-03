@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Clock, Leaf, Package } from "lucide-react";
+import { Clock, Leaf, Package, Lock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { motion } from "motion/react";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const packingList = {
   "Beach Trip": ["Sunscreen", "Swimsuit", "Sunglasses", "Beach towel", "Flip-flops", "Hat"],
@@ -15,76 +16,24 @@ const packingList = {
 
 export function WowFeatures() {
   const [selectedPackingCategory, setSelectedPackingCategory] = useState<keyof typeof packingList>("Beach Trip");
+  const { t } = useLanguage();
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">
-            The Magic That Makes Us
+            {t('features.title')}
             <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Different
+              {t('features.titleHighlight')}
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Innovative features that turn travel planning into an adventure
+            {t('features.description')}
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          {/* Layover Planner */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg  bg-primary  flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle>Layover Optimizer</CardTitle>
-                  <CardDescription>Make the most of your connection time</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-muted rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm">Layover in Rome</span>
-                    <Badge>6 hours</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Enough time to see the city center!
-                  </p>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span>30 min: Airport to city (train)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span>2 hrs: Colosseum & Roman Forum</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span>1 hr: Lunch near Trevi Fountain</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span>1 hr: Quick Pantheon visit</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span>1.5 hrs: Return to airport</span>
-                    </div>
-                  </div>
-                </div>
-                <Button className="w-full  bg-primary ">
-                  Create My Layover Plan
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Smart Packing */}
           <Card>
             <CardHeader>
@@ -93,8 +42,8 @@ export function WowFeatures() {
                   <Package className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <CardTitle>Smart Packing Assistant</CardTitle>
-                  <CardDescription>Never forget the essentials</CardDescription>
+                  <CardTitle>{t('features.smartPacking.title')}</CardTitle>
+                  <CardDescription>{t('features.smartPacking.description')}</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -128,8 +77,84 @@ export function WowFeatures() {
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  ✨ List auto-generated based on destination weather, activities & airline rules
+                  {t('features.smartPacking.autoGenerated')}
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Layover Planner */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-lg  bg-primary  flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle>{t('features.layoverOptimizer.title')}</CardTitle>
+                  <CardDescription>{t('features.layoverOptimizer.description')}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 bg-muted rounded-lg opacity-60">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm">{t('features.layoverOptimizer.example')}</span>
+                    <Badge>{t('features.layoverOptimizer.duration')}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {t('features.layoverOptimizer.descriptionText')}
+                  </p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      <span>{t('features.layoverOptimizer.itinerary.airportToCity')}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary text-primary"></div>
+                      <span>{t('features.layoverOptimizer.itinerary.colosseum')}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      <span>{t('features.layoverOptimizer.itinerary.lunch')}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      <span>{t('features.layoverOptimizer.itinerary.pantheon')}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      <span>{t('features.layoverOptimizer.itinerary.returnToAirport')}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Button 
+                    className="w-full bg-primary cursor-not-allowed hover:bg-gray-300" 
+                    disabled
+                  >
+                    <Lock className="w-4 h-4 mr-2" />
+                    {t('features.layoverOptimizer.createPlan')}
+                  </Button>
+                  <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
+                            <Lock className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-amber-800">Premium Required</h4>
+                            <p className="text-sm text-amber-700">Switch to premium plan to continue with chat history</p>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-white"
+                          size="sm"
+                        >
+                          Upgrade to Premium
+                        </Button>
+                      </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -143,8 +168,8 @@ export function WowFeatures() {
                 <Leaf className="w-5 h-5 text-white" />
               </div>
               <div>
-                <CardTitle>Your Trip's Sustainability Score</CardTitle>
-                <CardDescription>Make eco-friendly choices for a better planet</CardDescription>
+                <CardTitle>{t('features.sustainability.title')}</CardTitle>
+                <CardDescription>{t('features.sustainability.description')}</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -156,34 +181,34 @@ export function WowFeatures() {
                   <div className="text-3xl mb-1 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                     B+
                   </div>
-                  <p className="text-sm text-muted-foreground">Overall Score</p>
+                  <p className="text-sm text-muted-foreground">{t('features.sustainability.overallScore')}</p>
                 </div>
               </div>
               <div className="md:col-span-2 space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Transport (Train vs Plane)</span>
-                    <span className="text-green-600">Excellent</span>
+                    <span>{t('features.sustainability.transport')}</span>
+                    <span className="text-green-600">{t('features.sustainability.excellent')}</span>
                   </div>
                   <Progress value={90} className="h-2" />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Accommodation (Eco Hotels)</span>
-                    <span className="text-yellow-600">Good</span>
+                    <span>{t('features.sustainability.accommodation')}</span>
+                    <span className="text-yellow-600">{t('features.sustainability.good')}</span>
                   </div>
                   <Progress value={70} className="h-2" />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Activities (Local & Sustainable)</span>
-                    <span className="text-green-600">Great</span>
+                    <span>{t('features.sustainability.activities')}</span>
+                    <span className="text-green-600">{t('features.sustainability.great')}</span>
                   </div>
                   <Progress value={85} className="h-2" />
                 </div>
                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-sm text-green-800">
-                    💡 <strong>Tip:</strong> Switch to eco-certified hotels to improve your score to A-
+                    💡 <strong>{t('common.tip')}:</strong> {t('features.sustainability.tip')}
                   </p>
                 </div>
               </div>
