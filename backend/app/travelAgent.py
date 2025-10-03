@@ -29,11 +29,11 @@ async def get_mcp_lists(departure_location:str, arrival_location:str, departure_
 
 
 @function_tool
-async def pick_options(option_list : List[Content], preferences:str) -> List[Content]:
+async def pick_options(option_list : str, preferences:str) -> List[Content]:
     """
      This tool picks the most related option within the text field of each content, it should pick one flight, one hotel, one car rental option based on user preferences and budget.
     Args:
-        option_list (List[Content]): List of Content objects containing text and optional link.
+        option_list str: List of flight, hotel, car rental options in string format.
         preferences (str): User preferences and budget information.
     Returns:
         List[Content]: A list containing the most related options. Like 
@@ -55,14 +55,14 @@ async def pick_options(option_list : List[Content], preferences:str) -> List[Con
 
 
 @function_tool
-async def trip_plan(selected_options:List[Content],preferences:str) -> str:
+async def trip_plan(selected_options:str,preferences:str) -> str:
     """
     This tool summarizes the selected options and plans the trip day by day by dividing the days into 3 parts(morning, afternoon, evening) and suggest activities and food suggestions for each part of the day.( Consider selected flight hours before deciding on the activities for the first and last day)
     Args:
-        selected_options (List[Content]): List of selected Content objects containing text and optional link. This info is returned from pick_options tool.
+        selected_options (str): List of selected flight,hotel and car rental option containing text and optional link. This info is returned from pick_options tool.
         preferences (str): User preferences and budget information.
     Returns:
-        str: A summary of the trip plan. day by day plan with activities and food suggestions.
+        str: A summary of the trip plan. day by day plan with activities and food suggestions. provide the plan in a detailed  and clean manner.
     """
     #TODO: llm based implementation
     agent = Agent(

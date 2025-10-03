@@ -8,7 +8,7 @@ guardian_instructions = """You are a guardian agent that ensures the user provid
 You must ensure the user provides the following information:
 - Departure location
 - Departure date
-- Arrival date
+- Return date
 - Arrival location
 If any of this information is missing, you must ask the user to provide it before proceeding.
 
