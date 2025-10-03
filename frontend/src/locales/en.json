@@ -168,6 +168,12 @@
       "romantic": "Romantic getaway in Paris",
       "business": "Business trip to Tokyo",
       "cultural": "Cultural tour of Italy"
+    },
+    "moodPrompts": {
+      "relaxation": "I'm feeling relaxed and want to unwind. Plan a peaceful trip for me!",
+      "adventure": "I'm feeling adventurous and ready for excitement. Plan an exciting trip for me!",
+      "culture": "I'm feeling cultural and want to explore art and history. Plan a cultural trip for me!",
+      "foodie": "I'm feeling hungry for great food and culinary experiences. Plan a foodie trip for me!"
     }
   },
   "common": {

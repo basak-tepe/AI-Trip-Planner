@@ -168,6 +168,12 @@
       "romantic": "Paris'te romantik kaçamak",
       "business": "Tokyo'ya iş seyahati",
       "cultural": "İtalya kültür turu"
+    },
+    "moodPrompts": {
+      "relaxation": "Rahatlamış hissediyorum ve dinlenmek istiyorum. Benim için huzurlu bir seyahat planla!",
+      "adventure": "Maceraperest hissediyorum ve heyecan arıyorum. Benim için heyecan verici bir seyahat planla!",
+      "culture": "Kültürel hissediyorum ve sanat ile tarihi keşfetmek istiyorum. Benim için kültürel bir seyahat planla!",
+      "foodie": "Harika yemekler ve mutfak deneyimleri için aç hissediyorum. Benim için gurme bir seyahat planla!"
     }
   },
   "common": {
