@@ -5,9 +5,10 @@ from .Message import RequestMessage, ResponseMessage
 import json
 import os
 import dotenv
-from travelAgent import MCPAgentRunner
+# from travelAgent import TravelAgent
 from guardianAgent import run_guardian_agent
 from models.Message import Content
+from guardianAgent import GuardianAgent
 from schemas import RequestMessageSchema, ChatSchema, ResponseMessageSchema
 from models.Message import OutputResponse
 
@@ -46,8 +47,8 @@ class Chat:
         self.updated_at = updated_at or datetime.utcnow()
 
         # runtime-only attribute
-        self._agent = MCPAgentRunner()
-        self.guardian_agent 
+        #self._agent = TravelAgent()
+        #self.guardian_agent = GuardianAgent()
         self._save_to_db()
  
     
@@ -112,7 +113,7 @@ class Chat:
                             updated_at=datetime.fromisoformat(chat_data["updated_at"])
                         )
                         # Don't save to DB again since we're loading from DB
-                        chat._agent = MCPAgentRunner()
+                        #chat._agent = TravelAgent()
                         return chat
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
             pass
@@ -156,7 +157,7 @@ class Chat:
                         updated_at=datetime.fromisoformat(chat_data["updated_at"])
                     )
                     # Initialize agent for each chat
-                    chat._agent = MCPAgentRunner()
+                    #chat._agent = TravelAgent()
                     chats.append(chat)
                 return chats
         except (FileNotFoundError, json.JSONDecodeError, KeyError):

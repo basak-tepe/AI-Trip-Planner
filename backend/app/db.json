@@ -5,6 +5,204 @@
       "messages": [],
       "created_at": "2025-10-03T20:27:05.650001",
       "updated_at": "2025-10-03T20:27:05.650023"
+    },
+    {
+      "id": "338b20e1-fe99-4b28-99bc-f9b4b2dfb684",
+      "messages": [],
+      "created_at": "2025-10-03T21:15:32.667257",
+      "updated_at": "2025-10-03T21:15:32.667266"
+    },
+    {
+      "id": "fd7da3b8-77b0-4ff3-b02b-c8df4a337455",
+      "messages": [],
+      "created_at": "2025-10-03T21:16:29.872467",
+      "updated_at": "2025-10-03T21:16:29.872476"
+    },
+    {
+      "id": "b4e659c9-a6cd-40ff-b5de-e7b5c10e48ee",
+      "messages": [],
+      "created_at": "2025-10-03T21:17:22.538985",
+      "updated_at": "2025-10-03T21:17:22.538993"
+    },
+    {
+      "id": "dede2608-e70b-4c7d-b9df-8a19cd3099d7",
+      "messages": [],
+      "created_at": "2025-10-03T21:22:45.344053",
+      "updated_at": "2025-10-03T21:22:45.344068"
+    },
+    {
+      "id": "2ba7e414-dc65-421c-bc6b-8ae264ea454f",
+      "messages": [
+        {
+          "role": "user",
+          "content": "hi",
+          "chat_id": "2ba7e414-dc65-421c-bc6b-8ae264ea454f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Hello! To help plan your trip, I need a few details:\n- Departure location\n- Departure date\n- Arrival location\n- Arrival date\n\nCould you please provide this information?",
+              "link": null
+            }
+          ],
+          "chat_id": "2ba7e414-dc65-421c-bc6b-8ae264ea454f",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-03T21:25:36.508403",
+      "updated_at": "2025-10-04T00:25:36.525572"
+    },
+    {
+      "id": "78d03025-9474-4f6d-9945-62a0e49811de",
+      "messages": [
+        {
+          "role": "user",
+          "content": "5 kas\u0131mda 3 \u00fc\u00e7 g\u00fcnl\u00fck tatil yap\u0131cam",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harika! Tatil planlaman\u0131za yard\u0131mc\u0131 olabilmem i\u00e7in \u015fu bilgileri de payla\u015f\u0131r m\u0131s\u0131n\u0131z?\n\n- Nereden (hangi \u015fehirden) yola \u00e7\u0131kacaks\u0131n\u0131z? (\u00c7\u0131k\u0131\u015f yeri)\n- Hangi \u015fehre veya \u00fclkeye gitmek istiyorsunuz? (Var\u0131\u015f yeri)\n\n\u015eu anda elimde sadece tarih bilgisi var. Bu eksik bilgileri payla\u015f\u0131rsan\u0131z planlamaya devam edebilirim.",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "ankaradan yola \u00e7\u0131k\u0131cam",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Seyahatinizi planlamak i\u00e7in \u015fu bilgilere ihtiyac\u0131m\u0131z var:\n- Nereden yola \u00e7\u0131kaca\u011f\u0131n\u0131z\u0131 belirttiniz: Ankara\n- L\u00fctfen var\u0131\u015f yerinizi belirtir misiniz?\n- Ayr\u0131ca, yola \u00e7\u0131k\u0131\u015f (gidi\u015f) ve var\u0131\u015f (d\u00f6n\u00fc\u015f) tarihlerinizi de payla\u015f\u0131r m\u0131s\u0131n\u0131z?",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "istanbul",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Thank you! To help plan your trip from Istanbul, could you please provide the following details:\n\n1. Departure date\n2. Arrival location\n3. Arrival date\n\nWith this information, I can assist you further.",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "benim ad\u0131m bubbles",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Merhaba Bubbles! Sana bir seyahat planlamam i\u00e7in \u015fu bilgilere ihtiyac\u0131m var:\n- Nereden (hangi \u015fehirden) hareket edeceksin?\n- Ne zaman (hangi tarihte) hareket edeceksin?\n- Var\u0131\u015f yerin neresi olacak?\n- D\u00f6n\u00fc\u015f yapacaksan, hangi tarihte d\u00f6nmeyi planl\u0131yorsun?\n\nL\u00fctfen bu bilgileri payla\u015f ki sana yard\u0131mc\u0131 olabileyim!",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "benim ad\u0131m ne",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Seyahat plan\u0131 yapabilmem i\u00e7in baz\u0131 bilgilere ihtiyac\u0131m var. L\u00fctfen a\u015fa\u011f\u0131daki bilgileri payla\u015f\u0131r m\u0131s\u0131n\u0131z?\n\n- Nereden ayr\u0131l\u0131yorsunuz? (\u00c7\u0131k\u0131\u015f noktan\u0131z)\n- Nereye gitmek istiyorsunuz? (Var\u0131\u015f noktan\u0131z)\n- Ne zaman ayr\u0131lmak istiyorsunuz? (Gidi\u015f tarihi)\n- Ne zaman d\u00f6nmek istiyorsunuz veya varmak istiyorsunuz? (D\u00f6n\u00fc\u015f/var\u0131\u015f tarihi)\n\nBu bilgilerin ard\u0131ndan size yard\u0131mc\u0131 olabilirim. Ayr\u0131ca isterseniz ad\u0131n\u0131z\u0131 da payla\u015fabilirsiniz, ancak seyahat plan\u0131 i\u00e7in yukar\u0131daki bilgiler gereklidir.",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "benim ad\u0131m ne",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Seyahat planlamas\u0131na ba\u015flamadan \u00f6nce baz\u0131 bilgilere ihtiyac\u0131m var. L\u00fctfen a\u015fa\u011f\u0131daki bilgileri payla\u015f\u0131r m\u0131s\u0131n\u0131z?\n\n- Nereden seyahat edeceksiniz? (\u00c7\u0131k\u0131\u015f noktas\u0131)\n- Seyahate ne zaman \u00e7\u0131kacaks\u0131n\u0131z? (\u00c7\u0131k\u0131\u015f tarihi)\n- Ne zaman d\u00f6nmek istiyorsunuz? (D\u00f6n\u00fc\u015f tarihi)\n- Nereye seyahat etmek istiyorsunuz? (Var\u0131\u015f noktas\u0131)\n\nBu bilgileri payla\u015ft\u0131\u011f\u0131n\u0131zda seyahatinizi planlamaya ba\u015flayabiliriz.",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "ankaradan istanbula gidece\u011fim. 5 kas\u0131mda 3 g\u00fcn",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Te\u015fekk\u00fcrler, neredeyse t\u00fcm bilgileri verdiniz. Emin olmak i\u00e7in 2 sorum olacak:\n\n1. D\u00f6n\u00fc\u015f tarihiniz 8 Kas\u0131m m\u0131 olacak (yani 5 Kas\u0131m \u00e7\u0131k\u0131\u015f, 8 Kas\u0131m d\u00f6n\u00fc\u015f)? \n2. Ankara\u2019dan \u0130stanbul\u2019a m\u0131 gideceksiniz? (Bilet/rota plan\u0131 sadece tek y\u00f6n m\u00fc, yoksa d\u00f6n\u00fc\u015f de dahil mi?)\n\nBu bilgileri netle\u015ftirir misiniz? Ard\u0131ndan seyahatinizi planlayabilirim.",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "gidi\u015f geli\u015f aynen \u00f6yle 8 kas\u0131m",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Te\u015fekk\u00fcrler! Seyahat plan\u0131 olu\u015fturabilmem i\u00e7in a\u015fa\u011f\u0131daki bilgilere de ihtiyac\u0131m var:\n\n- Nereden (hangi \u015fehirden/\u00fclkeden) hareket edeceksiniz? \n- Hangi \u015fehre/\u00fclkeye gitmek istiyorsunuz?\n- D\u00f6n\u00fc\u015f tarihiniz de 8 Kas\u0131m m\u0131 olacak? Yoksa 8 Kas\u0131m'da m\u0131 gidi\u015f/d\u00f6n\u00fc\u015f yapmak istiyorsunuz?\n\nBu bilgileri payla\u015f\u0131rsan\u0131z, hemen devam edebilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "ben az \u00f6nce ne sordum",
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Hen\u00fcz seyahat plan\u0131 yapmak i\u00e7in gerekli bilgileri vermediniz. Size yard\u0131mc\u0131 olabilmem i\u00e7in l\u00fctfen a\u015fa\u011f\u0131daki bilgileri belirtin:\n\n- Nereden (kalk\u0131\u015f noktas\u0131) seyahat edeceksiniz?\n- Hangi tarihte yola \u00e7\u0131kacaks\u0131n\u0131z? (Kalk\u0131\u015f tarihi)\n- Hangi tarihte varmak istiyorsunuz? (Var\u0131\u015f tarihi)\n- Nereye (var\u0131\u015f noktas\u0131) seyahat etmek istiyorsunuz?\n\nBu bilgileri payla\u015f\u0131rsan\u0131z seyahat planlaman\u0131za yard\u0131mc\u0131 olabilirim.",
+              "link": null
+            }
+          ],
+          "chat_id": "78d03025-9474-4f6d-9945-62a0e49811de",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-03T21:29:48.448817",
+      "updated_at": "2025-10-04T00:34:19.091275"
     }
   ]
 }

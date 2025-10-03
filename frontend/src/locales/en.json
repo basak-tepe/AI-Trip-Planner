@@ -44,7 +44,15 @@
       "example": "Layover in Rome",
       "duration": "6 hours",
       "descriptionText": "Enough time to see the city center!",
-      "createPlan": "Create My Layover Plan"
+      "createPlan": "Create My Layover Plan",
+      "unlockPremium": "Unlock Premium to access Layover Planner",
+      "itinerary": {
+        "airportToCity": "30 min: Airport to city (train)",
+        "colosseum": "2 hrs: Colosseum & Roman Forum",
+        "lunch": "1 hr: Lunch near Trevi Fountain",
+        "pantheon": "1 hr: Quick Pantheon visit",
+        "returnToAirport": "1.5 hrs: Return to airport"
+      }
     },
     "smartPacking": {
       "title": "Smart Packing Assistant",

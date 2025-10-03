@@ -1,5 +1,5 @@
 from agents import Agent, handoff, Runner
-from travelAgent import MCPAgentRunner
+from travelAgent import TravelAgent
 from typing import List, Optional
 from models.Message import Content, OutputResponse
 
@@ -15,8 +15,11 @@ If any of this information is missing, you must ask the user to provide it befor
 Once all information is provided, you will handoff the conversation to the travel planning agent."""
 
 
+agent=TravelAgent()
+
+
 travelAgentHandoff = handoff(
-    agent=travelAgent,
+    agent=agent,
     tool_description_override="This tool is called once the user has provided all necessary travel information. It helps plan the trip based on the user's preferences and budget."
 )
 
@@ -25,7 +28,7 @@ class GuardianAgent(Agent):
         super().__init__(
             name="GuardianAgent",
             instructions=guardian_instructions,
-            tools=[travelAgentHandoff],
+            handoffs=[travelAgentHandoff],
             output_type=OutputResponse
         )
 

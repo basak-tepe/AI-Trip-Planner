@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from models.Activity import Activity
+from .Activity import Activity
 from datetime import date
 from typing import List
 from typing import Optional
@@ -62,6 +62,6 @@ class RequestMessage(BaseModel):
 
     
 
-class OutputResponse:
+class OutputResponse(BaseModel):
     plan: Optional[str] = None # Optional overall plan summary
     contents: List[Content] = [] 

@@ -44,7 +44,15 @@
       "example": "Roma'da Aktarma",
       "duration": "6 saat",
       "descriptionText": "Şehir merkezini görmek için yeterli zaman!",
-      "createPlan": "Aktarma Planımı Oluştur"
+      "createPlan": "Aktarma Planımı Oluştur",
+      "unlockPremium": "Aktarma Planlayıcısına erişmek için Premium'u açın",
+      "itinerary": {
+        "airportToCity": "30 dk: Havalimanından şehre (tren)",
+        "colosseum": "2 saat: Kolezyum ve Roma Forumu",
+        "lunch": "1 saat: Trevi Çeşmesi yakınında öğle yemeği",
+        "pantheon": "1 saat: Hızlı Pantheon ziyareti",
+        "returnToAirport": "1.5 saat: Havalimanına dönüş"
+      }
     },
     "smartPacking": {
       "title": "Akıllı Bavul Asistanı",
