@@ -75,7 +75,8 @@ class Chat:
             updated_at=self.updated_at,
             messages=[message_schema_factory(msg) for msg in self.messages]
         )
-    
+
+        
     
     @staticmethod
     def get_chat(chat_id: str) -> Optional['Chat']:
@@ -89,7 +90,7 @@ class Chat:
                         # Convert dict back to Chat object
                         return Chat(
                             id=chat_data["id"],
-                            messages=[message_factory(**msg) for msg in chat_data.get("messages", [])],
+                            messages=[message_factory(msg) for msg in chat_data.get("messages", [])],
                             created_at=datetime.fromisoformat(chat_data["created_at"]),
                             updated_at=datetime.fromisoformat(chat_data["updated_at"])
                         )
@@ -129,7 +130,7 @@ class Chat:
                 chats = [
                     Chat(
                         id=chat_data["id"],
-                        messages=[message_factory(**msg) for msg in chat_data.get("messages", [])],
+                        messages=[message_factory(msg) for msg in chat_data.get("messages", [])],
                         created_at=datetime.fromisoformat(chat_data["created_at"]),
                         updated_at=datetime.fromisoformat(chat_data["updated_at"])
                     )
