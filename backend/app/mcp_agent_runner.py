@@ -2,13 +2,12 @@ import asyncio
 from typing import List, Optional
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
-from .models.Message import Content, OutputResponse
+from models.Message import Content, OutputResponse
 import os
 from dotenv import load_dotenv
 load_dotenv(override=True)
 from agents.mcp.util import create_static_tool_filter, MCPUtil
 from agents import tool
-from .tools import pick_options, trip_plan
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -58,9 +57,7 @@ class MCPAgentRunner:
         self.agent = Agent(
             name=self.agent_name,
             instructions=self.instructions,
-            mcp_servers=[self.mcp_server],
-            tools=[pick_options, trip_plan],
-            output_type=OutputResponse
+            mcp_servers=[self.mcp_server]
         )
 
     async def run(self, input_text: str, conversation_history: Optional[List[dict]] = None):

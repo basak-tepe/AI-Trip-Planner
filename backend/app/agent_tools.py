@@ -1,6 +1,20 @@
 from agents import function_tool
 from models.Message import Content
 from typing import List
+from mcp_agent_runner import MCPAgentRunner
+
+
+@function_tool
+async def get_mcp_lists(departure_location:str, arrival_location:str, departure_date:str, return_date:str, preferences:str) -> None:
+    """
+    This tool fetches the list of options from MCP server for flights, hotels, car rentals based on user preferences and budget.
+    Args:
+        None
+    """
+    runner = MCPAgentRunner()
+    response = await runner.run(f"Get me flight and hotel and car rental options based on the following details:\n Departure Location: {departure_location}\n Arrival Location: {arrival_location}\n Departure Date: {departure_date}\n Return Date: {return_date}\n Preferences: {preferences}")
+    print("MCP Response:", response)
+    return response
 
 
 @function_tool
@@ -14,7 +28,8 @@ def pick_options(option_list : List[Content], preferences:str) -> List[Content]:
         List[Content]: A list containing the most related options.
     """
     #TODO: llm based implementation
-    return 
+    mock_content = Content(text="Mock selected option based on preferences: " + preferences, link=None)
+    return [mock_content]
 
 @function_tool
 def trip_plan(selected_options:List[Content],preferences:str) -> str:

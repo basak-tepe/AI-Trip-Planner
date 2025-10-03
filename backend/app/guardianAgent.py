@@ -17,7 +17,6 @@ Once all information is provided, you will handoff the conversation to the trave
 
 agent=TravelAgent()
 
-
 travelAgentHandoff = handoff(
     agent=agent,
     tool_description_override="This tool is called once the user has provided all necessary travel information. It helps plan the trip based on the user's preferences and budget."
