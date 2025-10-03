@@ -3,8 +3,11 @@ from typing import List, Optional
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
 from models.Message import Content
+import os
+from dotenv import load_dotenv
+load_dotenv(override=True)
 
-
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 class MCPAgentRunner:
     def __init__(self, 
                  name: str = "AssistantWithMCP",
@@ -56,7 +59,7 @@ class MCPAgentRunner:
 if __name__ == "__main__":
     async def main():
         session = MCPAgentRunner()
-        response = await session.run("Do something with enuygun’s tools")
+        response = await session.run("İSTANBUL ANKARA 10 KASIM UÇAK BİLETİ ")
         print("Final output:", response)
         await session.close()
 

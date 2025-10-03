@@ -1,45 +1,45 @@
-from pydantic import BaseModel
 from datetime import datetime
 import uuid
 from typing import List, Optional
-from .Message import Message
+from .Message import RequestMessage, ResponseMessage
 import json
 import os
 import dotenv
 from travelAgent import MCPAgentRunner
-from Message import Content
+from models.Message import Content
+from schemas import RequestMessageSchema, ChatSchema
 
 dotenv.load_dotenv()
 DB_FILE = os.getenv("DB_FILE", "db.json")
 CHATS_KEY = "chats"
 
-class Chat(BaseModel):
-    id: str
-    messages: List[Message]
-    created_at: datetime
-    updated_at: datetime
 
-    def __init__(self): #assign agent to chat 
-        self.agent = MCPAgentRunner()
+class Chat:
+    def __init__(
+        self,
+        id: Optional[str] = None,
+        messages: Optional[List[RequestMessage]] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
+    ):
+        self.id = id or str(uuid.uuid4())
+        self.messages = messages or []
+        self.created_at = created_at or datetime.utcnow()
+        self.updated_at = updated_at or datetime.utcnow()
 
-    @classmethod
-    def create_chat(cls):
-        """Create a new chat instance"""
-        chat = cls(
-            id=str(uuid.uuid4()),
-            messages=[],
-            created_at=datetime.now(),
-            updated_at=datetime.now()
-        )
-        chat._save_to_db()
-        return chat
+        # runtime-only attribute
+        self._agent = MCPAgentRunner()
+        self._save_to_db()
+ 
     
-    def add_message(self, message: Message) ->List[Content]:
+    async def add_message(self, message: RequestMessageSchema) ->List[Content]:
         """Add a message to the chat and save to database"""
-        self.messages.append(message)
+        msg= RequestMessage(role=message.role, content=message.content, chat_id=self.id)
+        self.messages.append(msg)
         self.updated_at = datetime.now()
-        response=self.agent.run(message.content) #call the agent to generate a response
-        self.messages.append(response)
+        response= await self._agent.run(message.content) #call the agent to generate a response
+        response_msg= ResponseMessage(role="assistant", content=response, chat_id=self.id)
+        self.messages.append(response_msg)
         self._save_to_db()
         return response #return the response to the user
     
@@ -49,6 +49,14 @@ class Chat(BaseModel):
             "messages": [message.dict() for message in self.messages],
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()
+        }
+    
+    def to_schema(self) -> ChatSchema:
+        return {
+            "id": self.id,
+            "messages": [RequestMessageSchema(role=msg.role, content=msg.content) for msg in self.messages],
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
         }
     
     @staticmethod
@@ -94,12 +102,22 @@ class Chat(BaseModel):
             return False
 
     @staticmethod
-    def get_chats() -> List[dict]:
+    def get_chats() -> List[Optional['Chat']]:
         """Get all chats"""
         try:
             with open(DB_FILE, "r") as file:
                 data = json.load(file)
-                return data.get(CHATS_KEY, [])
+                # Convert each chat dict back to Chat object
+                chats = [
+                    Chat(
+                        id=chat_data["id"],
+                        messages=[Message(**msg) for msg in chat_data.get("messages", [])],
+                        created_at=datetime.fromisoformat(chat_data["created_at"]),
+                        updated_at=datetime.fromisoformat(chat_data["updated_at"])
+                    )
+                    for chat_data in data.get(CHATS_KEY, [])
+                ]
+                return chats
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
             return []
 

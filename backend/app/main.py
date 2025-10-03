@@ -1,12 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi import HTTPException
 from dotenv import load_dotenv
 import os 
-import httpx
 load_dotenv()
-from pydantic import BaseModel
-from datetime import date, datetime
-from models import Chat, Message, Activity
+from models.Chat import Chat
+from schemas import RequestMessageSchema, ChatSchema, ResponseMessageSchema
+from typing import List
+
 
 app = FastAPI(title="AI Trip Planner API")
 
@@ -16,50 +16,46 @@ MCP_BASE_URL = os.getenv("mcp_base_url")
 
 #implement them one by one 
 
-@app.post("/api/chat")
-async def add_chat(chat: Chat):
-    new_chat= Chat.create_chat()
-    new_chat.updated_at = datetime.now()
-    print(f"New chat added: {new_chat}")
-    return new_chat.to_json()
+@app.post("/api/chat", response_model=ChatSchema)
+async def add_chat():
+    # create a runtime Chat instance
+    new_chat = Chat()
+    schema=new_chat.to_schema() #convert to schema for response
+    print(f"New chat added: {schema}")
+    return schema
 
 @app.delete("/api/chat/{chat_id}")
-async def delete_chat(chat_id: str):
-    Chat.delete_chat(chat_id)
+async def delete_chat(chat_id: str) -> dict:
+    deleted = Chat.delete_chat(chat_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Chat not found")
     print(f"Chat deleted: {chat_id}")
-    return {"message": "Chat deleted successfully"}
+    return {f"message": "Chat with id {chat_id} deleted successfully"}
 
 @app.get("/api/chats")
-async def get_chats():
+async def get_chats() -> List[ChatSchema]:
     chats = Chat.get_chats() #returns list of all chats, no user for now 
     print(f"Chats fetched: {chats}")
-    return {"message": "Chats fetched successfully"}
+    schemas = [chat.to_schema() for chat in chats]
+    return schemas
+    
 
 @app.get("/api/chat/{chat_id}")
-async def get_chat(chat_id: str):
+async def get_chat(chat_id: str) -> ChatSchema:
     chat = Chat.get_chat(chat_id)
     print(f"Chat fetched: {chat}")
     #returns chat with all messages
-    return {"message": "Chat fetched successfully"}
+    schema = chat.to_schema()
+    return schema
+
 
 @app.post("/api/chat/{chat_id}/message")
-async def chat_with_llm(chat_id: str, message: Message):
+async def chat_with_llm(chat_id: str, message: RequestMessageSchema = Body(...)) -> ResponseMessageSchema:
     chat = Chat.get_chat(chat_id)
-    chat.add_message(message) #this will call the llm to generate a response
-    chat.updated_at = datetime.now()
-    print(f"Message added: {message}")
-    return {"message": "Message added successfully"}
+    response=await chat.add_message(message) #this will call the llm to generate a response
+    response_schema=ResponseMessageSchema(role="assistant", content=response)
+    return response_schema
 
-
-@app.get("/mcp/resources")
-async def get_resources():
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(f"{MCP_BASE_URL}/resources")
-            response.raise_for_status()
-            return response.json()
-        except httpx.HTTPError as e:
-            raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 async def health_check():

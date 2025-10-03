@@ -8,14 +8,19 @@ class Content(BaseModel):
     date:date #date for the day
     package_advice: str #advice for what to pack for the day
     day_activities: list[Activity] #this will be a list of activities for each day
-class Message(BaseModel):
+class ResponseMessage(BaseModel):
     role: str
     content: List[Content] #this will be  list of each day's plan and each day's plan will be a list of activities
     chat_id: str 
 
+class RequestMessage(BaseModel):
+    role: str
+    content: str #this will be the user input prompt
+    chat_id: str
+
 # Example usage
 
-msg_example = Message(
+msg_example = ResponseMessage(
     role="assistant",
     content=[
         Content(

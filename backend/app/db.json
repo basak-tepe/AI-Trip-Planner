@@ -1,0 +1,16 @@
+{
+  "chats": [
+    {
+      "id": "77bfe42a-0175-4148-b40b-70b086cde05c",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam bana ne gibi konularda yard\u0131mc\u0131 olabilirisin",
+          "chat_id": "77bfe42a-0175-4148-b40b-70b086cde05c"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "day": 1,
+              "date": 
