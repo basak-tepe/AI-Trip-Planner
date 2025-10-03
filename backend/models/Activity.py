@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 class Activity(BaseModel):
     activity: str #activity title like "Visit the Louvre"
     time: str  #either morning, afternoon, evening or full day
