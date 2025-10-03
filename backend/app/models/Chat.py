@@ -7,18 +7,34 @@ import os
 import dotenv
 from travelAgent import MCPAgentRunner
 from models.Message import Content
-from schemas import RequestMessageSchema, ChatSchema
+from schemas import RequestMessageSchema, ChatSchema, ResponseMessageSchema
 
 dotenv.load_dotenv()
 DB_FILE = os.getenv("DB_FILE", "db.json")
 CHATS_KEY = "chats"
 
+# factory for messages
+def message_factory(msg: dict):
+    if msg.get("role") == "user":
+        return RequestMessage(**msg)
+    elif msg.get("role") == "assistant":
+        return ResponseMessage(**msg)
+    else:
+        raise ValueError(f"Unknown role in message: {msg.get('role')}")
+    
+def message_schema_factory(msg: RequestMessage| ResponseMessage):
+    if msg.role == "user":
+        return RequestMessageSchema(role=msg.role, content=msg.content)
+    elif msg.role == "assistant":
+        return ResponseMessageSchema(role=msg.role, content=msg.content)
+    else:
+        raise ValueError(f"Unknown role in message: {msg.role}")
 
 class Chat:
     def __init__(
         self,
         id: Optional[str] = None,
-        messages: Optional[List[RequestMessage]] = None,
+        messages: Optional[List[RequestMessage| ResponseMessage]] = None,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
     ):
@@ -46,7 +62,7 @@ class Chat:
     def to_json(self):
         return {
             "id": self.id,
-            "messages": [message.dict() for message in self.messages],
+            "messages": [message.to_json() for message in self.messages],
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()
         }
@@ -54,7 +70,7 @@ class Chat:
     def to_schema(self) -> ChatSchema:
         return {
             "id": self.id,
-            "messages": [RequestMessageSchema(role=msg.role, content=msg.content) for msg in self.messages],
+            "messages": [message_schema_factory(msg) for msg in self.messages],
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
@@ -71,7 +87,7 @@ class Chat:
                         # Convert dict back to Chat object
                         return Chat(
                             id=chat_data["id"],
-                            messages=[Message(**msg) for msg in chat_data.get("messages", [])],
+                            messages=[message_factory(**msg) for msg in chat_data.get("messages", [])],
                             created_at=datetime.fromisoformat(chat_data["created_at"]),
                             updated_at=datetime.fromisoformat(chat_data["updated_at"])
                         )
@@ -111,7 +127,7 @@ class Chat:
                 chats = [
                     Chat(
                         id=chat_data["id"],
-                        messages=[Message(**msg) for msg in chat_data.get("messages", [])],
+                        messages=[message_factory(**msg) for msg in chat_data.get("messages", [])],
                         created_at=datetime.fromisoformat(chat_data["created_at"]),
                         updated_at=datetime.fromisoformat(chat_data["updated_at"])
                     )

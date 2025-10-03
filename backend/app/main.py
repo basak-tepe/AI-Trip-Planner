@@ -10,6 +10,21 @@ from typing import List
 
 app = FastAPI(title="AI Trip Planner API")
 
+origins = [
+    "http://localhost:3000",   # Next.js dev server
+    "http://127.0.0.1:3000",   # Just in case you hit it via 127.0.0.1
+]
+
+#allow app for requests coming from 3000
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Adjust this to restrict origins in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 MCP_BASE_URL = os.getenv("mcp_base_url")
 
 #this backend will add new chat delete existing chat, get existing chats and get a specific chat

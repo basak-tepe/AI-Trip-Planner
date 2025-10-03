@@ -5,3 +5,11 @@ class Activity(BaseModel):
     location: str #can be museum, restaurant, park, cafe hotel, etc.
     notes: str #any suggestions for the activity what to eat, reservations,taking a photo, any other tips etc.
 
+    def to_json(self):
+        return {
+            "activity": self.activity,
+            "time": self.time,
+            "location": self.location,
+            "notes": self.notes
+        }
+

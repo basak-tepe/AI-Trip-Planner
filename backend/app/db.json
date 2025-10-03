@@ -1,16 +1,40 @@
 {
   "chats": [
     {
-      "id": "77bfe42a-0175-4148-b40b-70b086cde05c",
-      "messages": [
-        {
-          "role": "user",
-          "content": "selam bana ne gibi konularda yard\u0131mc\u0131 olabilirisin",
-          "chat_id": "77bfe42a-0175-4148-b40b-70b086cde05c"
-        },
-        {
-          "role": "assistant",
-          "content": [
-            {
-              "day": 1,
-              "date": 
+      "id": "50a70e68-a6f9-4d29-b6b5-876f68263e6b",
+      "messages": [],
+      "created_at": "2025-10-03T14:15:25.465608",
+      "updated_at": "2025-10-03T14:15:25.465616"
+    },
+    {
+      "id": "224c9815-e7ad-4649-94a5-c016426de2f8",
+      "messages": [],
+      "created_at": "2025-10-03T14:15:28.365974",
+      "updated_at": "2025-10-03T14:15:28.365982"
+    },
+    {
+      "id": "d9e18b87-f7d8-4d81-84a1-da6de53f7cd0",
+      "messages": [],
+      "created_at": "2025-10-03T14:15:28.783464",
+      "updated_at": "2025-10-03T14:15:28.783473"
+    },
+    {
+      "id": "b83d8c59-fd4a-4f7c-9b8d-a44af8e799a1",
+      "messages": [],
+      "created_at": "2025-10-03T14:15:28.926156",
+      "updated_at": "2025-10-03T14:15:28.926163"
+    },
+    {
+      "id": "7caba8c6-d15e-4d33-86d6-ea1ff40a6912",
+      "messages": [],
+      "created_at": "2025-10-03T14:15:29.056014",
+      "updated_at": "2025-10-03T14:15:29.056022"
+    },
+    {
+      "id": "b96063ca-9e2e-4bf7-aafc-d93be23aba6c",
+      "messages": [],
+      "created_at": "2025-10-03T14:15:29.186689",
+      "updated_at": "2025-10-03T14:15:29.186698"
+    }
+  ]
+}
