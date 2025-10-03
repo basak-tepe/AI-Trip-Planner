@@ -1,62 +1,64 @@
-import os
-from dotenv import load_dotenv
-from agents import Agent, ModelSettings, function_tool, HostedMCPTool, Runner
-import httpx
-import http 
-# Load env vars
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-MCP_BASE_URL = os.getenv("mcp_base_url")
+import asyncio
+from typing import List, Optional
+from agents import Agent, Runner
+from agents.mcp import MCPServerStdio
+from models.Message import Content
 
-class TravelAgent(Agent):
-    def __init__(self):
-        self.model_settings = ModelSettings(
-            model="gpt-4o",
-            temperature=0.7,
-            max_tokens=1000,
-            api_key=OPENAI_API_KEY
+
+class MCPAgentRunner:
+    def __init__(self, 
+                 name: str = "AssistantWithMCP",
+                 instructions: str = "You can use the tools exposed by the enuygun MCP server.",
+                 command: str = "npx",
+                 args: Optional[list] = None):
+        if args is None:
+            args = ["-y", "mcp-remote", "https://mcp.enuygun.com/mcp"]
+
+        self.command = command
+        self.args = args
+        self.agent_name = name
+        self.instructions = instructions
+        self.mcp_server: Optional[MCPServerStdio] = None
+        self.agent: Optional[Agent] = None
+
+    async def _setup(self):
+        """Initialize MCP server and agent."""
+        self.mcp_server = MCPServerStdio(
+            name="enuygun-mcp",
+            params={"command": self.command, "args": self.args}
         )
-    flight_search_tool= HostedMCPTool(
-                tool_config={
-                    "type": "mcp",
-                    "name": "enuygun",
-                    "description": "This is a tool that allows you to search for flights and hotels.",
-                    "server_url": os.getenv("mcp_base_url"),
-                    "require_approval": "never",
-                }
-            )
-    agent = Agent(
-        name="Assistant",
-        instructions="You're a helpful travel planning assistant. You can help users plan trips, find flights, and suggest activities.",
+        await self.mcp_server.__aenter__()  # manually enter async context
 
-        
-    )
-
-    async def get_response(self, user_message: str):
-        response = await Runner.run(
-            starting_agent=self.agent,
-            input=user_message
+        self.agent = Agent(
+            name=self.agent_name,
+            instructions=self.instructions,
+            mcp_servers=[self.mcp_server],
+            output_type=List[Content]
         )
-        print(response.final_output)
-        return response
-    
-travel_agent = TravelAgent()
 
-async def main():
-    user_message = "I want to plan a trip to istanbul from Ankara on 20th october. Can you help me find flights and suggest activities?"
-    response = await travel_agent.get_response(user_message)
-    print("Agent Response:", response)
+    async def run(self, input_text: str):
+        """Run the agent with the given input text."""
+        if self.mcp_server is None or self.agent is None:
+            await self._setup()
 
+        result = await Runner.run(starting_agent=self.agent, input=input_text)
+        return result.final_output
+
+    async def close(self):
+        """Clean up MCP server properly."""
+        if self.mcp_server:
+            await self.mcp_server.__aexit__(None, None, None)
+            self.mcp_server = None
+            self.agent = None
+
+
+# Example usage
 if __name__ == "__main__":
-    import asyncio
+    async def main():
+        session = MCPAgentRunner()
+        response = await session.run("Do something with enuygun’s tools")
+        print("Final output:", response)
+        await session.close()
+
     asyncio.run(main())
-
-
-
-    
-
-
-
-
-
 

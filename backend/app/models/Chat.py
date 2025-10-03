@@ -6,6 +6,8 @@ from .Message import Message
 import json
 import os
 import dotenv
+from travelAgent import MCPAgentRunner
+from Message import Content
 
 dotenv.load_dotenv()
 DB_FILE = os.getenv("DB_FILE", "db.json")
@@ -16,6 +18,9 @@ class Chat(BaseModel):
     messages: List[Message]
     created_at: datetime
     updated_at: datetime
+
+    def __init__(self): #assign agent to chat 
+        self.agent = MCPAgentRunner()
 
     @classmethod
     def create_chat(cls):
@@ -29,12 +34,14 @@ class Chat(BaseModel):
         chat._save_to_db()
         return chat
     
-    def add_message(self, message: Message):
+    def add_message(self, message: Message) ->List[Content]:
         """Add a message to the chat and save to database"""
         self.messages.append(message)
         self.updated_at = datetime.now()
+        response=self.agent.run(message.content) #call the agent to generate a response
+        self.messages.append(response)
         self._save_to_db()
-        return self
+        return response #return the response to the user
     
     def to_json(self):
         return {
