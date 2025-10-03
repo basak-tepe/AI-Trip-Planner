@@ -1,8 +1,12 @@
+import React from "react";
 import { Plane, Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export function Footer() {
+  const { t } = useLanguage();
+  
   return (
     <footer className="bg-gradient-to-b from-white to-primary/5 border-t border-border">
       <div className="container mx-auto px-4 py-12">
@@ -13,11 +17,10 @@ export function Footer() {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <Plane className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl text-primary">travai</span>
+              <span className="text-xl text-primary">{t('footer.company')}</span>
             </div>
             <p className="text-sm text-muted-foreground mb-4 max-w-sm">
-              AI-powered travel planning that turns your dream trips into perfectly crafted itineraries. 
-              Explore the world smarter, not harder.
+              {t('footer.description')}
             </p>
             <div className="flex gap-2">
               <Button variant="outline" size="icon" className="hover:bg-primary hover:text-white transition-colors">
@@ -37,56 +40,56 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h4 className="mb-4">Product</h4>
+            <h4 className="mb-4">{t('footer.product')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#features" className="hover:text-primary transition-colors">Features</a>
+                <a href="#features" className="hover:text-primary transition-colors">{t('footer.features')}</a>
               </li>
               <li>
-                <a href="#itinerary" className="hover:text-primary transition-colors">Itinerary Builder</a>
+                <a href="#itinerary" className="hover:text-primary transition-colors">{t('footer.itineraryBuilder')}</a>
               </li>
               <li>
-                <a href="#community" className="hover:text-primary transition-colors">Community</a>
+                <a href="#community" className="hover:text-primary transition-colors">{t('footer.community')}</a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">Pricing</a>
+                <a href="#" className="hover:text-primary transition-colors">{t('footer.pricing')}</a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">Mobile App</a>
+                <a href="#" className="hover:text-primary transition-colors">{t('footer.mobileApp')}</a>
               </li>
             </ul>
           </div>
 
           {/* Company */}
           <div>
-            <h4 className="mb-4">Company</h4>
+            <h4 className="mb-4">{t('footer.company')}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#about" className="hover:text-primary transition-colors">About Us</a>
+                <a href="#about" className="hover:text-primary transition-colors">{t('footer.aboutUs')}</a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">Careers</a>
+                <a href="#" className="hover:text-primary transition-colors">{t('footer.careers')}</a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">Press</a>
+                <a href="#" className="hover:text-primary transition-colors">{t('footer.press')}</a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">Blog</a>
+                <a href="#" className="hover:text-primary transition-colors">{t('footer.blog')}</a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">Partners</a>
+                <a href="#" className="hover:text-primary transition-colors">{t('footer.partners')}</a>
               </li>
             </ul>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h4 className="mb-4">Stay Updated</h4>
+            <h4 className="mb-4">{t('footer.newsletter')}</h4>
             <p className="text-sm text-muted-foreground mb-3">
-              Get travel tips, destination guides, and exclusive deals.
+              {t('footer.newsletterDescription')}
             </p>
             <div className="flex gap-2">
-              <Input placeholder="Your email" type="email" className="h-9" />
+              <Input placeholder={t('footer.newsletterPlaceholder')} type="email" className="h-9" />
               <Button size="sm" className=" bg-primary hover:opacity-90">
                 <Mail className="w-4 h-4" />
               </Button>
@@ -98,12 +101,12 @@ export function Footer() {
         <div className="pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2025 travai. All rights reserved.
+              © 2025 {t('footer.company')}. {t('footer.rights')}
             </p>
             <div className="flex gap-6 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-primary transition-colors">Cookie Policy</a>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.privacy')}</a>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.terms')}</a>
+              <a href="#" className="hover:text-primary transition-colors">{t('footer.cookies')}</a>
             </div>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
 import { Loader2, Send, Bot, User } from "lucide-react";
 import { ApiService } from "../services/api";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface ChatMessage {
   id: string;
@@ -18,6 +19,7 @@ export function OpenAIChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const { t } = useLanguage();
 
   // Check connection on component mount
   React.useEffect(() => {
@@ -82,17 +84,17 @@ export function OpenAIChat() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="flex items-center gap-2">
-              <Bot className="w-5 h-5" />
-              Travel Agent Assistant
-            </CardTitle>
-            <CardDescription>
-              Ask me anything about travel planning, flights, hotels, and activities using Enuygun tools
-            </CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <Bot className="w-5 h-5" />
+                  {t('chat.title')} {t('chat.titleHighlight')}
+                </CardTitle>
+                <CardDescription>
+                  {t('chat.description')}
+                </CardDescription>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant={isConnected ? "default" : "destructive"}>
-              {isConnected ? "Connected" : "Offline"}
+              {isConnected ? t('chat.connected') : t('chat.offline')}
             </Badge>
             {messages.length > 0 && (
               <Button variant="outline" size="sm" onClick={clearChat}>
@@ -107,11 +109,11 @@ export function OpenAIChat() {
         {/* Messages */}
         <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
           {messages.length === 0 ? (
-            <div className="text-center text-muted-foreground py-8">
-              <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Start a conversation with your travel agent!</p>
-              <p className="text-sm">Try asking: "Find flights from Istanbul to Paris" or "Plan a 3-day trip to Istanbul"</p>
-            </div>
+                <div className="text-center text-muted-foreground py-8">
+                  <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>{t('chat.startConversation')}</p>
+                  <p className="text-sm">{t('chat.tryAsking')}</p>
+                </div>
           ) : (
             messages.map((message) => (
               <div
@@ -156,13 +158,13 @@ export function OpenAIChat() {
 
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Ask me about travel planning, flights, hotels, activities... (Powered by Enuygun tools)"
-            className="min-h-[100px]"
-            disabled={isLoading || !isConnected}
-          />
+              <Textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder={t('chat.placeholder')}
+                className="min-h-[100px]"
+                disabled={isLoading || !isConnected}
+              />
           <div className="flex justify-between items-center">
             <p className="text-sm text-muted-foreground">
               {isConnected 
@@ -178,12 +180,12 @@ export function OpenAIChat() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Processing...
+                  {t('chat.sending')}
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  Send
+                  {t('chat.sendMessage')}
                 </>
               )}
             </Button>

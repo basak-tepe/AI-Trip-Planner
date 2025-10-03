@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Calendar, MapPin, Clock, Lock, Unlock, Plus, Trash2, DollarSign, Star, Hotel, Plane, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Button } from "./ui/button";
@@ -9,6 +9,7 @@ import { Slider } from "./ui/slider";
 import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const mockItinerary = [
   {
@@ -80,6 +81,7 @@ export function ItineraryBuilder() {
   const [itinerary, setItinerary] = useState(mockItinerary);
   const [accommodations, setAccommodations] = useState(mockAccommodations);
   const [modificationPrompt, setModificationPrompt] = useState("");
+  const { t } = useLanguage();
 
   const toggleLock = (dayIndex: number, activityIndex: number) => {
     const newItinerary = [...itinerary];
@@ -106,13 +108,10 @@ export function ItineraryBuilder() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">
-            Build Your Perfect
-            <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Itinerary
-            </span>
+            {t('itinerary.title')}
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Lock your must-see activities and let AI optimize the rest
+            {t('itinerary.description')}
           </p>
         </div>
 
@@ -120,11 +119,11 @@ export function ItineraryBuilder() {
           {/* Controls */}
           <Card className="lg:col-span-1">
             <CardHeader>
-              <CardTitle>Trip Settings</CardTitle>
+              <CardTitle>{t('itinerary.planDetails')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <Label>Destination</Label>
+                <Label>{t('itinerary.destination')}</Label>
                 <div className="flex items-center gap-2 mt-2">
                   <MapPin className="w-5 h-5 text-primary" />
                   <Input placeholder="Bangkok, Thailand" />
@@ -132,7 +131,7 @@ export function ItineraryBuilder() {
               </div>
 
               <div>
-                <Label>Trip Duration: {tripDays} days</Label>
+                <Label>{t('itinerary.duration')}: {tripDays} {t('itinerary.day')}s</Label>
                 <Slider
                   value={[tripDays]}
                   onValueChange={(value) => setTripDays(value[0])}
@@ -144,7 +143,7 @@ export function ItineraryBuilder() {
               </div>
 
               <div>
-                <Label>Budget: ${budget[0]}</Label>
+                <Label>{t('itinerary.budget')}: ${budget[0]}</Label>
                 <Slider
                   value={budget}
                   onValueChange={setBudget}
@@ -177,7 +176,7 @@ export function ItineraryBuilder() {
               </div>
 
               <Button className="w-full bg-primary">
-                Regenerate with AI
+                {t('itinerary.generate')}
               </Button>
             </CardContent>
           </Card>
@@ -248,7 +247,7 @@ export function ItineraryBuilder() {
 
                 <Button variant="outline" className="w-full">
                   <Plus className="w-4 h-4 mr-2" />
-                  Add Custom Activity
+                  {t('itinerary.activities')}
                 </Button>
               </div>
             </CardContent>
@@ -410,9 +409,9 @@ export function ItineraryBuilder() {
             <div className="flex gap-3">
               <Button className="flex-1 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
                 <Sparkles className="w-4 h-4 mr-2" />
-                Update Itinerary
+                {t('itinerary.modifyPlan')}
               </Button>
-              <Button variant="outline">Reset</Button>
+              <Button variant="outline">{t('common.clear')}</Button>
             </div>
           </CardContent>
         </Card>

@@ -7,38 +7,32 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import { useLanguage } from "../contexts/LanguageContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-primary backdrop-blur-md border-b border-primary/20 shadow-lg">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
               <Plane className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-primary">travai</span>
+            <span className="text-xl font-bold text-white">{t('header.logo')}</span>
           </div>
 
           {/* Right Section */}
           <div className="flex items-center gap-3">
-            <nav className="hidden md:flex justify-between gap-6">
-              <a href="#community" className="text-foreground hover:text-primary transition-colors">
-                Community
-              </a>
-            </nav>
-             | TRY
-            {/* User + CTA */}
-            <Button className="hidden md:flex  bg-primary hover:opacity-90">
-              Get Started
-            </Button>
+            <LanguageSwitcher />
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden text-white hover:bg-white/20"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <Menu className="w-5 h-5" />
@@ -49,14 +43,11 @@ export function Header() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 flex flex-col gap-3">
-            <a href="#itinerary" className="text-foreground hover:text-primary transition-colors py-2">
+            <a href="#itinerary" className="text-white/90 hover:text-white transition-colors py-2">
               Plan Trip
             </a>
-            <a href="#community" className="text-foreground hover:text-primary transition-colors py-2">
-              Community
-            </a>
-            <Button className="mt-2 bg-gradient-to-r from-primary to-secondary">
-              Get Started
+            <Button className="mt-2 bg-white text-primary hover:bg-white/90">
+              {t('header.getStarted')}
             </Button>
           </nav>
         )}
