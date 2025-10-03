@@ -3,6 +3,7 @@ from datetime import datetime
 import uuid
 from typing import List
 from models.Message import Content
+from typing import Optional
 
 class RequestMessageSchema(BaseModel):
     role : str = "user"
@@ -11,6 +12,7 @@ class RequestMessageSchema(BaseModel):
 class ResponseMessageSchema(BaseModel):
     role: str = "assistant"
     content: List[Content]  # List of each day's plan as strings
+    plan : Optional[str] = None  # Optional overall plan summary
 
 class ChatSchema(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4())) 

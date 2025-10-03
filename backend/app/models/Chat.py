@@ -6,8 +6,10 @@ import json
 import os
 import dotenv
 from travelAgent import MCPAgentRunner
+from guardianAgent import run_guardian_agent
 from models.Message import Content
 from schemas import RequestMessageSchema, ChatSchema, ResponseMessageSchema
+from models.Message import OutputResponse
 
 dotenv.load_dotenv()
 DB_FILE = os.getenv("DB_FILE", "db.json")
@@ -26,7 +28,7 @@ def message_schema_factory(msg: RequestMessage| ResponseMessage):
     if msg.role == "user":
         return RequestMessageSchema(role=msg.role, content=msg.content)
     elif msg.role == "assistant":
-        return ResponseMessageSchema(role=msg.role, content=msg.content)
+        return ResponseMessageSchema(role=msg.role, content=msg.content, plan=getattr(msg, 'plan', None))
     else:
         raise ValueError(f"Unknown role in message: {msg.role}")
 
@@ -45,16 +47,18 @@ class Chat:
 
         # runtime-only attribute
         self._agent = MCPAgentRunner()
+        self.guardian_agent 
         self._save_to_db()
  
     
-    async def add_message(self, message: RequestMessageSchema) ->List[Content]:
+    async def add_message(self, message: RequestMessageSchema) -> OutputResponse:
         """Add a message to the chat and save to database"""
         msg= RequestMessage(role=message.role, content=message.content, chat_id=self.id)
         self.messages.append(msg)
         self.updated_at = datetime.now()
-        response= await self._agent.run(message.content) #call the agent to generate a response
-        response_msg= ResponseMessage(role="assistant", content=response, chat_id=self.id)
+        #response= await self._agent.run(message.content) #call the agent to generate a response
+        response = await run_guardian_agent(message.content)
+        response_msg= ResponseMessage(role="assistant", content=response.contents, chat_id=self.id, plan=response.plan if hasattr(response, 'plan') else None)
         self.messages.append(response_msg)
         print(f"Calling save_to_db from add_message")
         self._save_to_db()

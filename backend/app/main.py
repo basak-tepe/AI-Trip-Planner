@@ -68,7 +68,7 @@ async def get_chat(chat_id: str) -> ChatSchema:
 async def chat_with_llm(chat_id: str, message: RequestMessageSchema = Body(...)) -> ResponseMessageSchema:
     chat = Chat.get_chat(chat_id)
     response=await chat.add_message(message) #this will call the llm to generate a response
-    response_schema=ResponseMessageSchema(role="assistant", content=response)
+    response_schema=ResponseMessageSchema(role="assistant", content=response.contents, plan =response.plan if hasattr(response, 'plan') else None)
     return response_schema
 
 
