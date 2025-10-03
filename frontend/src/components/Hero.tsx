@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Sparkles, MapPin, Calendar, DollarSign, Loader2 } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Sparkles, MapPin, Calendar, DollarSign, Loader2, Send, User, Bot } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -11,6 +11,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 export function Hero() {
   const [usePrompt, setUsePrompt] = useState(false);
   const { t } = useLanguage();
+  const quickSearchRef = useRef<HTMLDivElement>(null);
   
   // Form state
   const [destination, setDestination] = useState("");
@@ -18,10 +19,83 @@ export function Hero() {
   const [budget, setBudget] = useState("");
   const [prompt, setPrompt] = useState("");
   
+  // Chat state
+  const [messages, setMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [isChatLoading, setIsChatLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  
   // API state
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
+
+  const scrollToQuickSearch = () => {
+    if (quickSearchRef.current) {
+      quickSearchRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  };
+
+  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  const sendChatMessage = async () => {
+    if (!currentMessage.trim() || isChatLoading) return;
+
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: currentMessage,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setCurrentMessage("");
+    setIsChatLoading(true);
+
+    try {
+      const response = await ApiService.generatePlan(currentMessage);
+      
+      // Use raw response for chat - no formatting needed
+      const assistantContent = typeof response.result === 'string' 
+        ? response.result 
+        : JSON.stringify(response.result, null, 2);
+
+      const assistantMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: assistantContent,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (err) {
+      console.error('Error in chat:', err);
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: `Sorry, I encountered an error: ${err instanceof Error ? err.message : "Failed to generate response"}`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsChatLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  };
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -54,7 +128,7 @@ export function Hero() {
         setResult(response.result);
       } else if (Array.isArray(response.result)) {
         // Format structured response as readable text
-        const formattedResult = response.result.map((day: any, index: number) => {
+        const formattedResult = (response.result as any[]).map((day: any, index: number) => {
           const dayNumber = day.day || index + 1;
           const date = day.date || '';
           const packageAdvice = day.package_advice || '';
@@ -103,11 +177,10 @@ export function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"></div>
       </div>
-
       {/* Content */}
       <div className="container mx-auto px-4 z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary backdrop-blur-sm px-4 py-2 rounded-full mb-6 mt-8">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm text-foreground">{t('hero.badge')}</span>
           </div>
@@ -128,26 +201,48 @@ export function Hero() {
             <MoodTravel 
               onMoodSelect={(mood, destination) => {
                 setDestination(destination);
-                setPrompt(`I'm feeling ${mood.toLowerCase()} and want to visit ${destination}. Plan a trip for me!`);
+                const initialMessage = `I'm feeling ${mood.toLowerCase()}. Plan a trip for me!`;
+                setPrompt(initialMessage);
                 setUsePrompt(true);
+                
+                // Initialize chat with the mood selection
+                setMessages([{
+                  id: Date.now().toString(),
+                  role: 'user',
+                  content: initialMessage,
+                  timestamp: new Date()
+                }]);
+                
+                // Scroll to quick search after a short delay to allow state updates
+                setTimeout(() => {
+                  scrollToQuickSearch();
+                }, 100);
               }}
             />
           </div>
 
           {/* Quick Search */}
-          <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-3xl mx-auto mb-8">
+          <div ref={quickSearchRef} className="bg-white rounded-2xl p-6 shadow-2xl max-w-3xl mx-auto mb-8">
             {/* Toggle between form and prompt */}
             <div className="flex gap-2 mb-4">
               <Button
                 variant={!usePrompt ? "default" : "outline"}
-                onClick={() => setUsePrompt(false)}
+                onClick={() => {
+                  setUsePrompt(false);
+                  setMessages([]);
+                  setCurrentMessage("");
+                }}
                 className={!usePrompt ? "bg-gradient-to-r from-primary to-secondary flex-1" : "flex-1"}
               >
                 {t('hero.quickSearch.title')}
               </Button>
               <Button
                 variant={usePrompt ? "default" : "outline"}
-                onClick={() => setUsePrompt(true)}
+                onClick={() => {
+                  setUsePrompt(true);
+                  setResult("");
+                  setError("");
+                }}
                 className={usePrompt ? "bg-gradient-to-r from-primary to-secondary flex-1" : "flex-1"}
               >
                 <Sparkles className="w-4 h-4 mr-2" />
@@ -190,18 +285,119 @@ export function Hero() {
               </>
             ) : (
               <div className="mb-4">
-                <Textarea
-                  placeholder={t('hero.quickSearch.promptPlaceholder')}
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="min-h-[120px] bg-background resize-none"
-                />
-                <p className="text-xs text-muted-foreground mt-2 text-left">
-                  💡 {t('common.try')}: "{t('prompts.examples.adventure')}", "{t('prompts.examples.family')}", "{t('prompts.examples.solo')}"
-                </p>
+                {/* Chat Interface */}
+                <div className="bg-gray-50 rounded-lg border border-gray-200 min-h-[300px] max-h-[400px] flex flex-col">
+                  {/* Chat Messages */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    {messages.length === 0 ? (
+                      <div className="text-center text-gray-500 py-8">
+                        <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                        <p className="text-sm">{t('chat.startConversationChat')}</p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          💡 {t('common.try')}: "{t('prompts.examples.adventure')}", "{t('prompts.examples.family')}", "{t('prompts.examples.solo')}"
+                        </p>
+                      </div>
+                    ) : (
+                      messages.map((message) => (
+                        <div
+                          key={message.id}
+                          className={`flex gap-3 ${
+                            message.role === 'user' ? 'justify-end' : 'justify-start'
+                          }`}
+                        >
+                          {message.role === 'assistant' && (
+                            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                              <Bot className="w-4 h-4 text-white" />
+                            </div>
+                          )}
+                          <div
+                            className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                              message.role === 'user'
+                                ? 'bg-primary text-white'
+                                : 'bg-white border border-gray-200 text-gray-800'
+                            }`}
+                          >
+                            <div className="whitespace-pre-wrap text-sm">
+                              {message.content}
+                            </div>
+                            <div className={`text-xs mt-1 ${
+                              message.role === 'user' ? 'text-white/70' : 'text-gray-500'
+                            }`}>
+                              {message.timestamp.toLocaleTimeString()}
+                            </div>
+                          </div>
+                          {message.role === 'user' && (
+                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                              <User className="w-4 h-4 text-gray-600" />
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    )}
+                    {isChatLoading && (
+                      <div className="flex gap-3 justify-start">
+                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                          <Bot className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
+                          <div className="flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                            <span className="text-sm text-gray-600">{t('chat.thinking')}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+                  
+                  {/* Chat Input */}
+                  <div className="border-t border-gray-200 p-4">
+                    {messages.length > 0 && (
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs text-gray-500">
+                          {messages.length} {t('chat.messageCount')}
+                        </span>
+                        <Button
+                          onClick={() => {
+                            setMessages([]);
+                            setCurrentMessage("");
+                          }}
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-gray-500 hover:text-gray-700"
+                        >
+                          {t('chat.clearChat')}
+                        </Button>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder={t('chat.typeMessage')}
+                        value={currentMessage}
+                        onChange={(e) => setCurrentMessage(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className="flex-1"
+                        disabled={isChatLoading}
+                      />
+                      <Button
+                        onClick={sendChatMessage}
+                        disabled={!currentMessage.trim() || isChatLoading}
+                        size="sm"
+                        className="px-3"
+                      >
+                        {isChatLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
+            {!usePrompt ? (
             <Button 
               onClick={handleSubmit}
               disabled={isLoading}
@@ -214,6 +410,11 @@ export function Hero() {
               )}
               {isLoading ? t('common.loading') : t('hero.quickSearch.generatePlan')}
             </Button>
+            ) : (
+              <div className="text-center text-sm text-gray-500">
+                💬 {t('chat.chatWithAI')}
+              </div>
+            )}
           </div>
 
           {/* Error Display */}

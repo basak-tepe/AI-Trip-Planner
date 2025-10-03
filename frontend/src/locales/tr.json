@@ -68,8 +68,8 @@
     }
   },
   "chat": {
-    "title": "Seyahat",
-    "titleHighlight": "Asistanınızla Sohbet",
+    "title": "Seyahat Asistanınızla Sohbet",
+    "titleHighlight": "",
     "description": "AI ve gerçek zamanlı seyahat verileriyle desteklenen kişiselleştirilmiş seyahat tavsiyeleri alın",
     "placeholder": "Seyahat planlama, uçak biletleri, oteller, aktiviteler hakkında soru sorun... (Enuygun araçları ile desteklenmektedir)",
     "connected": "Bağlı",
@@ -77,7 +77,13 @@
     "sending": "Gönderiliyor...",
     "sendMessage": "Mesaj Gönder",
     "startConversation": "Seyahat asistanınızla sohbet etmeye başlayın!",
-    "tryAsking": "Şunları deneyin: \"İstanbul'dan Paris'e uçak bileti bul\" veya \"İstanbul'da 3 günlük bir seyahat planla\""
+    "tryAsking": "Şunları deneyin: \"İstanbul'dan Paris'e uçak bileti bul\" veya \"İstanbul'da 3 günlük bir seyahat planla\"",
+    "chatWithAI": "AI ile sohbet ederek mükemmel seyahatinizi planlayın!",
+    "startConversationChat": "Seyahat planlarınız hakkında sohbet etmeye başlayın!",
+    "thinking": "Düşünüyor...",
+    "typeMessage": "Mesajınızı yazın...",
+    "clearChat": "Sohbeti Temizle",
+    "messageCount": "mesaj"
   },
   "achievements": {
     "title": "Seyahat Başarıları",

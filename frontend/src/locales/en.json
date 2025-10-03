@@ -68,8 +68,8 @@
     }
   },
   "chat": {
-    "title": "Chat with Your",
-    "titleHighlight": "Travel Agent",
+    "title": "Chat with Your Travel Agent",
+    "titleHighlight": "",
     "description": "Get personalized travel advice powered by AI and real-time travel data",
     "placeholder": "Ask me about travel planning, flights, hotels, activities... (Powered by Enuygun tools)",
     "connected": "Connected",
@@ -77,7 +77,13 @@
     "sending": "Sending...",
     "sendMessage": "Send Message",
     "startConversation": "Start a conversation with your travel agent!",
-    "tryAsking": "Try asking: \"Find flights from Istanbul to Paris\" or \"Plan a 3-day trip to Istanbul\""
+    "tryAsking": "Try asking: \"Find flights from Istanbul to Paris\" or \"Plan a 3-day trip to Istanbul\"",
+    "chatWithAI": "Chat with AI to plan your perfect trip!",
+    "startConversationChat": "Start a conversation about your travel plans!",
+    "thinking": "Thinking...",
+    "typeMessage": "Type your message...",
+    "clearChat": "Clear chat",
+    "messageCount": "message"
   },
   "achievements": {
     "title": "Travel Achievements",
