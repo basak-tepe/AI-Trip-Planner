@@ -23,6 +23,7 @@ export function Hero() {
   const [messages, setMessages] = useState<Array<{id: string, role: 'user' | 'assistant', content: string, timestamp: Date}>>([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   
   // API state
@@ -61,12 +62,27 @@ export function Hero() {
     setIsChatLoading(true);
 
     try {
-      const response = await ApiService.generatePlan(currentMessage);
+      let response;
+      
+      // Create a new chat if we don't have one, otherwise use existing chat
+      if (!currentChatId) {
+        const newChat = await ApiService.createChat();
+        setCurrentChatId(newChat.id);
+        response = await ApiService.sendMessage(newChat.id, {
+          role: 'user',
+          content: currentMessage
+        });
+      } else {
+        response = await ApiService.sendMessage(currentChatId, {
+          role: 'user',
+          content: currentMessage
+        });
+      }
       
       // Use raw response for chat - no formatting needed
-      const assistantContent = typeof response.result === 'string' 
-        ? response.result 
-        : JSON.stringify(response.result, null, 2);
+      const assistantContent = typeof response.content === 'string' 
+        ? response.content 
+        : JSON.stringify(response.content, null, 2);
 
       const assistantMessage = {
         id: (Date.now() + 1).toString(),

@@ -19,6 +19,7 @@ export function OpenAIChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const { t } = useLanguage();
 
   // Check connection on component mount
@@ -51,12 +52,27 @@ export function OpenAIChat() {
     setIsLoading(true);
 
     try {
-      const response = await ApiService.processPrompt(prompt);
+      let response;
+      
+      // Create a new chat if we don't have one, otherwise use existing chat
+      if (!currentChatId) {
+        const newChat = await ApiService.createChat();
+        setCurrentChatId(newChat.id);
+        response = await ApiService.sendMessage(newChat.id, {
+          role: 'user',
+          content: prompt
+        });
+      } else {
+        response = await ApiService.sendMessage(currentChatId, {
+          role: 'user',
+          content: prompt
+        });
+      }
       
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response.response,
+        content: response.content,
         timestamp: new Date()
       };
 
@@ -77,6 +93,7 @@ export function OpenAIChat() {
 
   const clearChat = () => {
     setMessages([]);
+    setCurrentChatId(null);
   };
 
   return (

@@ -53,7 +53,21 @@ class Chat:
         msg= RequestMessage(role=message.role, content=message.content, chat_id=self.id)
         self.messages.append(msg)
         self.updated_at = datetime.now()
-        response= await self._agent.run(message.content) #call the agent to generate a response
+        
+        # Build conversation history from existing messages
+        conversation_history = []
+        for existing_msg in self.messages[:-1]:  # Exclude the current message we just added
+            if existing_msg.role == "user":
+                conversation_history.append({"role": "user", "content": existing_msg.content})
+            elif existing_msg.role == "assistant":
+                # Convert Content objects to string for history
+                content_str = existing_msg.content
+                if isinstance(content_str, list):
+                    content_str = str(content_str)
+                conversation_history.append({"role": "assistant", "content": content_str})
+        
+        # Call the agent with conversation history
+        response= await self._agent.run(message.content, conversation_history=conversation_history)
         response_msg= ResponseMessage(role="assistant", content=response, chat_id=self.id)
         self.messages.append(response_msg)
         print(f"Calling save_to_db from add_message")
@@ -88,12 +102,15 @@ class Chat:
                 for chat_data in chats:
                     if chat_data.get("id") == chat_id:
                         # Convert dict back to Chat object
-                        return Chat(
+                        chat = Chat(
                             id=chat_data["id"],
                             messages=[message_factory(msg) for msg in chat_data.get("messages", [])],
                             created_at=datetime.fromisoformat(chat_data["created_at"]),
                             updated_at=datetime.fromisoformat(chat_data["updated_at"])
                         )
+                        # Don't save to DB again since we're loading from DB
+                        chat._agent = MCPAgentRunner()
+                        return chat
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
             pass
         return None
@@ -127,15 +144,17 @@ class Chat:
             with open(DB_FILE, "r") as file:
                 data = json.load(file)
                 # Convert each chat dict back to Chat object
-                chats = [
-                    Chat(
+                chats = []
+                for chat_data in data.get(CHATS_KEY, []):
+                    chat = Chat(
                         id=chat_data["id"],
                         messages=[message_factory(msg) for msg in chat_data.get("messages", [])],
                         created_at=datetime.fromisoformat(chat_data["created_at"]),
                         updated_at=datetime.fromisoformat(chat_data["updated_at"])
                     )
-                    for chat_data in data.get(CHATS_KEY, [])
-                ]
+                    # Initialize agent for each chat
+                    chat._agent = MCPAgentRunner()
+                    chats.append(chat)
                 return chats
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
             return []
