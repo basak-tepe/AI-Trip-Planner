@@ -1,39 +1,40 @@
 import asyncio
 from typing import List, Optional
 from agents import Agent, Runner
-from agents.mcp import MCPServerStdio
+from agents.mcp import MCPServerSse   # <-- switched here
 from models.Message import Content
 import os
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
-OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+
 class MCPAgentRunner:
-    def __init__(self, 
+    def __init__(self,
                  name: str = "AssistantWithMCP",
                  instructions: str = "You can use the tools exposed by the enuygun MCP server.",
-                 command: str = "npx",
-                 args: Optional[list] = None,
-                 ):
-        if args is None:
-            args = ["-y", "mcp-remote", "https://mcp.enuygun.com/mcp"]
+                 url: str = "https://mcp.enuygun.com/mcp",   # <-- SSE endpoint instead of npx
+                 headers: Optional[dict] = None):
+        if headers is None:
+            headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
 
-        self.command = command
-        self.args = args
+        self.url = url
+        self.headers = headers
         self.agent_name = name
         self.instructions = instructions
-        self.mcp_server: Optional[MCPServerStdio] = None
+        self.mcp_server: Optional[MCPServerSse] = None
         self.agent: Optional[Agent] = None
 
     async def _setup(self):
-        """Initialize MCP server and agent."""
-        self.mcp_server = MCPServerStdio(
-            name="enuygun-mcp",
-            params={"command": self.command, "args": self.args},
+        """Initialize MCP SSE server and agent."""
+        self.mcp_server = MCPServerSse(
+            name="enuygun-mcp-sse",
             client_session_timeout_seconds=60.0,  # wait up to 60 seconds
-            cache_tools_list=True,                 # optional, avoids round trips
-            max_retry_attempts=2,                  # optional, adds retries
-            retry_backoff_seconds_base=2.0        # optional, adds exponential backoff on retries
+            params={
+                "url": self.url
+            },
+            cache_tools_list=True
         )
         await self.mcp_server.__aenter__()  # manually enter async context
 
@@ -48,11 +49,9 @@ class MCPAgentRunner:
         """Run the agent with the given input text."""
         if self.mcp_server is None or self.agent is None:
             await self._setup()
-        try:
-            result = await Runner.run(starting_agent=self.agent, input=input_text)
-            return result.final_output
-        finally:
-            await self.close()
+
+        result = await Runner.run(starting_agent=self.agent, input=input_text)
+        return result.final_output
 
     async def close(self):
         """Clean up MCP server properly."""
@@ -67,11 +66,10 @@ if __name__ == "__main__":
     async def main():
         session = MCPAgentRunner()
         start_time = asyncio.get_event_loop().time()
-        response = await session.run("İSTANBUL ANKARA 10 KASIM UÇAK BİLETİ ")
+        response = await session.run("İSTANBUL ANKARA 10 KASIM UÇAK BİLETİ")
         end_time = asyncio.get_event_loop().time()
         print(f"Response time: {end_time - start_time} seconds")
         print("Final output:", response)
         await session.close()
 
     asyncio.run(main())
-

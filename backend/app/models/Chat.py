@@ -56,6 +56,7 @@ class Chat:
         response= await self._agent.run(message.content) #call the agent to generate a response
         response_msg= ResponseMessage(role="assistant", content=response, chat_id=self.id)
         self.messages.append(response_msg)
+        print(f"Calling save_to_db from add_message")
         self._save_to_db()
         return response #return the response to the user
     
@@ -68,12 +69,13 @@ class Chat:
         }
     
     def to_schema(self) -> ChatSchema:
-        return {
-            "id": self.id,
-            "messages": [message_schema_factory(msg) for msg in self.messages],
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
-        }
+        return ChatSchema(
+            id=self.id,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+            messages=[message_schema_factory(msg) for msg in self.messages]
+        )
+    
     
     @staticmethod
     def get_chat(chat_id: str) -> Optional['Chat']:
