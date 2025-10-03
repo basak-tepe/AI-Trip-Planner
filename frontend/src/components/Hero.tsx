@@ -67,7 +67,7 @@ export function Hero() {
     return String(content);
   };
 
-  // Auto-scroll to bottom of chat
+  // Auto-scroll to show latest message at bottom
   useEffect(() => {
     if (chatEndRef.current) {
       chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -77,10 +77,19 @@ export function Hero() {
   const sendChatMessage = async () => {
     if (!currentMessage.trim() || isChatLoading) return;
 
+    // Check if this is the first message and we have a mood prompt to append
+    const isFirstMessage = messages.length === 0;
+    const shouldAppendMoodPrompt = isFirstMessage && prompt && prompt.trim();
+    
+    // Prepare the message content (secretly append mood prompt if needed)
+    const messageContent = shouldAppendMoodPrompt 
+      ? `${currentMessage}\n\n${prompt}` 
+      : currentMessage;
+
     const userMessage = {
       id: Date.now().toString(),
       role: 'user' as const,
-      content: currentMessage,
+      content: currentMessage, // Show only the user's original message in UI
       timestamp: new Date()
     };
 
@@ -97,12 +106,12 @@ export function Hero() {
         setCurrentChatId(newChat.id);
         response = await ApiService.sendMessage(newChat.id, {
           role: 'user',
-          content: currentMessage
+          content: messageContent // Send the combined message to the API
         });
       } else {
         response = await ApiService.sendMessage(currentChatId, {
           role: 'user',
-          content: currentMessage
+          content: messageContent // Send the combined message to the API
         });
       }
       
@@ -117,6 +126,11 @@ export function Hero() {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Clear the mood prompt after it's been used once
+      if (shouldAppendMoodPrompt) {
+        setPrompt("");
+      }
     } catch (err) {
       console.error('Error in chat:', err);
       const errorMessage = {
@@ -208,7 +222,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <ImageWithFallback
@@ -219,8 +233,8 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"></div>
       </div>
       {/* Content */}
-      <div className="container mx-auto px-4 z-10">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="container mx-auto px-4 z-10 flex items-center justify-center h-full">
+        <div className="max-w-4xl mx-auto text-center w-full">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary backdrop-blur-sm px-4 py-2 rounded-full mb-6 mt-8">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm text-foreground">{t('hero.badge')}</span>
@@ -242,17 +256,11 @@ export function Hero() {
             <MoodTravel 
               onMoodSelect={(mood, destination) => {
                 setDestination(destination);
-                const initialMessage = `I'm feeling ${mood.toLowerCase()}. Plan a trip for me!`;
-                setPrompt(initialMessage);
                 setUsePrompt(true);
                 
-                // Initialize chat with the mood selection
-                setMessages([{
-                  id: Date.now().toString(),
-                  role: 'user',
-                  content: initialMessage,
-                  timestamp: new Date()
-                }]);
+                // Store the mood prompt for later use (secretly append to first user message)
+                const moodPrompt = t(`prompts.moodPrompts.${mood}`);
+                setPrompt(moodPrompt);
                 
                 // Scroll to quick search after a short delay to allow state updates
                 setTimeout(() => {
@@ -327,7 +335,7 @@ export function Hero() {
             ) : (
               <div className="mb-4">
                 {/* Chat Interface */}
-                <div className="bg-gray-50 rounded-lg border border-gray-200 min-h-[300px] max-h-[400px] flex flex-col">
+                <div className="bg-gray-50 rounded-lg border border-gray-200 h-[400px] flex flex-col relative mx-auto max-w-3xl">
                   {/* Chat Messages */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {messages.length === 0 ? (
@@ -395,8 +403,8 @@ export function Hero() {
                     <div ref={chatEndRef} />
                   </div>
                   
-                  {/* Chat Input */}
-                  <div className="border-t border-gray-200 p-4">
+                  {/* Chat Input - Sticky at bottom */}
+                  <div className="border-t border-gray-200 p-4 bg-gray-50 sticky bottom-0">
                     {messages.length > 0 && (
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-xs text-gray-500">
