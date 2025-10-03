@@ -17,7 +17,7 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <Plane className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold text-primary">travai</span>
@@ -32,7 +32,7 @@ export function Header() {
             </nav>
              | TRY
             {/* User + CTA */}
-            <Button className="hidden md:flex bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+            <Button className="hidden md:flex  bg-primary hover:opacity-90">
               Get Started
             </Button>
             <Button

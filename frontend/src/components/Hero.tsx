@@ -168,7 +168,7 @@ export function Hero() {
             <Button 
               onClick={handleSubmit}
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 h-14 disabled:opacity-50"
+              className="w-full  bg-primary hover:opacity-90 h-14 disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />

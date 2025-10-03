@@ -176,7 +176,7 @@ export function ItineraryBuilder() {
                 </div>
               </div>
 
-              <Button className="w-full bg-gradient-to-r from-primary to-secondary">
+              <Button className="w-full bg-primary">
                 Regenerate with AI
               </Button>
             </CardContent>

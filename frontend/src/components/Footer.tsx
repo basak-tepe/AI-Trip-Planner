@@ -10,7 +10,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                 <Plane className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl text-primary">travai</span>
@@ -87,7 +87,7 @@ export function Footer() {
             </p>
             <div className="flex gap-2">
               <Input placeholder="Your email" type="email" className="h-9" />
-              <Button size="sm" className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+              <Button size="sm" className=" bg-primary hover:opacity-90">
                 <Mail className="w-4 h-4" />
               </Button>
             </div>

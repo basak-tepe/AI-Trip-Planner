@@ -26,7 +26,7 @@ export function MoodTravel({ onMoodSelect }: MoodTravelProps) {
     <Card className="overflow-hidden bg-white/95 backdrop-blur-sm">
       <CardHeader>
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg  bg-primary flex items-center justify-center">
             <Smile className="w-5 h-5 text-white" />
           </div>
           <div>

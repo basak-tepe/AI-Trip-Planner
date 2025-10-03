@@ -36,7 +36,7 @@ export function WowFeatures() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg  bg-primary  flex items-center justify-center">
                   <Clock className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -78,7 +78,7 @@ export function WowFeatures() {
                     </div>
                   </div>
                 </div>
-                <Button className="w-full bg-gradient-to-r from-secondary to-accent">
+                <Button className="w-full  bg-primary ">
                   Create My Layover Plan
                 </Button>
               </div>
