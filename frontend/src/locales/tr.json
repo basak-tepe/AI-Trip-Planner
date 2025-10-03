@@ -193,6 +193,10 @@
     "travelEvents": "Seyahat Etkinlikleri",
     "discussions": "Tartışmalar",
     "reviews": "Değerlendirmeler",
-    "recommendations": "Öneriler"
+    "recommendations": "Öneriler",
+    "trendingTitle": "Bu Ay Trend Olan Destinasyonlar",
+    "trendingDescription": "Topluluğumuz tarafından en çok planlanan destinasyonlar",
+    "trips": "seyahat",
+    "exploreAll": "Tüm Destinasyonları Keşfet"
   }
 }

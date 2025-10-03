@@ -193,6 +193,10 @@
     "travelEvents": "Travel Events",
     "discussions": "Discussions",
     "reviews": "Reviews",
-    "recommendations": "Recommendations"
+    "recommendations": "Recommendations",
+    "trendingTitle": "Trending Destinations This Month",
+    "trendingDescription": "Most planned destinations by our community",
+    "trips": "trips",
+    "exploreAll": "Explore All Destinations"
   }
 }
