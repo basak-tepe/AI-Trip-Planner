@@ -1,4 +1,5 @@
-import { Plane, Menu, User } from "lucide-react";
+import React, { useState } from "react";
+import { Plane, Menu, User, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -6,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
-import { useState } from "react";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,9 +32,6 @@ export function Header() {
             </nav>
              | TRY
             {/* User + CTA */}
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <User className="w-5 h-5" />
-            </Button>
             <Button className="hidden md:flex bg-gradient-to-r from-primary to-secondary hover:opacity-90">
               Get Started
             </Button>

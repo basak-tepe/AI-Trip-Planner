@@ -1,12 +1,59 @@
-import { useState } from "react";
-import { Sparkles, MapPin, Calendar, DollarSign } from "lucide-react";
+import React, { useState } from "react";
+import { Sparkles, MapPin, Calendar, DollarSign, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ApiService } from "../services/api";
+import { MoodTravel } from "./MoodTravel";
 
 export function Hero() {
   const [usePrompt, setUsePrompt] = useState(false);
+  
+  // Form state
+  const [destination, setDestination] = useState("");
+  const [date, setDate] = useState("");
+  const [budget, setBudget] = useState("");
+  const [prompt, setPrompt] = useState("");
+  
+  // API state
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    setError("");
+    setResult("");
+
+    try {
+      let queryPrompt = "";
+      
+      if (usePrompt) {
+        queryPrompt = prompt;
+      } else {
+        // Build prompt from form fields
+        const parts: string[] = [];
+        if (destination) parts.push(`destination: ${destination}`);
+        if (date) parts.push(`dates: ${date}`);
+        if (budget) parts.push(`budget: ${budget}`);
+        
+        queryPrompt = `Plan a trip with ${parts.join(", ")}`;
+      }
+
+      if (!queryPrompt.trim()) {
+        setError("Please fill in at least one field or enter a prompt");
+        return;
+      }
+
+      const response = await ApiService.generatePlan(queryPrompt);
+      setResult(response.result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate plan");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -39,6 +86,17 @@ export function Hero() {
             Let AI craft your perfect itinerary. From flights to hidden gems, we handle everything so you can focus on the adventure.
           </p>
 
+          {/* AI Mood Travel, matches the width of the quick search*/}
+          <div className="rounded-2xl p-6 shadow-2xl max-w-3xl mx-auto mb-8">
+            <MoodTravel 
+              onMoodSelect={(mood, destination) => {
+                setDestination(destination);
+                setPrompt(`I'm feeling ${mood.toLowerCase()} and want to visit ${destination}. Plan a trip for me!`);
+                setUsePrompt(true);
+              }}
+            />
+          </div>
+
           {/* Quick Search */}
           <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-3xl mx-auto mb-8">
             {/* Toggle between form and prompt */}
@@ -67,6 +125,8 @@ export function Hero() {
                     <MapPin className="w-5 h-5 text-primary flex-shrink-0" />
                     <Input
                       placeholder="Where to?"
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
                       className="border-0 p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -75,6 +135,8 @@ export function Hero() {
                     <Input
                       placeholder="When?"
                       type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
                       className="border-0 p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -82,6 +144,8 @@ export function Hero() {
                     <DollarSign className="w-5 h-5 text-primary flex-shrink-0" />
                     <Input
                       placeholder="Budget"
+                      value={budget}
+                      onChange={(e) => setBudget(e.target.value)}
                       className="border-0 p-0 h-auto focus-visible:ring-0"
                     />
                   </div>
@@ -91,6 +155,8 @@ export function Hero() {
               <div className="mb-4">
                 <Textarea
                   placeholder="Tell us about your dream trip... e.g., 'I want a 5-day romantic getaway in Paris with good food and wine tasting, budget around $3000'"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
                   className="min-h-[120px] bg-background resize-none"
                 />
                 <p className="text-xs text-muted-foreground mt-2 text-left">
@@ -99,27 +165,36 @@ export function Hero() {
               </div>
             )}
 
-            <Button className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 h-14">
-              <Sparkles className="w-5 h-5 mr-2" />
-              Generate My Itinerary
+            <Button 
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 h-14 disabled:opacity-50"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="w-5 h-5 mr-2" />
+              )}
+              {isLoading ? "Generating..." : "Generate My Itinerary"}
             </Button>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4">
-              <div className="text-3xl text-white mb-1">500K+</div>
-              <div className="text-sm text-white/80">Trips Planned</div>
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 max-w-3xl mx-auto mb-8">
+              <p className="text-red-600 text-sm">{error}</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4">
-              <div className="text-3xl text-white mb-1">195</div>
-              <div className="text-sm text-white/80">Countries</div>
+          )}
+
+          {/* Result Display */}
+          {result && (
+            <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto mb-8">
+              <h3 className="text-xl font-semibold mb-4 text-gray-800">Your AI-Generated Itinerary</h3>
+              <div className="prose max-w-none">
+                <p className="text-gray-700 whitespace-pre-wrap">{result}</p>
+              </div>
             </div>
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-4">
-              <div className="text-3xl text-white mb-1">98%</div>
-              <div className="text-sm text-white/80">Satisfaction</div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </section>
