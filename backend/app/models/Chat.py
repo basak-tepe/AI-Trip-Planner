@@ -71,7 +71,7 @@ class Chat:
                 conversation_history.append({"role": "assistant", "content": content_str})
         
         # Call the agent with conversation history
-        response = await run_guardian_agent(message.content)
+        response = await run_guardian_agent(message.content, conversation_history)
         response_msg= ResponseMessage(role="assistant", content=response.contents, chat_id=self.id, plan=response.plan if hasattr(response, 'plan') else None)
         self.messages.append(response_msg)
         print(f"Calling save_to_db from add_message")
