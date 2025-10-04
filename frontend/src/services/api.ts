@@ -16,6 +16,7 @@ export interface Chat {
 export interface Message {
   role: string;
   content: string;
+  plan?: string;
 }
 
 export interface RequestMessage {
