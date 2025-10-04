@@ -735,8 +735,8 @@ export function ItineraryBuilder() {
                   </div>
                 ) : flightData ? (
                   <>
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="text-sm text-muted-foreground mr-3 flex-1">{flightData}</p>
+                    <div className="flex items-center gap-4 mb-3">
+                      <p className="text-sm text-muted-foreground flex-1 max-w-[60%]">{flightData}</p>
                       {(() => {
                         const brand = detectAirlineBrand(flightData);
                         const logo = airlineBrandLogoSrc(brand);
@@ -745,7 +745,7 @@ export function ItineraryBuilder() {
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <div className="shrink-0 w-10 h-10 rounded-md border flex items-center justify-center bg-white/60 hover:bg-white">
-                                <img src={logo} alt="Airline logo" className="max-w-8 max-h-8" />
+                                <img src={logo} alt="Airline logo" className="max-w-8 max-h-8 rounded-md" />
                               </div>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -765,8 +765,8 @@ export function ItineraryBuilder() {
                   </>
                 ) : (
                   <>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex-1">
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="flex-1 max-w-[60%]">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-semibold">{mockFlightData.airline}</span>
                           <span className="text-sm text-muted-foreground">{mockFlightData.flight}</span>
