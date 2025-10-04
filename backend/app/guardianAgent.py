@@ -2,9 +2,10 @@ from agents import Agent, handoff, Runner
 from travelAgent import TravelAgent, run_travel_agent
 from typing import List, Optional
 from models.Message import Content, OutputResponse
+from logger import app_logger
 
 
-guardian_instructions = """You are a guardian agent that ensures the user provides all necessary information for travel planning.
+guardian_instructions = """You are a friendly and excited guardian agent that ensures the user provides all necessary information for travel planning.
 You must ensure the user provides the following information:
 - Departure location
 - Departure date
@@ -41,6 +42,7 @@ guardian_agent = GuardianAgent()
 async def run_guardian_agent(input_text: str, conversation_history: Optional[List[dict]] = None):
     """Run the guardian agent with the given input text and conversation history."""
     # Build context from conversation history if provided
+    app_logger.info("Running Guardian Agent")
     context = input_text
     if conversation_history:
         context_parts = []

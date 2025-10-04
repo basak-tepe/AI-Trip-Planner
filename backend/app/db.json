@@ -203,6 +203,63 @@
       ],
       "created_at": "2025-10-03T21:29:48.448817",
       "updated_at": "2025-10-04T00:34:19.091275"
+    },
+    {
+      "id": "f65acc1d-024c-4af8-99cc-d4bec270fcad",
+      "messages": [],
+      "created_at": "2025-10-04T00:03:11.879942",
+      "updated_at": "2025-10-04T00:03:11.879949"
+    },
+    {
+      "id": "055c89ba-1bd6-4869-add0-118176602a4d",
+      "messages": [],
+      "created_at": "2025-10-04T00:06:08.940075",
+      "updated_at": "2025-10-04T00:06:08.940085"
+    },
+    {
+      "id": "a7cf717e-71d2-4bce-81bf-d6afe7e58b08",
+      "messages": [],
+      "created_at": "2025-10-04T00:19:00.956904",
+      "updated_at": "2025-10-04T00:19:00.956913"
+    },
+    {
+      "id": "9713e763-349e-4067-a1b6-246ad7f5c32f",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam 5 kas\u0131mda istanbuldan ankaraya gidece\u011fim",
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "\u015eu ana kadar verdi\u011finiz bilgilere g\u00f6re:\n- Gidi\u015f tarihi: 5 Kas\u0131m\n- Kalk\u0131\u015f yeri: \u0130stanbul\n- Var\u0131\u015f yeri: Ankara\n\nD\u00f6n\u00fc\u015f tarihiyle ilgili bilgi vermediniz. L\u00fctfen d\u00f6n\u00fc\u015f tarihini de belirtir misiniz?",
+              "link": null
+            }
+          ],
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "selam 5 kas\u0131mda istanbuldan ankaraya gidece\u011fim",
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "\u015eu ana kadar verdi\u011finiz bilgiler \u015funlar:\n- Kalk\u0131\u015f yeri: \u0130stanbul\n- Var\u0131\u015f yeri: Ankara\n- Gidi\u015f tarihi: 5 Kas\u0131m\n\nHen\u00fcz d\u00f6n\u00fc\u015f tarihi vermediniz. Planlamaya devam edebilmem i\u00e7in l\u00fctfen d\u00f6n\u00fc\u015f tarihinizi de belirtin!",
+              "link": null
+            }
+          ],
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-04T00:23:56.930164",
+      "updated_at": "2025-10-04T03:24:51.746060"
     }
   ]
 }
