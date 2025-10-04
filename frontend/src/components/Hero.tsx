@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, MapPin, Calendar, DollarSign, Loader2, Send, User, Bot } from "lucide-react";
+import { Sparkles, MapPin, Calendar, DollarSign, Loader2, Send, User, Bot, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { ScrollArea } from "./ui/scroll-area";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ApiService } from "../services/api";
 import { MoodTravel } from "./MoodTravel";
@@ -24,6 +25,8 @@ export function Hero() {
   const [currentMessage, setCurrentMessage] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [previousMessageCount, setPreviousMessageCount] = useState(0);
   const chatEndRef = useRef<HTMLDivElement>(null);
   
   // API state
@@ -39,6 +42,40 @@ export function Hero() {
       });
     }
   };
+
+  // Pagination helpers
+  const messagesPerPage = 4;
+  const totalPages = Math.ceil(messages.length / messagesPerPage);
+  const startIndex = currentPage * messagesPerPage;
+  const endIndex = startIndex + messagesPerPage;
+  const currentMessages = messages.slice(startIndex, endIndex);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Auto-navigate to next page when new message exceeds current page
+  useEffect(() => {
+    if (messages.length > previousMessageCount && messages.length > 0) {
+      const newTotalPages = Math.ceil(messages.length / messagesPerPage);
+      const newStartIndex = currentPage * messagesPerPage;
+      const newEndIndex = newStartIndex + messagesPerPage;
+      
+      // If the last message is beyond the current page, go to the last page
+      if (messages.length > newEndIndex) {
+        setCurrentPage(newTotalPages - 1);
+      }
+    }
+    setPreviousMessageCount(messages.length);
+  }, [messages.length, currentPage, messagesPerPage, previousMessageCount]);
 
   // Function to format assistant message content
   const formatAssistantContent = (content: any): string => {
@@ -341,17 +378,19 @@ export function Hero() {
                 {/* Chat Interface */}
                 <div className="bg-gray-50 rounded-lg border border-gray-200 h-[400px] flex flex-col relative mx-auto max-w-3xl overflow-hidden">
                   {/* Chat Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ scrollBehavior: 'smooth' }}>
-                    {messages.length === 0 ? (
-                      <div className="text-center text-gray-500 py-8">
-                        <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-sm">{t('chat.startConversationChat')}</p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          💡 {t('common.try')}: "{t('prompts.examples.adventure')}", "{t('prompts.examples.family')}", "{t('prompts.examples.solo')}"
-                        </p>
-                      </div>
-                    ) : (
-                      messages.slice(-3).map((message) => (
+                  <ScrollArea className="flex-1 p-4">
+                    <div className="space-y-4">
+                      {messages.length === 0 ? (
+                        <div className="text-center text-gray-500 py-8">
+                          <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm">{t('chat.startConversationChat')}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            💡 {t('common.try')}: "{t('prompts.examples.adventure')}", "{t('prompts.examples.family')}", "{t('prompts.examples.solo')}"
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          {currentMessages.map((message) => (
                         <div
                           key={message.id}
                           className={`flex gap-3 ${
@@ -389,23 +428,54 @@ export function Hero() {
                             </div>
                           )}
                         </div>
-                      ))
-                    )}
-                    {isChatLoading && (
-                      <div className="flex gap-3 justify-start">
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                          <Bot className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                            <span className="text-sm text-gray-600">{t('chat.thinking')}</span>
+                          ))}
+                          
+                          {/* Navigation Controls */}
+                          {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-gray-200">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={goToPreviousPage}
+                                disabled={currentPage === 0}
+                                className="flex items-center gap-1"
+                              >
+                                <ChevronLeft className="w-4 h-4" />
+                                Previous
+                              </Button>
+                              <span className="text-sm text-gray-500 px-2">
+                                {currentPage + 1} of {totalPages}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={goToNextPage}
+                                disabled={currentPage === totalPages - 1}
+                                className="flex items-center gap-1"
+                              >
+                                Next
+                                <ChevronRight className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      )}
+                      {isChatLoading && (
+                        <div className="flex gap-3 justify-start">
+                          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                            <Bot className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                              <span className="text-sm text-gray-600">{t('chat.thinking')}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                    <div ref={chatEndRef} />
-                  </div>
+                      )}
+                      <div ref={chatEndRef} />
+                    </div>
+                  </ScrollArea>
                   
                   {/* Chat Input - Sticky at bottom */}
                   <div className="border-t border-gray-200 p-4 bg-gray-50 sticky bottom-0">

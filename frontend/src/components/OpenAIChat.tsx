@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Badge } from "./ui/badge";
-import { Loader2, Send, Bot, User } from "lucide-react";
+import { ScrollArea } from "./ui/scroll-area";
+import { Loader2, Send, Bot, User, ChevronLeft, ChevronRight } from "lucide-react";
 import { ApiService } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useChat } from "../contexts/ChatContext";
@@ -20,6 +21,8 @@ export function OpenAIChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [previousMessageCount, setPreviousMessageCount] = useState(0);
   const { currentChatId, setCurrentChatId } = useChat();
   const { t } = useLanguage();
 
@@ -95,7 +98,42 @@ export function OpenAIChat() {
   const clearChat = () => {
     setMessages([]);
     setCurrentChatId(null);
+    setCurrentPage(0);
   };
+
+  // Pagination helpers
+  const messagesPerPage = 4;
+  const totalPages = Math.ceil(messages.length / messagesPerPage);
+  const startIndex = currentPage * messagesPerPage;
+  const endIndex = startIndex + messagesPerPage;
+  const currentMessages = messages.slice(startIndex, endIndex);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Auto-navigate to next page when new message exceeds current page
+  React.useEffect(() => {
+    if (messages.length > previousMessageCount && messages.length > 0) {
+      const newTotalPages = Math.ceil(messages.length / messagesPerPage);
+      const newStartIndex = currentPage * messagesPerPage;
+      const newEndIndex = newStartIndex + messagesPerPage;
+      
+      // If the last message is beyond the current page, go to the last page
+      if (messages.length > newEndIndex) {
+        setCurrentPage(newTotalPages - 1);
+      }
+    }
+    setPreviousMessageCount(messages.length);
+  }, [messages.length, currentPage, messagesPerPage, previousMessageCount]);
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -125,54 +163,87 @@ export function OpenAIChat() {
       
       <CardContent>
         {/* Messages */}
-        <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
-          {messages.length === 0 ? (
-                <div className="text-center text-muted-foreground py-8">
-                  <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>{t('chat.startConversation')}</p>
-                  <p className="text-sm">{t('chat.tryAsking')}</p>
-                </div>
-          ) : (
-            messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted'
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    {message.role === 'user' ? (
-                      <User className="w-4 h-4" />
-                    ) : (
-                      <Bot className="w-4 h-4" />
-                    )}
-                    <span className="text-xs opacity-70">
-                      {message.timestamp.toLocaleTimeString()}
-                    </span>
+        <ScrollArea className="h-96 mb-6">
+          <div className="space-y-4 pr-4">
+            {messages.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-8">
+                    <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>{t('chat.startConversation')}</p>
+                    <p className="text-sm">{t('chat.tryAsking')}</p>
                   </div>
-                  <p className="whitespace-pre-wrap">{message.content}</p>
+            ) : (
+              <>
+                {currentMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] p-3 rounded-lg ${
+                      message.role === 'user'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      {message.role === 'user' ? (
+                        <User className="w-4 h-4" />
+                      ) : (
+                        <Bot className="w-4 h-4" />
+                      )}
+                      <span className="text-xs opacity-70">
+                        {message.timestamp.toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <p className="whitespace-pre-wrap">{message.content}</p>
+                  </div>
+                </div>
+                ))}
+                
+                {/* Navigation Controls */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-gray-200">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={goToPreviousPage}
+                      disabled={currentPage === 0}
+                      className="flex items-center gap-1"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      Previous
+                    </Button>
+                    <span className="text-sm text-gray-500 px-2">
+                      {currentPage + 1} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={goToNextPage}
+                      disabled={currentPage === totalPages - 1}
+                      className="flex items-center gap-1"
+                    >
+                      Next
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+            
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-muted p-3 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Bot className="w-4 h-4" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>AI is thinking...</span>
+                  </div>
                 </div>
               </div>
-            ))
-          )}
-          
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-muted p-3 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <Bot className="w-4 h-4" />
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>AI is thinking...</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </ScrollArea>
 
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
