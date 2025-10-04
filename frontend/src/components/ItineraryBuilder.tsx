@@ -13,7 +13,8 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useChat } from "../contexts/ChatContext";
 import { ApiService } from "../services/api";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { detectAirlineBrand, airlineBrandLogoSrc } from "./ui/utils";
+import { detectAirlineBrand, airlineBrandLogoSrc, detectCityImageFromTexts } from "./ui/utils";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 const mockItinerary = [
   {
@@ -453,8 +454,21 @@ export function ItineraryBuilder() {
                                 <MapPin className="w-3 h-3" />
                                 <span>{activity.location}</span>
                               </div>
+                              {/* Image moved next to lock button */}
                             </div>
-                            
+                            {(() => {
+                              const img = detectCityImageFromTexts(activity.name, activity.location);
+                              if (!img) return null;
+                              return (
+                                <div className="shrink-0">
+                                  <ImageWithFallback
+                                    src={img}
+                                    alt="City"
+                                    className="w-28 h-16 object-cover rounded-md border"
+                                  />
+                                </div>
+                              );
+                            })()}
                             <Button
                               variant="ghost"
                               size="icon"

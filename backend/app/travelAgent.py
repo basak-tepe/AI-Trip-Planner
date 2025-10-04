@@ -52,7 +52,8 @@ async def pick_options(option_list : str, preferences:str) -> List[Content]:
     agent = Agent(
         name="OptionPickerAgent",
         instructions="From the following list of options of flights, hotels, and car rentals, pick the most suitable single option from each category based on the user's preferences and budget. Provide your selections in a concise manner.",
-        output_type=List[Content]
+        output_type=List[Content],
+        model="gpt-4o-mini"
     )
     response = await Runner.run(agent, input=f"Option list: {option_list}\n User preferences and budget: {preferences}")
     return response.final_output
