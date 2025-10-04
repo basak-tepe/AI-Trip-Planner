@@ -159,62 +159,6 @@ export function WowFeatures() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Sustainability Score */}
-        <Card className="mt-8">
-          <CardHeader>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                <Leaf className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <CardTitle>{t('features.sustainability.title')}</CardTitle>
-                <CardDescription>{t('features.sustainability.description')}</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div>
-                <div className="text-center mb-3">
-                  <div className="text-5xl mb-2">🌍</div>
-                  <div className="text-3xl mb-1 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                    B+
-                  </div>
-                  <p className="text-sm text-muted-foreground">{t('features.sustainability.overallScore')}</p>
-                </div>
-              </div>
-              <div className="md:col-span-2 space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>{t('features.sustainability.transport')}</span>
-                    <span className="text-green-600">{t('features.sustainability.excellent')}</span>
-                  </div>
-                  <Progress value={90} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>{t('features.sustainability.accommodation')}</span>
-                    <span className="text-yellow-600">{t('features.sustainability.good')}</span>
-                  </div>
-                  <Progress value={70} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>{t('features.sustainability.activities')}</span>
-                    <span className="text-green-600">{t('features.sustainability.great')}</span>
-                  </div>
-                  <Progress value={85} className="h-2" />
-                </div>
-                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800">
-                    💡 <strong>{t('common.tip')}:</strong> {t('features.sustainability.tip')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </section>
   );
