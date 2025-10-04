@@ -32,12 +32,12 @@ export function MoodTravel({ onMoodSelect }: MoodTravelProps) {
             <Smile className="w-5 h-5 text-white" />
           </div>
           <div>
-            <CardDescription className="text-white/80">{t('hero.moodTravel.description')}</CardDescription>
+            <CardDescription className="text-black/80">{t('hero.moodTravel.description')}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-white/80 mb-4">
+        <p className="text-sm text-black/80 mb-4">
           {t('hero.moodTravel.selectMood')}
         </p>
         <div className="flex gap-3 mb-4 w-full">
@@ -60,7 +60,7 @@ export function MoodTravel({ onMoodSelect }: MoodTravelProps) {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-xs text-white font-medium text-center">{t(`hero.moodTravel.${option.moodKey}`)}</div>
+              <div className="text-xs text-black font-medium text-center">{t(`hero.moodTravel.${option.moodKey}`)}</div>
             </motion.button>
           ))}
         </div>
