@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, MapPin, Clock, Lock, Unlock, Plus, Trash2, DollarSign, Star, Hotel, Plane, Sparkles } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Button } from "./ui/button";
@@ -85,10 +85,19 @@ export function ItineraryBuilder() {
   const [itinerary, setItinerary] = useState(mockItinerary);
   const [isConnected, setIsConnected] = useState(false);
   const [accommodations, setAccommodations] = useState(mockAccommodations);
-  const { currentChatId } = useChat();
+  const { currentChatId, setOnMessageSent } = useChat();
   console.log("CURRENT CHAT ID: ", currentChatId);
   const { t } = useLanguage();
 
+  // Register refetch callback when component mounts
+  useEffect(() => {
+    setOnMessageSent(() => handleLoadLatestPlan);
+
+    // Cleanup function
+    return () => {
+      setOnMessageSent(undefined);
+    };
+  }, [setOnMessageSent]);
 
   // Connection checks are triggered manually by user action
 
@@ -113,7 +122,7 @@ export function ItineraryBuilder() {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
-      
+
       // Check if this is a day header (supports EN and Turkish formats)
       const isDayHeader = (
         line.startsWith('Day ') ||
@@ -125,7 +134,7 @@ export function ItineraryBuilder() {
         if (currentDay && currentDay.activities.length > 0) {
           days.push(currentDay);
         }
-        
+
         // Start new day
         currentDay = {
           day: dayNumber,
@@ -134,7 +143,7 @@ export function ItineraryBuilder() {
         dayNumber++;
         currentTimeSlot = null;
       }
-      
+
       // Check for time slot headers (EN + TR)
       if (currentDay && (
         line.startsWith('**Morning:**') || line.startsWith('**Afternoon:**') || line.startsWith('**Evening:**') ||
@@ -142,19 +151,19 @@ export function ItineraryBuilder() {
         line.startsWith('**Sabah:**') || line.startsWith('**Öğlen:**') || line.startsWith('**Öğle:**') || line.startsWith('**Akşam:**') ||
         line.startsWith('- Sabah:') || line.startsWith('- Öğlen:') || line.startsWith('- Öğle:') || line.startsWith('- Akşam:')
       )) {
-        const timeMatch = line.match(/^\*\*(Morning|Afternoon|Evening|Sabah|Öğlen|Öğle|Akşam):\*\*/) || 
-                         line.match(/^- (Morning|Afternoon|Evening|Sabah|Öğlen|Öğle|Akşam):/);
+        const timeMatch = line.match(/^\*\*(Morning|Afternoon|Evening|Sabah|Öğlen|Öğle|Akşam):\*\*/) ||
+          line.match(/^- (Morning|Afternoon|Evening|Sabah|Öğlen|Öğle|Akşam):/);
         if (timeMatch) {
           currentTimeSlot = timeMatch[1];
         }
       }
-      
+
       // Parse activities under time slots
       if (currentDay && currentTimeSlot && line.startsWith('- ') &&
-          !line.startsWith('- Morning:') && !line.startsWith('- Afternoon:') && !line.startsWith('- Evening:') &&
-          !line.startsWith('- Sabah:') && !line.startsWith('- Öğlen:') && !line.startsWith('- Öğle:') && !line.startsWith('- Akşam:')) {
+        !line.startsWith('- Morning:') && !line.startsWith('- Afternoon:') && !line.startsWith('- Evening:') &&
+        !line.startsWith('- Sabah:') && !line.startsWith('- Öğlen:') && !line.startsWith('- Öğle:') && !line.startsWith('- Akşam:')) {
         const activity = line.substring(2).trim(); // Remove the "- " prefix
-        
+
         // Extract location from activity text
         let location = "Various locations";
         const locationPatterns = [
@@ -163,7 +172,7 @@ export function ItineraryBuilder() {
           /to\s+([A-Z][^,]+)/,
           /([A-Z][a-z]+\s+[A-Z][a-z]+)/ // General location pattern
         ];
-        
+
         for (const pattern of locationPatterns) {
           const match = activity.match(pattern);
           if (match) {
@@ -171,7 +180,7 @@ export function ItineraryBuilder() {
             break;
           }
         }
-        
+
         currentDay.activities.push({
           time: (
             currentTimeSlot === "Morning" || currentTimeSlot === "Sabah"
@@ -184,7 +193,7 @@ export function ItineraryBuilder() {
         });
       }
     }
-    
+
     // Add the last day
     if (currentDay && currentDay.activities.length > 0) {
       days.push(currentDay);
@@ -225,7 +234,7 @@ export function ItineraryBuilder() {
   const handleLoadLatestPlan = async () => {
     try {
       // optional: health check when button is clicked
-      await ApiService.healthCheck().catch(() => {});
+      await ApiService.healthCheck().catch(() => { });
 
       let chatIdToUse = currentChatId;
       if (!chatIdToUse) {
@@ -249,7 +258,7 @@ export function ItineraryBuilder() {
         if (typeof content === 'string') {
           content = JSON.parse(content);
         }
-      } catch {}
+      } catch { }
 
       setFlightData(content?.[0]?.text || '');
       setHotelData(content?.[1]?.text || '');
@@ -280,7 +289,7 @@ export function ItineraryBuilder() {
 
   const toggleLock = (dayIndex: number, activityIndex: number) => {
     const newItinerary = [...itinerary];
-    newItinerary[dayIndex].activities[activityIndex].locked = 
+    newItinerary[dayIndex].activities[activityIndex].locked =
       !newItinerary[dayIndex].activities[activityIndex].locked;
     setItinerary(newItinerary);
   };
@@ -298,31 +307,29 @@ export function ItineraryBuilder() {
     <section id="itinerary" className="py-20 bg-gradient-to-b from-background to-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl mb-4 text-foreground">
-            {t('itinerary.title')}
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t('itinerary.description')}
-          </p>
+          <div className="flex justify-center">
+            <Button 
+              variant="default" 
+              onClick={handleLoadLatestPlan} 
+              className="px-24 py-10 rounded-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-black font-semibold min-w-[400px] text-sm"
+            >
+                 <Sparkles className="w-4 h-4 text-black" />&nbsp;&nbsp;Load Latest Plan&nbsp;&nbsp;
+            </Button>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Flight, Hotel, and Car Rental Information Cards */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="flex items-center gap-3">
-              <Button variant="default" size="sm" onClick={handleLoadLatestPlan}>
-                Load Latest Plan
-              </Button>
-            </div>
             {/* Flight Information */}
             {flightData && (
               <Card>
-            <CardHeader>
+                <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Plane className="w-5 h-5 text-primary" />
                     Flight Details
                   </CardTitle>
-            </CardHeader>
+                </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-sm text-muted-foreground mr-3 flex-1">{flightData}</p>
@@ -368,12 +375,12 @@ export function ItineraryBuilder() {
                   <p className="text-sm text-muted-foreground mb-3">{hotelData}</p>
                   {hotelLink && (
                     <div className="mt-3">
-                      <img 
-                        src={hotelLink} 
-                        alt="Hotel details" 
+                      <img
+                        src={hotelLink}
+                        alt="Hotel details"
                         className="w-full h-32 object-cover rounded-lg"
-                />
-              </div>
+                      />
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -395,10 +402,10 @@ export function ItineraryBuilder() {
                       <a href={carRentalLink} target="_blank" rel="noopener noreferrer">
                         View Transportation Options
                       </a>
-              </Button>
+                    </Button>
                   )}
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
             )}
           </div>
 
@@ -406,7 +413,7 @@ export function ItineraryBuilder() {
           <Card className="lg:col-span-2">
             <CardHeader>
               <div className="flex items-center justify-between">
-              <CardTitle>Your Itinerary</CardTitle>
+                <CardTitle>Your Itinerary</CardTitle>
                 {planData && (
                   <Badge variant="default" className="bg-green-100 text-green-800">
                     <Sparkles className="w-3 h-3 mr-1" />
@@ -438,7 +445,7 @@ export function ItineraryBuilder() {
                           className="relative bg-white border border-border rounded-lg p-4 hover:shadow-md transition-shadow"
                         >
                           <div className="absolute -left-[31px] w-4 h-4 rounded-full bg-primary border-4 border-background"></div>
-                          
+
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-2">
@@ -454,7 +461,7 @@ export function ItineraryBuilder() {
                                 <span>{activity.location}</span>
                               </div>
                             </div>
-                            
+
                             <Button
                               variant="ghost"
                               size="icon"
