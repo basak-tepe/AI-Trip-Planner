@@ -121,7 +121,6 @@ export function ItineraryBuilder() {
   const [isConnected, setIsConnected] = useState(false);
   const [accommodations, setAccommodations] = useState(mockAccommodations);
   const { currentChatId, setOnMessageSent } = useChat();
-  console.log("CURRENT CHAT ID: ", currentChatId);
   const { t } = useLanguage();
 
   // Register refetch callback when component mounts
@@ -318,14 +317,6 @@ export function ItineraryBuilder() {
       setIsLoadingPlan(false);
     }
   };
-
-  console.log("PLAN DATA: ", planData);
-  console.log("FLIGHT DATA: ", flightData);
-  console.log("HOTEL DATA: ", hotelData);
-  console.log("CAR RENTAL DATA: ", carRentalData);
-  console.log("FLIGHT LINK: ", flightLink);
-  console.log("HOTEL LINK: ", hotelLink);
-  console.log("CAR RENTAL LINK: ", carRentalLink);
 
   const toggleLock = (dayIndex: number, activityIndex: number) => {
     const newItinerary = [...itinerary];
