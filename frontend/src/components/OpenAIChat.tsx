@@ -6,6 +6,7 @@ import { Badge } from "./ui/badge";
 import { Loader2, Send, Bot, User } from "lucide-react";
 import { ApiService } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useChat } from "../contexts/ChatContext";
 
 interface ChatMessage {
   id: string;
@@ -19,7 +20,7 @@ export function OpenAIChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const { currentChatId, setCurrentChatId } = useChat();
   const { t } = useLanguage();
 
   // Check connection on component mount
