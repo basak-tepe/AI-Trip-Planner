@@ -203,6 +203,134 @@
       ],
       "created_at": "2025-10-03T21:29:48.448817",
       "updated_at": "2025-10-04T00:34:19.091275"
+    },
+    {
+      "id": "f65acc1d-024c-4af8-99cc-d4bec270fcad",
+      "messages": [],
+      "created_at": "2025-10-04T00:03:11.879942",
+      "updated_at": "2025-10-04T00:03:11.879949"
+    },
+    {
+      "id": "055c89ba-1bd6-4869-add0-118176602a4d",
+      "messages": [],
+      "created_at": "2025-10-04T00:06:08.940075",
+      "updated_at": "2025-10-04T00:06:08.940085"
+    },
+    {
+      "id": "a7cf717e-71d2-4bce-81bf-d6afe7e58b08",
+      "messages": [],
+      "created_at": "2025-10-04T00:19:00.956904",
+      "updated_at": "2025-10-04T00:19:00.956913"
+    },
+    {
+      "id": "9713e763-349e-4067-a1b6-246ad7f5c32f",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam 5 kas\u0131mda istanbuldan ankaraya gidece\u011fim",
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "\u015eu ana kadar verdi\u011finiz bilgilere g\u00f6re:\n- Gidi\u015f tarihi: 5 Kas\u0131m\n- Kalk\u0131\u015f yeri: \u0130stanbul\n- Var\u0131\u015f yeri: Ankara\n\nD\u00f6n\u00fc\u015f tarihiyle ilgili bilgi vermediniz. L\u00fctfen d\u00f6n\u00fc\u015f tarihini de belirtir misiniz?",
+              "link": null
+            }
+          ],
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "selam 5 kas\u0131mda istanbuldan ankaraya gidece\u011fim",
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "\u015eu ana kadar verdi\u011finiz bilgiler \u015funlar:\n- Kalk\u0131\u015f yeri: \u0130stanbul\n- Var\u0131\u015f yeri: Ankara\n- Gidi\u015f tarihi: 5 Kas\u0131m\n\nHen\u00fcz d\u00f6n\u00fc\u015f tarihi vermediniz. Planlamaya devam edebilmem i\u00e7in l\u00fctfen d\u00f6n\u00fc\u015f tarihinizi de belirtin!",
+              "link": null
+            }
+          ],
+          "chat_id": "9713e763-349e-4067-a1b6-246ad7f5c32f",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-04T00:23:56.930164",
+      "updated_at": "2025-10-04T03:24:51.746060"
+    },
+    {
+      "id": "2a41ab0f-bf05-460b-a0ea-fdccde1dc00d",
+      "messages": [],
+      "created_at": "2025-10-04T00:52:07.194774",
+      "updated_at": "2025-10-04T00:52:07.194793"
+    },
+    {
+      "id": "297da560-e663-4cf7-814a-0caca4337e76",
+      "messages": [],
+      "created_at": "2025-10-04T00:52:08.413233",
+      "updated_at": "2025-10-04T00:52:08.413244"
+    },
+    {
+      "id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam ",
+          "chat_id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Merhaba! Size bir seyahat plan\u0131 yapmam i\u00e7in yard\u0131mc\u0131 olabilirim. Bana a\u015fa\u011f\u0131daki bilgileri verir misiniz?\n\n- Nereden yola \u00e7\u0131kacaks\u0131n\u0131z (\u00e7\u0131k\u0131\u015f noktas\u0131)?\n- Nereye gitmek istiyorsunuz (var\u0131\u015f noktas\u0131)?\n- Hangi tarihte gitmek istersiniz (gidi\u015f tarihi)?\n- Ne zaman d\u00f6nmek istersiniz (d\u00f6n\u00fc\u015f tarihi)?\n\nBu bilgileri payla\u015f\u0131rsan\u0131z, seyahatinizi planlamaya ba\u015flayabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "5 arl\u0131kta yola \u00e7\u0131k\u0131p 10 aral\u0131kta d\u00f6nece\u011fim istanbuldan parise gidiyorum ",
+          "chat_id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Te\u015fekk\u00fcrler! Verdi\u011finiz bilgilerle kontrol ediyorum:\n\n- \u00c7\u0131k\u0131\u015f noktas\u0131: \u0130stanbul\n- Var\u0131\u015f noktas\u0131: Paris\n- Gidi\u015f tarihi: 5 Aral\u0131k\n- D\u00f6n\u00fc\u015f tarihi: 10 Aral\u0131k\n\nT\u00fcm gerekli bilgiler tamam. Seyahat plan\u0131n\u0131z\u0131 olu\u015fturmak i\u00e7in \u015fimdi planlama asistan\u0131na y\u00f6nlendiriyorum.",
+              "link": null
+            }
+          ],
+          "chat_id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "evet seyahat plan\u0131 nedir ",
+          "chat_id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "En uygun otel se\u00e7imi: Le 123 Sebastopol Astotel. Hem merkezde, hem de en y\u00fcksek puana (9,4) sahip ve fiyat\u0131 (51.443 TL/5 gece) b\u00fct\u00e7eye en uygun olan se\u00e7enek. K\u00fclt\u00fcrel ve gastronomik deneyimlere ula\u015f\u0131m da kolayd\u0131r.",
+              "link": "https://www.enuygun.com/otel/detay/le-123-sebastopol-paris-fransa-537068/?autoRequest=1&checkInDate=05.12.2025&checkOutDate=10.12.2025&rooms=1&countryCode=TR&p=hotel_detail"
+            },
+            {
+              "text": "U\u00e7u\u015f se\u00e7imi: Pegasus PC1133 (Gidi\u015f: 05.12.2025, 08:55 SAW > 10:45 ORY) ve Pegasus PC1136 (D\u00f6n\u00fc\u015f: 10.12.2025, 15:45 ORY > 21:15 SAW); S\u00fcper Eko Paket; ekonomik, erken gidi\u015f ve \u00f6\u011fleden sonra d\u00f6n\u00fc\u015fte Paris Orly havaliman\u0131. Toplam: 8.351 TL.",
+              "link": null
+            }
+          ],
+          "chat_id": "4f66e82a-cc29-400e-8eaf-20ea7dbca4ca",
+          "plan": "Harika, i\u015fte Paris seyahatiniz i\u00e7in plan\u0131n\u0131z:\n\n---\n\n**U\u00e7u\u015f:** Pegasus PC1133 (Gidi\u015f: 5 Aral\u0131k 2025, 08:55 SAW \u2013 10:45 ORY) / Pegasus PC1136 (D\u00f6n\u00fc\u015f: 10 Aral\u0131k 2025, 15:45 ORY \u2013 21:15 SAW)\n**Otel:** Le 123 Sebastopol Astotel (Paris merkez)\n\n----\n\n**1. G\u00fcn (5 Aral\u0131k): Var\u0131\u015f ve Marais Gezisi**\n- **Sabah:** Orly'e ini\u015f, otel check-in veya valiz b\u0131rakma\n- **\u00d6\u011fle:** Rue Montorgueil-Frans\u0131z pastanesi, Marais sokaklar\u0131, hafif krep/Lebretz Caf\u00e9\n- **Ak\u015fam:** Bastille veya otel \u00e7evresinde bistrot ak\u015fam yeme\u011fi, k\u0131sa y\u00fcr\u00fcy\u00fc\u015f\n\n**2. G\u00fcn (6 Aral\u0131k): Louvre & Tuileries**\n- **Sabah:** Otelde kahvalt\u0131, Louvre M\u00fczesi (erken giri\u015f)\n- **\u00d6\u011fle:** Palais Royal ve bah\u00e7eleri, Tuileries'de y\u00fcr\u00fcy\u00fc\u015f, Angelina'da s\u0131cak \u00e7ikolata\n- **Ak\u015fam:** Seine y\u00fcr\u00fcy\u00fc\u015f\u00fc, Champs-Elys\u00e9es, uygun fiyatl\u0131 Bouillon Pigalle\u2019da ak\u015fam yeme\u011fi\n\n**3. G\u00fcn (7 Aral\u0131k): Montmartre**\n- **Sabah:** Montmartre/Sacr\u00e9 Coeur, Place du Tertre\n- **\u00d6\u011fle:** Montmartre kafesi, Mus\u00e9e de Montmartre\n- **Ak\u015fam:** Gare Saint-Lazare\u2019de brasserie, otel \u00e7evresi\n\n**4. G\u00fcn (8 Aral\u0131k): Notre-Dame & Latin Mahallesi**\n- **Sabah:** Notre-Dame, Shakespeare&Company, kahve\n- **\u00d6\u011fle:** Sainte-Chapelle, Panth\u00e9on, Rue Mouffetard, bistroda \u00f6\u011fle\n- **Ak\u015fam:** Jardin du Luxembourg, Latin Mahallesi'nde ak\u015fam yeme\u011fi\n\n**5. G\u00fcn (9 Aral\u0131k): Eyfel ve Seine**\n- **Sabah:** Trocad\u00e9ro, Eyfel Kulesi, Ladur\u00e9e\u2019de macaron\n- **\u00d6\u011fle:** Champs de Mars\u2019da piknik, Seine tekne turu\n- **Ak\u015fam:** Le Suffren veya Les Cocottes, Seine kenar\u0131nda k\u0131sa y\u00fcr\u00fcy\u00fc\u015f\n\n**6. G\u00fcn (10 Aral\u0131k): Son Kahvalt\u0131 & D\u00f6n\u00fc\u015f**\n- **Sabah:** Otelde kahvalt\u0131, valiz haz\u0131rl\u0131\u011f\u0131, son al\u0131\u015fveri\u015f\n- **\u00d6\u011fle:** Transfer, havaalan\u0131nda kruvasan ve kahve\n- **Ak\u015fam:** Pegasus ile d\u00f6n\u00fc\u015f.\n\n---\n\n**Ekstra:** Metroya uygun Navigo kart, rezervasyonlar ve rahat y\u00fcr\u00fcy\u00fc\u015f ayakkab\u0131s\u0131 unutmay\u0131n :)\n\n**Otel:** Le 123 Sebastopol Astotel\nhttps://www.enuygun.com/otel/detay/le-123-sebastopol-paris-fransa-537068/?autoRequest=1&checkInDate=05.12.2025&checkOutDate=10.12.2025&rooms=1&countryCode=TR&p=hotel_detail\n![otel g\u00f6rseli](https://cdn3.enuygun.com/media/lib/uploads/image/le-123-sebastopol-astotel-paris-one-cikan-resim-77784738.jpg)\n\n\u0130yi geziler! K\u00fclt\u00fcr ve gastronomi merkezi Paris\u2019in tad\u0131n\u0131 \u00e7\u0131kar\u0131n!"
+        }
+      ],
+      "created_at": "2025-10-04T01:06:38.477342",
+      "updated_at": "2025-10-04T04:07:44.294297"
     }
   ]
 }

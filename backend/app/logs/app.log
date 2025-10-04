@@ -1,0 +1,22 @@
+2025-10-04 03:03:11,878 | INFO | - | ai_trip_planner | Incoming request: POST http://localhost:8003/api/chat
+2025-10-04 03:03:11,885 | INFO | - | ai_trip_planner | Response status: 200
+2025-10-04 03:06:08,935 | INFO | ae0dac57-e459-46de-92a2-7d0ee54b6db5 | ai_trip_planner | Incoming request: POST http://localhost:8003/api/chat
+2025-10-04 03:06:08,946 | INFO | ae0dac57-e459-46de-92a2-7d0ee54b6db5 | ai_trip_planner | Response status: 200
+2025-10-04 03:19:00,952 | INFO | ef1cab70-1505-49d1-92b7-b4b043eaf1dd | ai_trip_planner | Incoming request: POST http://localhost:8003/api/chat
+2025-10-04 03:19:00,956 | INFO | ef1cab70-1505-49d1-92b7-b4b043eaf1dd | ai_trip_planner | Chat initialized with ID=a7cf717e-71d2-4bce-81bf-d6afe7e58b08
+2025-10-04 03:19:00,964 | INFO | ef1cab70-1505-49d1-92b7-b4b043eaf1dd | ai_trip_planner | Response status: 200
+2025-10-04 03:23:56,929 | INFO | 69a2b23d-5d9f-46a1-9e17-07b18db143fb | ai_trip_planner | Incoming request: POST http://localhost:8003/api/chat
+2025-10-04 03:23:56,930 | INFO | 69a2b23d-5d9f-46a1-9e17-07b18db143fb | ai_trip_planner | Chat initialized with ID=9713e763-349e-4067-a1b6-246ad7f5c32f
+2025-10-04 03:23:56,933 | INFO | 69a2b23d-5d9f-46a1-9e17-07b18db143fb | ai_trip_planner | Response status: 200
+2025-10-04 03:24:09,742 | INFO | b00a1741-ce7a-47f4-9fc3-e371cc0cdcfc | ai_trip_planner | Incoming request: POST http://localhost:8003/api/chat/9713e763-349e-4067-a1b6-246ad7f5c32f/message
+2025-10-04 03:24:09,744 | INFO | b00a1741-ce7a-47f4-9fc3-e371cc0cdcfc | ai_trip_planner | Chat initialized with ID=9713e763-349e-4067-a1b6-246ad7f5c32f
+2025-10-04 03:24:09,747 | INFO | b00a1741-ce7a-47f4-9fc3-e371cc0cdcfc | ai_trip_planner | Chat fetched with ID=9713e763-349e-4067-a1b6-246ad7f5c32f
+2025-10-04 03:24:09,747 | INFO | b00a1741-ce7a-47f4-9fc3-e371cc0cdcfc | ai_trip_planner | Running Guardian Agent
+2025-10-04 03:24:11,820 | INFO | b00a1741-ce7a-47f4-9fc3-e371cc0cdcfc | ai_trip_planner | Message added to chat ID=9713e763-349e-4067-a1b6-246ad7f5c32f. Total messages now: 2
+2025-10-04 03:24:11,821 | INFO | b00a1741-ce7a-47f4-9fc3-e371cc0cdcfc | ai_trip_planner | Response status: 200
+2025-10-04 03:24:51,741 | INFO | 0f7d2311-c5a8-4afd-b9d2-a2be560fa001 | ai_trip_planner | Incoming request: POST http://localhost:8003/api/chat/9713e763-349e-4067-a1b6-246ad7f5c32f/message
+2025-10-04 03:24:51,743 | INFO | 0f7d2311-c5a8-4afd-b9d2-a2be560fa001 | ai_trip_planner | Chat initialized with ID=9713e763-349e-4067-a1b6-246ad7f5c32f
+2025-10-04 03:24:51,745 | INFO | 0f7d2311-c5a8-4afd-b9d2-a2be560fa001 | ai_trip_planner | Chat fetched with ID=9713e763-349e-4067-a1b6-246ad7f5c32f
+2025-10-04 03:24:51,746 | INFO | 0f7d2311-c5a8-4afd-b9d2-a2be560fa001 | ai_trip_planner | Running Guardian Agent
+2025-10-04 03:24:53,904 | INFO | 0f7d2311-c5a8-4afd-b9d2-a2be560fa001 | ai_trip_planner | Message added to chat ID=9713e763-349e-4067-a1b6-246ad7f5c32f. Total messages now: 4
+2025-10-04 03:24:53,906 | INFO | 0f7d2311-c5a8-4afd-b9d2-a2be560fa001 | ai_trip_planner | Response status: 200

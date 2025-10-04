@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 from agents.mcp.util import create_static_tool_filter, MCPUtil
 from agents import tool
+from logger import app_logger
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -62,6 +63,7 @@ class MCPAgentRunner:
 
     async def run(self, input_text: str, conversation_history: Optional[List[dict]] = None):
         """Run the agent with the given input text and conversation history."""
+        app_logger.info("Running MCP Agent Runner")
         if self.mcp_server is None or self.agent is None:
             await self._setup()
         
