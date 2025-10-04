@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bot, MessageSquare, Clock, Trash2, X, Lock } from "lucide-react";
+import { Bot, MessageSquare, Clock, Trash2, X, Lock, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
@@ -14,6 +14,8 @@ export function AIChatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [showChatHistory, setShowChatHistory] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const messagesPerPage = 4;
   const { t } = useLanguage();
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -76,6 +78,7 @@ export function AIChatbot() {
       const chat = await ApiService.getChat(chatId);
       setSelectedChat(chat);
       setShowChatHistory(false);
+      setCurrentPage(1); // Reset to first page when loading a new chat
       console.log('Loaded chat:', chat);
     } catch (error) {
       console.error('Error loading chat:', error);
@@ -87,6 +90,33 @@ export function AIChatbot() {
   const goBackToHistory = () => {
     setSelectedChat(null);
     setShowChatHistory(true);
+    setCurrentPage(1); // Reset pagination when going back
+  };
+
+  // Pagination helper functions
+  const getPaginatedMessages = () => {
+    if (!selectedChat?.messages) return [];
+    const startIndex = (currentPage - 1) * messagesPerPage;
+    const endIndex = startIndex + messagesPerPage;
+    return selectedChat.messages.slice(startIndex, endIndex);
+  };
+
+  const getTotalPages = () => {
+    if (!selectedChat?.messages) return 0;
+    return Math.ceil(selectedChat.messages.length / messagesPerPage);
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    const totalPages = getTotalPages();
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const formatMessageContent = (content: any) => {
@@ -285,26 +315,67 @@ export function AIChatbot() {
                       <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
                       <p className="text-sm">No messages in this chat</p>
                     </div>
+                  ) : getPaginatedMessages().length === 0 ? (
+                    <div className="text-center text-muted-foreground py-8">
+                      <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                      <p className="text-sm">No messages on this page</p>
+                    </div>
                   ) : (
                     <>
-                      {selectedChat.messages.map((message, index) => (
-                        <div
-                          key={index}
-                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                        >
+                      {getPaginatedMessages().map((message, index) => {
+                        const globalIndex = (currentPage - 1) * messagesPerPage + index;
+                        return (
                           <div
-                            className={`max-w-[80%] p-3 rounded-lg ${
-                              message.role === 'user'
-                                ? 'bg-primary text-white'
-                                : 'bg-muted'
-                            }`}
+                            key={globalIndex}
+                            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                           >
-                            <p className="text-sm whitespace-pre-wrap">
-                              {formatMessageContent(message.content)}
-                            </p>
+                            <div
+                              className={`max-w-[80%] p-3 rounded-lg ${
+                                message.role === 'user'
+                                  ? 'bg-primary text-white'
+                                  : 'bg-muted'
+                              }`}
+                            >
+                              <p className="text-sm whitespace-pre-wrap">
+                                {formatMessageContent(message.content)}
+                              </p>
+                            </div>
                           </div>
+                        );
+                      })}
+                      
+                      {/* Pagination Controls */}
+                      {getTotalPages() > 1 && (
+                        <div className="mt-4 flex items-center justify-between">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={goToPreviousPage}
+                            disabled={currentPage === 1}
+                            className="flex items-center gap-1"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                            Previous
+                          </Button>
+                          
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">
+                              Page {currentPage} of {getTotalPages()}
+                            </span>
+                          </div>
+                          
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={goToNextPage}
+                            disabled={currentPage === getTotalPages()}
+                            className="flex items-center gap-1"
+                          >
+                            Next
+                            <ChevronRight className="w-4 h-4" />
+                          </Button>
                         </div>
-                      ))}
+                      )}
                       
                       {/* Premium Lock Section */}
                       <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg">
