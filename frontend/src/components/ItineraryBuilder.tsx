@@ -79,6 +79,37 @@ const mockAlternativeActivities = {
   ],
 };
 
+const mockFlightData = {
+  airline: "Turkish Airlines",
+  flight: "TK 1234",
+  route: "Istanbul → Bangkok",
+  departure: "08:30",
+  arrival: "14:45",
+  duration: "9h 15m",
+  price: "€450",
+  logo: "/assets/thy.png"
+};
+
+const mockHotelData = {
+  name: "The Siam Hotel",
+  type: "Luxury Hotel",
+  rating: 4.8,
+  price: "€250/night",
+  location: "Riverside, Bangkok",
+  amenities: ["Pool", "Spa", "Restaurant", "Free WiFi"],
+  image: "https://images.unsplash.com/photo-1566073771259-6a8506099945"
+};
+
+const mockCarRentalData = {
+  company: "Avis",
+  vehicle: "Toyota Camry",
+  type: "Mid-size Sedan",
+  price: "€45/day",
+  features: ["Automatic", "Air Conditioning", "GPS", "Unlimited Mileage"],
+  pickup: "Bangkok Airport",
+  image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d"
+};
+
 export function ItineraryBuilder() {
   const [budget, setBudget] = useState([2000]);
   const [tripDays, setTripDays] = useState(5);
@@ -109,6 +140,7 @@ export function ItineraryBuilder() {
   const [flightLink, setFlightLink] = useState<string | null>(null);
   const [hotelLink, setHotelLink] = useState<string | null>(null);
   const [carRentalLink, setCarRentalLink] = useState<string | null>(null);
+  const [isLoadingPlan, setIsLoadingPlan] = useState(false);
 
   // Function to parse plan data and convert to itinerary format
   const parsePlanData = (planText: string) => {
@@ -233,6 +265,8 @@ export function ItineraryBuilder() {
   // Manual fetch handler
   const handleLoadLatestPlan = async () => {
     try {
+      setIsLoadingPlan(true);
+      
       // optional: health check when button is clicked
       await ApiService.healthCheck().catch(() => { });
 
@@ -276,6 +310,8 @@ export function ItineraryBuilder() {
       }
     } catch (error) {
       console.error('Error loading latest plan:', error);
+    } finally {
+      setIsLoadingPlan(false);
     }
   };
 
@@ -311,9 +347,19 @@ export function ItineraryBuilder() {
             <Button 
               variant="default" 
               onClick={handleLoadLatestPlan} 
-              className="px-24 py-10 rounded-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-black font-semibold min-w-[400px] text-sm"
+              disabled={isLoadingPlan}
+              className="px-24 py-10 rounded-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-black font-semibold min-w-[400px] text-sm disabled:opacity-50"
             >
-                 <Sparkles className="w-4 h-4 text-black" />&nbsp;&nbsp;Load Latest Plan&nbsp;&nbsp;
+              {isLoadingPlan ? (
+                <>
+                  <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full mr-2" />
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 text-black" />&nbsp;&nbsp;Load Latest Plan&nbsp;&nbsp;
+                </>
+              )}
             </Button>
           </div>
         </div>
@@ -322,91 +368,247 @@ export function ItineraryBuilder() {
           {/* Flight, Hotel, and Car Rental Information Cards */}
           <div className="lg:col-span-1 space-y-6">
             {/* Flight Information */}
-            {flightData && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Plane className="w-5 h-5 text-primary" />
-                    Flight Details
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm text-muted-foreground mr-3 flex-1">{flightData}</p>
-                    {(() => {
-                      const brand = detectAirlineBrand(flightData);
-                      const logo = airlineBrandLogoSrc(brand);
-                      if (!logo) return null;
-                      return (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="shrink-0 w-10 h-10 rounded-md border flex items-center justify-center bg-white/60 hover:bg-white">
-                              <img src={logo} alt="Airline logo" className="max-w-8 max-h-8" />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {brand === 'thy' ? 'Turkish Airlines' : brand === 'ajet' ? 'AJet' : 'Pegasus'}
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })()}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plane className="w-5 h-5 text-primary" />
+                  Flight Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingPlan ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="h-4 shimmer rounded w-3/4 mb-2"></div>
+                        <div className="h-3 shimmer rounded w-1/2 mb-2"></div>
+                        <div className="flex gap-4">
+                          <div className="h-3 shimmer rounded w-20"></div>
+                          <div className="h-3 shimmer rounded w-20"></div>
+                          <div className="h-3 shimmer rounded w-20"></div>
+                        </div>
+                      </div>
+                      <div className="w-10 h-10 shimmer rounded"></div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="h-6 shimmer rounded w-16"></div>
+                      <div className="h-8 shimmer rounded w-24"></div>
+                    </div>
                   </div>
-                  {flightLink && (
-                    <Button variant="outline" size="sm" className="w-full" asChild>
-                      <a href={flightLink} target="_blank" rel="noopener noreferrer">
-                        View Flight Details
-                      </a>
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                ) : flightData ? (
+                  <>
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-sm text-muted-foreground mr-3 flex-1">{flightData}</p>
+                      {(() => {
+                        const brand = detectAirlineBrand(flightData);
+                        const logo = airlineBrandLogoSrc(brand);
+                        if (!logo) return null;
+                        return (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="shrink-0 w-10 h-10 rounded-md border flex items-center justify-center bg-white/60 hover:bg-white">
+                                <img src={logo} alt="Airline logo" className="max-w-8 max-h-8" />
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {brand === 'thy' ? 'Turkish Airlines' : brand === 'ajet' ? 'AJet' : 'Pegasus'}
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })()}
+                    </div>
+                    {flightLink && (
+                      <Button variant="outline" size="sm" className="w-full" asChild>
+                        <a href={flightLink} target="_blank" rel="noopener noreferrer">
+                          View Flight Details
+                        </a>
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold">{mockFlightData.airline}</span>
+                          <span className="text-sm text-muted-foreground">{mockFlightData.flight}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{mockFlightData.route}</p>
+                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                          <span>Departure: {mockFlightData.departure}</span>
+                          <span>Arrival: {mockFlightData.arrival}</span>
+                          <span>Duration: {mockFlightData.duration}</span>
+                        </div>
+                      </div>
+                      <div className="shrink-0 w-10 h-10 rounded-md border flex items-center justify-center bg-white/60">
+                        <img src={mockFlightData.logo} alt="Turkish Airlines logo" className="max-w-8 max-h-8" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-primary">{mockFlightData.price}</span>
+                      <Button variant="outline" size="sm" className="text-xs">
+                        Book Flight
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Hotel Information */}
-            {hotelData && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Hotel className="w-5 h-5 text-primary" />
-                    Accommodation
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-3">{hotelData}</p>
-                  {hotelLink && (
-                    <div className="mt-3">
-                      <img
-                        src={hotelLink}
-                        alt="Hotel details"
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Hotel className="w-5 h-5 text-primary" />
+                  Accommodation
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingPlan ? (
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-16 h-16 shimmer rounded-lg"></div>
+                      <div className="flex-1">
+                        <div className="h-4 shimmer rounded w-3/4 mb-2"></div>
+                        <div className="h-3 shimmer rounded w-1/2 mb-2"></div>
+                        <div className="h-3 shimmer rounded w-2/3"></div>
+                      </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+                    <div className="flex items-center justify-between">
+                      <div className="h-6 shimmer rounded w-20"></div>
+                      <div className="h-8 shimmer rounded w-24"></div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-6 shimmer rounded w-16"></div>
+                      <div className="h-6 shimmer rounded w-12"></div>
+                      <div className="h-6 shimmer rounded w-20"></div>
+                    </div>
+                  </div>
+                ) : hotelData ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-3">{hotelData}</p>
+                    {hotelLink && (
+                      <div className="mt-3">
+                        <img
+                          src={hotelLink}
+                          alt="Hotel details"
+                          className="w-full h-32 object-cover rounded-lg"
+                        />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-start gap-3 mb-3">
+                      <img
+                        src={mockHotelData.image}
+                        alt={mockHotelData.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-semibold">{mockHotelData.name}</h4>
+                          <div className="flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm text-muted-foreground">{mockHotelData.rating}</span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{mockHotelData.type}</p>
+                        <p className="text-xs text-muted-foreground">{mockHotelData.location}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-lg font-bold text-primary">{mockHotelData.price}</span>
+                      <Button variant="outline" size="sm" className="text-xs">
+                        Book Hotel
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {mockHotelData.amenities.map((amenity, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {amenity}
+                        </Badge>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Car Rental Information */}
-            {carRentalData && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <DollarSign className="w-5 h-5 text-primary" />
-                    Car Rental
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-3">{carRentalData}</p>
-                  {carRentalLink && (
-                    <Button variant="outline" size="sm" className="w-full" asChild>
-                      <a href={carRentalLink} target="_blank" rel="noopener noreferrer">
-                        View Transportation Options
-                      </a>
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-primary" />
+                  Car Rental
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingPlan ? (
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-16 h-16 shimmer rounded-lg"></div>
+                      <div className="flex-1">
+                        <div className="h-4 shimmer rounded w-3/4 mb-2"></div>
+                        <div className="h-3 shimmer rounded w-1/2 mb-2"></div>
+                        <div className="h-3 shimmer rounded w-2/3"></div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="h-6 shimmer rounded w-20"></div>
+                      <div className="h-8 shimmer rounded w-20"></div>
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-6 shimmer rounded w-16"></div>
+                      <div className="h-6 shimmer rounded w-20"></div>
+                      <div className="h-6 shimmer rounded w-12"></div>
+                    </div>
+                  </div>
+                ) : carRentalData ? (
+                  <>
+                    <p className="text-sm text-muted-foreground mb-3">{carRentalData}</p>
+                    {carRentalLink && (
+                      <Button variant="outline" size="sm" className="w-full" asChild>
+                        <a href={carRentalLink} target="_blank" rel="noopener noreferrer">
+                          View Transportation Options
+                        </a>
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-start gap-3 mb-3">
+                      <img
+                        src={mockCarRentalData.image}
+                        alt={mockCarRentalData.vehicle}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-semibold">{mockCarRentalData.vehicle}</h4>
+                          <span className="text-xs text-muted-foreground">{mockCarRentalData.type}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{mockCarRentalData.company}</p>
+                        <p className="text-xs text-muted-foreground">Pickup: {mockCarRentalData.pickup}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-lg font-bold text-primary">{mockCarRentalData.price}</span>
+                      <Button variant="outline" size="sm" className="text-xs">
+                        Book Car
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {mockCarRentalData.features.map((feature, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Itinerary */}
@@ -423,8 +625,40 @@ export function ItineraryBuilder() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-8">
-                {itinerary.map((day, dayIndex) => (
+              {isLoadingPlan ? (
+                <div className="space-y-8">
+                  {[1, 2].map((day) => (
+                    <div key={day}>
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 shimmer rounded-full"></div>
+                        <div>
+                          <div className="h-5 shimmer rounded w-16 mb-2"></div>
+                          <div className="h-4 shimmer rounded w-24"></div>
+                        </div>
+                      </div>
+                      <div className="space-y-3 ml-6 border-l-2 border-gray-200 pl-6">
+                        {[1, 2, 3].map((activity) => (
+                          <div key={activity} className="bg-white border border-gray-200 rounded-lg p-4">
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <div className="h-4 shimmer rounded w-12"></div>
+                                  <div className="h-4 shimmer rounded w-8"></div>
+                                </div>
+                                <div className="h-5 shimmer rounded w-3/4 mb-2"></div>
+                                <div className="h-4 shimmer rounded w-1/2"></div>
+                              </div>
+                              <div className="w-8 h-8 shimmer rounded"></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  {itinerary.map((day, dayIndex) => (
                   <div key={dayIndex}>
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white">
@@ -480,7 +714,8 @@ export function ItineraryBuilder() {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
