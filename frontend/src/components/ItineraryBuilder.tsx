@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useChat } from "../contexts/ChatContext";
 import { ApiService } from "../services/api";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { detectAirlineBrand, airlineBrandLogoSrc } from "./ui/utils";
 
 const mockItinerary = [
   {
@@ -124,8 +126,13 @@ export function ItineraryBuilder() {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
       
-      // Check if this is a day header (supports both formats)
-      if (line.startsWith('Day ') || line.startsWith('## Day ')) {
+      // Check if this is a day header (supports EN and Turkish formats)
+      const isDayHeader = (
+        line.startsWith('Day ') ||
+        line.startsWith('## Day ') ||
+        line.startsWith('### ') // e.g., "### 13 Ekim (Pazartesi) ..."
+      );
+      if (isDayHeader) {
         // Save previous day if exists
         if (currentDay && currentDay.activities.length > 0) {
           days.push(currentDay);
@@ -140,20 +147,24 @@ export function ItineraryBuilder() {
         currentTimeSlot = null;
       }
       
-      // Check for time slot headers
+      // Check for time slot headers (EN + TR)
       if (currentDay && (
         line.startsWith('**Morning:**') || line.startsWith('**Afternoon:**') || line.startsWith('**Evening:**') ||
-        line.startsWith('- Morning:') || line.startsWith('- Afternoon:') || line.startsWith('- Evening:')
+        line.startsWith('- Morning:') || line.startsWith('- Afternoon:') || line.startsWith('- Evening:') ||
+        line.startsWith('**Sabah:**') || line.startsWith('**Öğlen:**') || line.startsWith('**Öğle:**') || line.startsWith('**Akşam:**') ||
+        line.startsWith('- Sabah:') || line.startsWith('- Öğlen:') || line.startsWith('- Öğle:') || line.startsWith('- Akşam:')
       )) {
-        const timeMatch = line.match(/^\*\*(Morning|Afternoon|Evening):\*\*/) || 
-                         line.match(/^- (Morning|Afternoon|Evening):/);
+        const timeMatch = line.match(/^\*\*(Morning|Afternoon|Evening|Sabah|Öğlen|Öğle|Akşam):\*\*/) || 
+                         line.match(/^- (Morning|Afternoon|Evening|Sabah|Öğlen|Öğle|Akşam):/);
         if (timeMatch) {
           currentTimeSlot = timeMatch[1];
         }
       }
       
       // Parse activities under time slots
-      if (currentDay && currentTimeSlot && line.startsWith('- ') && !line.startsWith('- Morning:') && !line.startsWith('- Afternoon:') && !line.startsWith('- Evening:')) {
+      if (currentDay && currentTimeSlot && line.startsWith('- ') &&
+          !line.startsWith('- Morning:') && !line.startsWith('- Afternoon:') && !line.startsWith('- Evening:') &&
+          !line.startsWith('- Sabah:') && !line.startsWith('- Öğlen:') && !line.startsWith('- Öğle:') && !line.startsWith('- Akşam:')) {
         const activity = line.substring(2).trim(); // Remove the "- " prefix
         
         // Extract location from activity text
@@ -174,7 +185,11 @@ export function ItineraryBuilder() {
         }
         
         currentDay.activities.push({
-          time: currentTimeSlot === "Morning" ? "09:00" : currentTimeSlot === "Afternoon" ? "14:00" : "19:00",
+          time: (
+            currentTimeSlot === "Morning" || currentTimeSlot === "Sabah"
+          ) ? "09:00" : (
+            currentTimeSlot === "Afternoon" || currentTimeSlot === "Öğlen" || currentTimeSlot === "Öğle"
+          ) ? "14:00" : "19:00",
           name: activity.split('.')[0].trim(),
           location: location,
           locked: false,
@@ -236,21 +251,32 @@ export function ItineraryBuilder() {
       if (chatIdToUse) {
         try {
           const response = await ApiService.getChat(chatIdToUse);
-          const latestMessage = response.messages[response.messages.length - 1];
-          if (latestMessage && latestMessage.plan) {
-            // Parse the content if it's a JSON string
-            const content = typeof latestMessage.content === 'string' 
-              ? JSON.parse(latestMessage.content) 
-              : latestMessage.content;
-            setFlightData(content[0]?.text || '');
-            setHotelData(content[1]?.text || '');
-            setCarRentalData(content[2]?.text || '');
-            setFlightLink(content[0]?.link || '');
-            setHotelLink(content[1]?.link || '');
-            setCarRentalLink(content[2]?.link || '');
-            setPlanData(latestMessage.plan);
-            // Update itinerary with parsed plan data
-            const parsedItinerary = parsePlanData(latestMessage.plan);
+          const messages = response.messages || [];
+          // Find the most recent assistant message that contains a non-null plan
+          const lastWithPlan = [...messages]
+            .reverse()
+            .find((m: any) => m && m.role === 'assistant' && m.plan);
+
+          if (lastWithPlan) {
+            // Parse content safely (array of {text, link} or JSON string)
+            let content: any = (lastWithPlan as any).content;
+            try {
+              if (typeof content === 'string') {
+                content = JSON.parse(content);
+              }
+            } catch {
+              // keep original content if not JSON
+            }
+
+            setFlightData(content?.[0]?.text || '');
+            setHotelData(content?.[1]?.text || '');
+            setCarRentalData(content?.[2]?.text || '');
+            setFlightLink(content?.[0]?.link || '');
+            setHotelLink(content?.[1]?.link || '');
+            setCarRentalLink(content?.[2]?.link || '');
+            setPlanData((lastWithPlan as any).plan);
+            // Update itinerary with parsed plan data (supports TR/EN)
+            const parsedItinerary = parsePlanData((lastWithPlan as any).plan);
             setItinerary(parsedItinerary);
           }
         } catch (error) {
@@ -311,7 +337,26 @@ export function ItineraryBuilder() {
                   </CardTitle>
             </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground mb-3">{flightData}</p>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm text-muted-foreground mr-3 flex-1">{flightData}</p>
+                    {(() => {
+                      const brand = detectAirlineBrand(flightData);
+                      const logo = airlineBrandLogoSrc(brand);
+                      if (!logo) return null;
+                      return (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="shrink-0 w-10 h-10 rounded-md border flex items-center justify-center bg-white/60 hover:bg-white">
+                              <img src={logo} alt="Airline logo" className="max-w-8 max-h-8" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {brand === 'thy' ? 'Turkish Airlines' : brand === 'ajet' ? 'AJet' : 'Pegasus'}
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    })()}
+                  </div>
                   {flightLink && (
                     <Button variant="outline" size="sm" className="w-full" asChild>
                       <a href={flightLink} target="_blank" rel="noopener noreferrer">
