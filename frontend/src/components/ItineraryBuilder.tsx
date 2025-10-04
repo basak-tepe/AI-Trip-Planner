@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Calendar, MapPin, Clock, Lock, Unlock, Plus, Trash2, DollarSign, Star, Hotel, Plane, Sparkles } from "lucide-react";
+import { Calendar, MapPin, Clock, Lock, Unlock, Plus, Trash2, DollarSign, Star, Hotel, Plane, Sparkles, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -14,6 +14,9 @@ import { useChat } from "../contexts/ChatContext";
 import { ApiService } from "../services/api";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { detectAirlineBrand, airlineBrandLogoSrc } from "./ui/utils";
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const mockItinerary = [
   {
@@ -338,6 +341,344 @@ export function ItineraryBuilder() {
     setAccommodations(newAccommodations);
   };
 
+  // Download functions
+  const downloadAsExcel = () => {
+    const worksheetData: (string | number)[][] = [];
+    
+    // Add header
+    worksheetData.push(['Day', 'Time', 'Activity', 'Location', 'Status']);
+    
+    // Add itinerary data
+    itinerary.forEach((day) => {
+      day.activities.forEach((activity) => {
+        worksheetData.push([
+          `Day ${day.day}`,
+          activity.time,
+          activity.name,
+          activity.location,
+          activity.locked ? 'Locked' : 'Flexible'
+        ]);
+      });
+    });
+
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Itinerary');
+    
+    // Generate filename with current date
+    const today = new Date().toISOString().split('T')[0];
+    const filename = `Travel_Itinerary_${today}.xlsx`;
+    
+    XLSX.writeFile(workbook, filename);
+  };
+
+  const downloadAsPDF = async () => {
+    try {
+      // Create a hidden iframe for silent PDF generation
+      const iframe = document.createElement('iframe');
+      iframe.style.position = 'absolute';
+      iframe.style.left = '-9999px';
+      iframe.style.top = '-9999px';
+      iframe.style.width = '1px';
+      iframe.style.height = '1px';
+      iframe.style.border = 'none';
+      document.body.appendChild(iframe);
+
+      // Generate HTML content for the PDF
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Travel Itinerary</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background: white;
+              color: #333;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              border-bottom: 2px solid #e5e7eb;
+              padding-bottom: 20px;
+            }
+            .title {
+              font-size: 28px;
+              font-weight: bold;
+              color: #1f2937;
+              margin-bottom: 10px;
+            }
+            .subtitle {
+              font-size: 16px;
+              color: #6b7280;
+            }
+            .day-section {
+              margin-bottom: 30px;
+              page-break-inside: avoid;
+            }
+            .day-header {
+              display: flex;
+              align-items: center;
+              margin-bottom: 15px;
+              padding: 10px;
+              background: #f3f4f6;
+              border-radius: 8px;
+            }
+            .day-number {
+              width: 40px;
+              height: 40px;
+              background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+              color: white;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              margin-right: 15px;
+            }
+            .day-info h3 {
+              margin: 0;
+              font-size: 18px;
+              color: #1f2937;
+            }
+            .day-info p {
+              margin: 5px 0 0 0;
+              font-size: 14px;
+              color: #6b7280;
+            }
+            .activity {
+              margin-bottom: 15px;
+              padding: 15px;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              background: white;
+            }
+            .activity-header {
+              display: flex;
+              align-items: center;
+              margin-bottom: 8px;
+            }
+            .activity-time {
+              font-weight: bold;
+              color: #3b82f6;
+              margin-right: 10px;
+            }
+            .activity-status {
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-size: 12px;
+              font-weight: bold;
+            }
+            .status-locked {
+              background: #fef3c7;
+              color: #92400e;
+            }
+            .status-flexible {
+              background: #d1fae5;
+              color: #065f46;
+            }
+            .activity-name {
+              font-size: 16px;
+              font-weight: 600;
+              color: #1f2937;
+              margin-bottom: 5px;
+            }
+            .activity-location {
+              font-size: 14px;
+              color: #6b7280;
+              display: flex;
+              align-items: center;
+            }
+            .location-icon {
+              margin-right: 5px;
+            }
+            .flight-info, .hotel-info, .car-info {
+              margin-bottom: 20px;
+              padding: 15px;
+              border: 1px solid #e5e7eb;
+              border-radius: 8px;
+              background: #f9fafb;
+            }
+            .info-title {
+              font-size: 16px;
+              font-weight: bold;
+              color: #1f2937;
+              margin-bottom: 10px;
+            }
+            .info-content {
+              font-size: 14px;
+              color: #6b7280;
+            }
+            @media print {
+              body { margin: 0; padding: 15px; }
+              .day-section { page-break-inside: avoid; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="title">Travel Itinerary</div>
+            <div class="subtitle">Generated on ${new Date().toLocaleDateString()}</div>
+          </div>
+          
+          ${flightData ? `
+            <div class="flight-info">
+              <div class="info-title">✈️ Flight Details</div>
+              <div class="info-content">${flightData}</div>
+            </div>
+          ` : ''}
+          
+          ${hotelData ? `
+            <div class="hotel-info">
+              <div class="info-title">🏨 Accommodation</div>
+              <div class="info-content">${hotelData}</div>
+            </div>
+          ` : ''}
+          
+          ${carRentalData ? `
+            <div class="car-info">
+              <div class="info-title">🚗 Car Rental</div>
+              <div class="info-content">${carRentalData}</div>
+            </div>
+          ` : ''}
+          
+          ${itinerary.map(day => `
+            <div class="day-section">
+              <div class="day-header">
+                <div class="day-number">${day.day}</div>
+                <div class="day-info">
+                  <h3>Day ${day.day}</h3>
+                  <p>${day.activities.length} activities</p>
+                </div>
+              </div>
+              
+              ${day.activities.map(activity => `
+                <div class="activity">
+                  <div class="activity-header">
+                    <span class="activity-time">${activity.time}</span>
+                    <span class="activity-status ${activity.locked ? 'status-locked' : 'status-flexible'}">
+                      ${activity.locked ? '🔒 Locked' : '🔓 Flexible'}
+                    </span>
+                  </div>
+                  <div class="activity-name">${activity.name}</div>
+                  <div class="activity-location">
+                    <span class="location-icon">📍</span>
+                    ${activity.location}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `).join('')}
+        </body>
+        </html>
+      `;
+
+      // Write content to iframe
+      iframe.contentDocument?.write(htmlContent);
+      iframe.contentDocument?.close();
+
+      // Wait for content to load, then trigger print
+      iframe.onload = () => {
+        setTimeout(() => {
+          if (iframe.contentWindow) {
+            iframe.contentWindow.print();
+          }
+          // Clean up the iframe after printing
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+          }, 1000);
+        }, 500);
+      };
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    }
+  };
+
+  // Google Calendar export function
+  const exportToGoogleCalendar = () => {
+    try {
+      // Get current date for the trip start
+      const today = new Date();
+      const tripStartDate = new Date(today.getTime() + (24 * 60 * 60 * 1000)); // Start tomorrow
+      
+      // Create events for each day
+      const events: Array<{
+        title: string;
+        details: string;
+        location: string;
+        start: string;
+        end: string;
+      }> = [];
+      
+      itinerary.forEach((day, dayIndex) => {
+        const dayDate = new Date(tripStartDate.getTime() + (dayIndex * 24 * 60 * 60 * 1000));
+        
+        day.activities.forEach((activity, activityIndex) => {
+          // Parse time and create datetime
+          const [hours, minutes] = activity.time.split(':').map(Number);
+          const activityDate = new Date(dayDate);
+          activityDate.setHours(hours, minutes, 0, 0);
+          
+          // Create end time (1 hour duration by default)
+          const endDate = new Date(activityDate.getTime() + (60 * 60 * 1000));
+          
+          // Format dates for Google Calendar
+          const formatDate = (date: Date) => {
+            return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+          };
+          
+          const event = {
+            title: activity.name,
+            details: `📍 ${activity.location}\n\n${activity.locked ? '🔒 Locked Activity' : '🔓 Flexible Activity'}`,
+            location: activity.location,
+            start: formatDate(activityDate),
+            end: formatDate(endDate)
+          };
+          
+          events.push(event);
+        });
+      });
+      
+      // Create Google Calendar URL
+      const baseUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+      
+      // For now, create a single event with all activities as description
+      // In a real implementation, you might want to create multiple events
+      const firstEvent = events[0];
+      if (firstEvent) {
+        const allActivities = events.map((event, index) => 
+          `${event.start.split('T')[1].substring(0, 5)} - ${event.title} (${event.location})`
+        ).join('\n');
+        
+        const eventTitle = `Travel Itinerary - Day 1`;
+        const eventDetails = `Travel Itinerary\n\n${allActivities}`;
+        const eventLocation = events[0].location;
+        
+        const params = new URLSearchParams({
+          text: eventTitle,
+          details: eventDetails,
+          location: eventLocation,
+          dates: `${firstEvent.start}/${firstEvent.end}`
+        });
+        
+        const googleCalendarUrl = `${baseUrl}&${params.toString()}`;
+        
+        // Open Google Calendar in new tab
+        window.open(googleCalendarUrl, '_blank');
+      } else {
+        alert('No activities found to export to Google Calendar.');
+      }
+      
+    } catch (error) {
+      console.error('Error exporting to Google Calendar:', error);
+      alert('Error exporting to Google Calendar. Please try again.');
+    }
+  };
+
 
   return (
     <section id="itinerary" className="py-20 bg-gradient-to-b from-background to-white">
@@ -616,12 +957,43 @@ export function ItineraryBuilder() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>{t("itinerary.yourItinerary")}</CardTitle>
-                {planData && (
-                  <Badge variant="default" className="bg-green-100 text-green-800">
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    AI Generated
-                  </Badge>
-                )}
+                <div className="flex items-center gap-2">
+                  {planData && (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      AI Generated
+                    </Badge>
+                  )}
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={downloadAsExcel}
+                      className="flex items-center gap-1"
+                    >
+                      <Download className="w-3 h-3" />
+                      {t("itinerary.downloadExcel")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={downloadAsPDF}
+                      className="flex items-center gap-1"
+                    >
+                      <Download className="w-3 h-3" />
+                      {t("itinerary.downloadPDF")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={exportToGoogleCalendar}
+                      className="flex items-center gap-1"
+                    >
+                      <Calendar className="w-3 h-3" />
+                      {t("itinerary.exportToGoogleCalendar")}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
