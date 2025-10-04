@@ -302,12 +302,6 @@ export function Community() {
                   </Card>
                     ))}
                   </div>
-
-              <div className="text-center">
-                <Button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90">
-                    {t('community.exploreAll')}
-                  </Button>
-              </div>
             </div>
           </TabsContent>
         </Tabs>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Bot, MessageSquare, Clock, Trash2, X, Lock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bot, MessageSquare, Clock, Trash2, X, Lock, ChevronLeft, ChevronRight, Send } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
 import { ApiService, Chat } from "../services/api";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useChat } from "../contexts/ChatContext";
 
 export function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,8 +17,11 @@ export function AIChatbot() {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [showChatHistory, setShowChatHistory] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [messageInput, setMessageInput] = useState("");
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
   const messagesPerPage = 4;
   const { t } = useLanguage();
+  const { currentChatId, setCurrentChatId, onMessageSent } = useChat();
   const chatRef = useRef<HTMLDivElement>(null);
 
   // Check connection and load chat history on mount
@@ -116,6 +121,53 @@ export function AIChatbot() {
     const totalPages = getTotalPages();
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Message sending functionality
+  const handleSendMessage = async () => {
+    if (!messageInput.trim() || isSendingMessage) return;
+
+    try {
+      setIsSendingMessage(true);
+      
+      // Use current chat or create a new one
+      let chatId = currentChatId;
+      if (!chatId) {
+        const newChat = await ApiService.createChat();
+        chatId = newChat.id;
+        setCurrentChatId(chatId);
+        await loadChatHistory(); // Refresh chat history
+      }
+
+      // Send the message
+      await ApiService.sendMessage(chatId, {
+        role: 'user',
+        content: messageInput.trim()
+      });
+
+      // Clear input and refresh the current chat
+      setMessageInput("");
+      if (selectedChat) {
+        await loadChat(selectedChat.id);
+      }
+
+      // Trigger plan refetch callback
+      if (onMessageSent) {
+        onMessageSent();
+      }
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -376,6 +428,32 @@ export function AIChatbot() {
                           </Button>
                         </div>
                       )}
+                      
+                      {/* Message Input */}
+                      <div className="mt-4 p-3 border-t">
+                        <div className="flex gap-2">
+                          <Input
+                            value={messageInput}
+                            onChange={(e) => setMessageInput(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            placeholder="Type your message..."
+                            disabled={isSendingMessage}
+                            className="flex-1"
+                          />
+                          <Button
+                            onClick={handleSendMessage}
+                            disabled={!messageInput.trim() || isSendingMessage}
+                            size="sm"
+                            className="px-3"
+                          >
+                            {isSendingMessage ? (
+                              <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                            ) : (
+                              <Send className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
                       
                       {/* Premium Lock Section */}
                       <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg">

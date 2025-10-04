@@ -27,6 +27,7 @@ export interface RequestMessage {
 export interface ResponseMessage {
   role: string;
   content: string;
+  plan?: string;
 }
 
 // Legacy interfaces for backward compatibility
