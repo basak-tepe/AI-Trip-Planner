@@ -40,7 +40,7 @@ export function MoodTravel({ onMoodSelect }: MoodTravelProps) {
         <p className="text-sm text-black/80 mb-4">
           {t('hero.moodTravel.selectMood')}
         </p>
-        <div className="flex gap-3 mb-4 w-full">
+        <div className="grid grid-cols-2 md:flex gap-3 mb-4 w-full">
           {moodOptions.map((option) => (
             <motion.button
               key={option.moodKey}
