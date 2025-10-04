@@ -17,9 +17,13 @@ client = OpenAI()
 @function_tool
 async def get_mcp_lists(departure_location:str, arrival_location:str, departure_date:str, return_date:str, preferences:str) -> None:
     """
-    This tool fetches the list of options from MCP server for flights, hotels, car rentals based on user preferences and budget.
+    This tool fetches the list of options from MCP server by using the tools flight_search, hotel_search, car_search based on user preferences and budget. Just return the response from MCP server. 
     Args:
-        None
+        departure_location (str): The location from which the user is departing.
+        arrival_location (str): The location to which the user is arriving.
+        departure_date (str): The date of departure in YYYY-MM-DD format.
+        return_date (str): The date of return in YYYY-MM-DD format.
+        preferences (str): User preferences and budget information.
     """
     runner = MCPAgentRunner()
     response = await runner.run(f"Get me flight and hotel and car rental options based on the following details:\n Departure Location: {departure_location}\n Arrival Location: {arrival_location}\n Departure Date: {departure_date}\n Return Date: {return_date}\n Preferences: {preferences}")
@@ -67,8 +71,9 @@ async def trip_plan(selected_options:str,preferences:str) -> str:
     #TODO: llm based implementation
     agent = Agent(
         name="TripPlannerAgent",
-        instructions="Using the selected options for flight, hotel, and car rental, create a detailed day-by-day trip plan. Divide each day into three parts: morning, afternoon, and evening. Suggest activities and food options for each part of the day, taking into account the flight times on the first and last days. An example format is as follows:  ---\n## Rome, Italy Itinerary (10\u201315 October 2025)\n\n---\n### Selected Options:\n- **Flight:** Direct Pegasus; Istanbul SAW \u2192 Rome FCO, Depart 10 Oct 09:05, Return 15 Oct 14:50, comfort economy with checked bag and meal.\n- **Hotel:** Otivm Hotel (Central Rome, walkable to sites, rooftop views, Italian breakfast, 9.4 score).\n- **Car Rental:** Toyota RAV4 Automatic (National, Fiumicino Airport pickup/dropoff, comfortable for city/country).\n\n---\n## Day 1 (10 Oct): Arrival & City First Bites\n**Morning:**\n- Arrive FCO 10:40, pick up car, drive to Otivm Hotel, check in and freshen up.\n\n**Afternoon:**\n- Walk to Mercato Centrale for lunch (sample Roman street food).\n- Explore Piazza Venezia, Capitoline Hill views, Fori Imperiali.\n- Espresso/pastry break at Antico Caff\u00e8 Greco or Roscioli Caff\u00e8.\n\n**Evening:**\n- Dinner at Trattoria Pennestri (Testaccio, Roman cuisine).\n- Stroll by the illuminated Colosseum.\n- Return to Otivm Hotel for rest.\n\n---\n## Day 2 (11 Oct): Classic Rome & Cuisine\n**Morning:**\n- Rooftop breakfast at hotel, then walk to the Pantheon, Piazza Navona, Trevi Fountain.\n- Gelato at Giolitti.\n\n**Afternoon:**\n- Lunch at Armando al Pantheon (reservations recommended).\n- Visit Galleria Doria Pamphilj, browse Campo de' Fiori market.\n- Coffee at Sant\u2019Eustachio Il Caff\u00e8.\n\n**Evening:**\n- Dinner at Roscioli Salumeria con Cucina (authentic Roman dishes).\n- Evening stroll along the Tiber River.",
-        output_type=str
+        instructions="Using the selected options for flight, hotel, and car rental, create a day-by-day trip plan  Divide each day into three parts: morning, afternoon, and evening. Suggest activities and food options for each part of the day, taking into account the flight times on the first and last days. An example format is as follows:  ---\n## Rome, Italy Itinerary (10\u201315 October 2025)\n\n---\n### Selected Options:\n- **Flight:** Direct Pegasus; Istanbul SAW \u2192 Rome FCO, Depart 10 Oct 09:05, Return 15 Oct 14:50, comfort economy with checked bag and meal.\n- **Hotel:** Otivm Hotel (Central Rome, walkable to sites, rooftop views, Italian breakfast, 9.4 score).\n- **Car Rental:** Toyota RAV4 Automatic (National, Fiumicino Airport pickup/dropoff, comfortable for city/country).\n\n---\n## Day 1 (10 Oct): Arrival & City First Bites\n**Morning:**\n- Arrive FCO 10:40, pick up car, drive to Otivm Hotel, check in and freshen up.\n\n**Afternoon:**\n- Walk to Mercato Centrale for lunch (sample Roman street food).\n- Explore Piazza Venezia, Capitoline Hill views, Fori Imperiali.\n- Espresso/pastry break at Antico Caff\u00e8 Greco or Roscioli Caff\u00e8.\n\n**Evening:**\n- Dinner at Trattoria Pennestri (Testaccio, Roman cuisine).\n- Stroll by the illuminated Colosseum.\n- Return to Otivm Hotel for rest.\n\n---\n## Day 2 (11 Oct): Classic Rome & Cuisine\n**Morning:**\n- Rooftop breakfast at hotel, then walk to the Pantheon, Piazza Navona, Trevi Fountain.\n- Gelato at Giolitti.\n\n**Afternoon:**\n- Lunch at Armando al Pantheon (reservations recommended).\n- Visit Galleria Doria Pamphilj, browse Campo de' Fiori market.\n- Coffee at Sant\u2019Eustachio Il Caff\u00e8.\n\n**Evening:**\n- Dinner at Roscioli Salumeria con Cucina (authentic Roman dishes).\n- Evening stroll along the Tiber River.",
+        output_type=str,
+        model="gpt-4o-mini"
     )
     response = await Runner.run(agent, input=f"Selected options: {selected_options}\n User preferences and budget: {preferences}")
     return response.final_output
