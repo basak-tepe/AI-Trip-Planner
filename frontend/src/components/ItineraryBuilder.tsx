@@ -353,11 +353,11 @@ export function ItineraryBuilder() {
               {isLoadingPlan ? (
                 <>
                   <div className="animate-spin w-4 h-4 border-2 border-black border-t-transparent rounded-full mr-2" />
-                  Loading...
+                  {t("itinerary.loading")}
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-black" />&nbsp;&nbsp;Load Latest Plan&nbsp;&nbsp;
+                  <Sparkles className="w-4 h-4 text-black" />&nbsp;&nbsp;{t("itinerary.loadLatestPlan")}&nbsp;&nbsp;
                 </>
               )}
             </Button>
@@ -372,7 +372,7 @@ export function ItineraryBuilder() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Plane className="w-5 h-5 text-primary" />
-                  Flight Details
+                  {t("itinerary.flightDetails")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -460,7 +460,7 @@ export function ItineraryBuilder() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Hotel className="w-5 h-5 text-primary" />
-                  Accommodation
+                  {t("itinerary.accommodation")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -540,7 +540,7 @@ export function ItineraryBuilder() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-primary" />
-                  Car Rental
+                  {t("itinerary.carRental")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -615,7 +615,7 @@ export function ItineraryBuilder() {
           <Card className="lg:col-span-2">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Your Itinerary</CardTitle>
+                <CardTitle>{t("itinerary.yourItinerary")}</CardTitle>
                 {planData && (
                   <Badge variant="default" className="bg-green-100 text-green-800">
                     <Sparkles className="w-3 h-3 mr-1" />

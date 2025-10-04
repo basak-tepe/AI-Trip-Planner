@@ -130,7 +130,12 @@
     "accommodation": "Accommodation",
     "transportation": "Transportation",
     "meals": "Meals",
-    "notes": "Notes"
+    "notes": "Notes",
+    "flightDetails": "Flight Details",
+    "carRental": "Car Rental",
+    "yourItinerary": "Your Itinerary",
+    "loadLatestPlan": "Load Latest Plan",
+    "loading": "Loading..."
   },
   "footer": {
     "company": "TravAI",

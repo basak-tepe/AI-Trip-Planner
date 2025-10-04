@@ -130,7 +130,12 @@
     "accommodation": "Konaklama",
     "transportation": "Ulaşım",
     "meals": "Yemekler",
-    "notes": "Notlar"
+    "notes": "Notlar",
+    "flightDetails": "Uçuş Detayları",
+    "carRental": "Araç Kiralama",
+    "yourItinerary": "Güzergahınız",
+    "loadLatestPlan": "Son Planı Yükle",
+    "loading": "Yükleniyor..."
   },
   "footer": {
     "company": "TravAI",
