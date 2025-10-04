@@ -44,7 +44,15 @@
       "example": "Layover in Rome",
       "duration": "6 hours",
       "descriptionText": "Enough time to see the city center!",
-      "createPlan": "Create My Layover Plan"
+      "createPlan": "Create My Layover Plan",
+      "unlockPremium": "Unlock Premium to access Layover Planner",
+      "itinerary": {
+        "airportToCity": "30 min: Airport to city (train)",
+        "colosseum": "2 hrs: Colosseum & Roman Forum",
+        "lunch": "1 hr: Lunch near Trevi Fountain",
+        "pantheon": "1 hr: Quick Pantheon visit",
+        "returnToAirport": "1.5 hrs: Return to airport"
+      }
     },
     "smartPacking": {
       "title": "Smart Packing Assistant",
@@ -122,7 +130,17 @@
     "accommodation": "Accommodation",
     "transportation": "Transportation",
     "meals": "Meals",
-    "notes": "Notes"
+    "notes": "Notes",
+    "flightDetails": "Flight Details",
+    "carRental": "Car Rental",
+    "yourItinerary": "Your Itinerary",
+    "loadLatestPlan": "Load Latest Plan",
+    "loading": "Loading...",
+    "downloadExcel": "Download as Excel",
+    "downloadPDF": "Download as PDF",
+    "downloadItinerary": "Download Itinerary",
+    "exportToGoogleCalendar": "Export to Google Calendar",
+    "example": "Example"
   },
   "footer": {
     "company": "TravAI",
@@ -160,6 +178,12 @@
       "romantic": "Romantic getaway in Paris",
       "business": "Business trip to Tokyo",
       "cultural": "Cultural tour of Italy"
+    },
+    "moodPrompts": {
+      "relaxation": "I'm feeling relaxed and want to unwind. Plan a peaceful trip for me!",
+      "adventure": "I'm feeling adventurous and ready for excitement. Plan an exciting trip for me!",
+      "culture": "I'm feeling cultural and want to explore art and history. Plan a cultural trip for me!",
+      "foodie": "I'm feeling hungry for great food and culinary experiences. Plan a foodie trip for me!"
     }
   },
   "common": {
@@ -202,7 +226,7 @@
     "recommendations": "Recommendations",
     "trendingTitle": "Trending Destinations This Month",
     "trendingDescription": "Most planned destinations by our community",
-    "trips": "trips",
+    "trips": "trips planned with travai this month",
     "exploreAll": "Explore All Destinations"
   }
 }

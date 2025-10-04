@@ -1,30 +1,93 @@
-import asyncio
-from typing import List, Optional
-from agents import Agent, Runner
+from agents import Agent, Runner, handoff
 from agents.mcp import MCPServerStdio
 from models.Message import Content, OutputResponse
+from typing import List, Optional
 import os
 from dotenv import load_dotenv
+from agents import function_tool
+from models.Message import Content
+from typing import List
+from mcp_agent_runner import MCPAgentRunner
+from openai import OpenAI
+from datetime import datetime
+client = OpenAI()
+
+
+
+@function_tool
+async def get_mcp_lists(departure_location:str, arrival_location:str, departure_date:str, return_date:str, preferences:str) -> None:
+    """
+    This tool fetches the list of options from MCP server by using the tools flight_search, hotel_search, car_search based on user preferences and budget. Just return the response from MCP server. 
+    Args:
+        departure_location (str): The location from which the user is departing.
+        arrival_location (str): The location to which the user is arriving.
+        departure_date (str): The date of departure in YYYY-MM-DD format.
+        return_date (str): The date of return in YYYY-MM-DD format.
+        preferences (str): User preferences and budget information.
+    """
+    runner = MCPAgentRunner()
+    response = await runner.run(f"Get me flight and hotel and car rental options based on the following details:\n Departure Location: {departure_location}\n Arrival Location: {arrival_location}\n Departure Date: {departure_date}\n Return Date: {return_date}\n Preferences: {preferences}")
+    print("MCP Response:", response)
+    await runner.close()
+    return response
+
+
+@function_tool
+async def pick_options(option_list : str, preferences:str) -> List[Content]:
+    """
+     This tool picks the most related option within the text field of each content, it should pick one flight, one hotel, one car rental option based on user preferences and budget.
+    Args:
+        option_list str: List of flight, hotel, car rental options in string format.
+        preferences (str): User preferences and budget information.
+    Returns:
+        List[Content]: A list containing the most related options. Like 
+        [
+            Content(text="Selected flight's details...", link=None),
+            Content(text="Selected hotel's details...", link="http://image_link.jpg"),
+            Content(text="Selected car rental's details...", link=None)
+        ]
+    """
+    #TODO: llm based implementation
+    
+    agent = Agent(
+        name="OptionPickerAgent",
+        instructions="From the following list of options of flights, hotels, and car rentals, pick the most suitable single option from each category based on the user's preferences and budget. Provide your selections in a concise manner.",
+        output_type=List[Content],
+        model="gpt-4o-mini"
+    )
+    response = await Runner.run(agent, input=f"Option list: {option_list}\n User preferences and budget: {preferences}")
+    return response.final_output
+
+
+@function_tool
+async def trip_plan(selected_options:str,preferences:str) -> str:
+    """
+    This tool summarizes the selected options and plans the trip day by day by dividing the days into 3 parts(morning, afternoon, evening) and suggest activities and food suggestions for each part of the day.( Consider selected flight hours before deciding on the activities for the first and last day)
+    Args:
+        selected_options (str): List of selected flight,hotel and car rental option containing text and optional link. This info is returned from pick_options tool.
+        preferences (str): User preferences and budget information.
+    Returns:
+        str: A summary of the trip plan. day by day plan with activities and food suggestions. provide the plan in a detailed  and clean manner.
+    """
+    #TODO: llm based implementation
+    agent = Agent(
+        name="TripPlannerAgent",
+        instructions=(
+            "Using the selected options for flight, hotel, and car rental, create a day-by-day trip plan. "
+            "Divide each day into morning/afternoon/evening and suggest activities and food, taking flight times into account on the first and last day. "
+            "CRITICAL OUTPUT FORMAT: Return ONLY a JSON array where each element has keys day_number (int), hour (HH:MM 24h string), activity_title (string), activity_content (string). "
+            "Do not include markdown or any text outside the JSON. Example: [{\"day_number\":1,\"hour\":\"09:00\",\"activity_title\":\"Check-in\",\"activity_content\":\"Arrive and check into hotel\"}]."
+        ),
+        output_type=str,
+        model="gpt-4o-mini"
+    )
+    response = await Runner.run(agent, input=f"Selected options: {selected_options}\nUser preferences and budget: {preferences}")
+    return response.final_output
+
 load_dotenv(override=True)
-from agents.mcp.util import create_static_tool_filter, MCPUtil
-from agents import tool
-from tools import pick_options,trip_plan 
 
-
-OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
-
-instructions_old = """You are an AI travel assistant that helps users plan their trips. If you dont have the information of departure date,arrival date,departure location and destination and budget information and car rental preference you must first ask user to provide the missing information and you dont proceed to next steps.
-        You can use the following tools to assist with travel-related queries:
-        - flight_search: Search for flights based on user criteria. Return results based on few criteria. First ask the user if she wants to see based on different airlines,based on price,based on arrival time or departure time. Then order the results accordingly.
-        - car_search: Search for rental cars based on user criteria. Return results based on few criteria. First ask the user if she wants to see based on different car types(economy,luxury,suv),based on price,based on rental company. Then order the results accordingly.
-        - bus_search: Search for bus tickets based on user criteria. Return results based on few criteria. First ask the user if she wants to see based on different bus companies,based on price,based on arrival time or departure time. Then order the results accordingly.
-        - hotel_search: Search for hotels based on user criteria. Return results based on few criteria. First ask the user if she wants to see based on different hotel types(budget,luxury),based on price,based on rating. Then order the results accordingly.
-        - flight_weather_forecast: Get weather forecast for a specific travel. First ask the user for the destination and travel dates.
-        After getting various choices from each tool call pick_options tool to select the most suitable single option from each tool result.(one flight departure and return, one car rental option, one hotel option) based on user preferences and budget.
-        Finally plan the whole trip day by day by dividing the days into 3 parts(morning, afternoon, evening) and suggest activities and food suggestions for each part of the day.( Consider selected flight hours before deciding on the activities for the first and last day)
-        """
-
-instructions = """You are an AI travel assistant that helps users plan their trips. 
+# Travel agent instructions
+travel_instructions_old = """You are an AI travel assistant that helps users plan their trips. 
         You can use the following tools to assist with travel-related queries:
         - flight_search: Search for flights based on given filters if any, each flight information should be provided item by item in the text field. 
         - car_search: Search for rental cars based on given filters if any, each car information should be provided item by item in the text field.
@@ -33,120 +96,63 @@ instructions = """You are an AI travel assistant that helps users plan their tri
         - flight_weather_forecast: Get weather forecast for a specific travel. 
         After getting various choices from each tool call pick_options tool to select the most suitable single option from each tool result.(one flight departure and return, one car rental option, one hotel option) based on user preferences and budget.
         Finally plan the whole trip with "trip_plan" tool day by day by dividing the days into 3 parts(morning, afternoon, evening) and suggest activities and food suggestions for each part of the day.( Consider selected flight hours before deciding on the activities for the first and last day)
+        
+        IMPORTANT: You have access to the full conversation history. Use this context to understand the user's preferences, previous requests, and any information that has been discussed. Reference previous messages when making recommendations and planning the trip.
         """
-class MCPAgentRunner:
-    def __init__(self, 
-                 name: str = "AssistantWithMCP",
-                 instructions: str = instructions,
-                 command: str = "npx",
-                 args: Optional[list] = None,
-                 ):
-        if args is None:
-            args = ["-y", "mcp-remote", "https://mcp.enuygun.com/mcp"]
 
-        self.command = command
-        self.args = args
-        self.agent_name = name
-        self.instructions = instructions
-        self.mcp_server: Optional[MCPServerStdio] = None
-        self.agent: Optional[Agent] = None
-        self.conversation_history: List[dict] = []
+travel_instructions = """You are an AI travel assistant that helps users plan their trips. Todays date is 5 october 2025. IMPORTANT : RESPOND IN USER'S LANGUAGE.
+       -You will use get_mcp_lists tool to fetch the list of options from MCP server for flights, hotels, car rentals.
+        After getting lists from get_mcp_lists, call pick_options tool to select the most suitable single option from each tool result. (one flight departure and return, one car rental option, one hotel option) based on user preferences and budget.
+        Finally plan the whole trip with trip_plan tool day by day by dividing the days into 3 parts(morning, afternoon, evening) and suggest activities and food suggestions for each part of the day.( Consider selected flight hours before deciding on the activities for the first and last day)
+        """
 
-    async def _setup(self):
-        """Initialize MCP server and agent."""
-        self.mcp_server = MCPServerStdio(
-            name="enuygun-mcp",
-            params={"command": self.command, "args": self.args},
-            client_session_timeout_seconds=60.0,  # wait up to 60 seconds
-            cache_tools_list=True,                 # optional, avoids round trips
-            max_retry_attempts=2,                  # optional, adds retries
-            retry_backoff_seconds_base=2.0        # optional, adds exponential backoff on retries
-        )
-        await self.mcp_server.__aenter__()  # manually enter async context
+class TravelAgent(Agent):
+    def __init__(self, mcp_server: MCPServerStdio = None):
+        # If no MCP server provided, create one
+        #get mcp server results from MCPAgentRunner
 
-        self.agent = Agent(
-            name=self.agent_name,
-            instructions=self.instructions,
-            mcp_servers=[self.mcp_server],
-            tools = [pick_options,trip_plan],
+        
+        super().__init__(
+            name="TravelAgent",
+            instructions=travel_instructions,
+            #mcp_servers=[mcp_server],
+            tools=[get_mcp_lists,pick_options,trip_plan],
             output_type=OutputResponse
         )
 
-    async def run(self, input_text: str, conversation_history: Optional[List[dict]] = None):
-        """Run the agent with the given input text and conversation history."""
-        if self.mcp_server is None or self.agent is None:
-            await self._setup()
-        
-        # Update conversation history if provided
-        if conversation_history is not None:
-            self.conversation_history = conversation_history
-        
-        # Add current user message to history
-        self.conversation_history.append({"role": "user", "content": input_text})
-        
-        try:
-            # Create context from conversation history
-            context = self._build_context_from_history()
-            result = await Runner.run(starting_agent=self.agent, input=context)
-            
-            # Add assistant response to history
-            assistant_content = result.final_output
-            self.conversation_history.append({"role": "assistant", "content": assistant_content})
-            
-            return result.final_output
-        finally:
-            await self.close()
-    
-    def _build_context_from_history(self) -> str:
-        """Build context string from conversation history."""
-        if not self.conversation_history:
-            return ""
-        
+
+
+# Convenience instance for import
+travelAgent = TravelAgent()
+
+
+async def run_travel_agent(input_text: str, conversation_history: Optional[List[dict]] = None):
+    """Run the travel agent with the given input text and conversation history."""
+    # Build context from conversation history if provided
+    context = input_text
+    if conversation_history:
         context_parts = []
-        for message in self.conversation_history:
+        for message in conversation_history:
             role = message["role"]
             content = message["content"]
             if role == "user":
                 context_parts.append(f"User: {content}")
             elif role == "assistant":
                 context_parts.append(f"Assistant: {content}")
-        
-        return "\n".join(context_parts)
+        context_parts.append(f"User: {input_text}")
+        context = "\n".join(context_parts)
     
-    def get_conversation_history(self) -> List[dict]:
-        """Get the current conversation history."""
-        return self.conversation_history.copy()
-    
-    def clear_history(self):
-        """Clear the conversation history."""
-        self.conversation_history = []
-
-    async def close(self):
-        """Clean up MCP server properly."""
-        if self.mcp_server:
-            await self.mcp_server.__aexit__(None, None, None)
-            self.mcp_server = None
-            self.agent = None
+    result = await Runner.run(travelAgent, input=context)
+    return result.final_output
 
 
-# Example usage
+
 if __name__ == "__main__":
-    async def main():
-        session = MCPAgentRunner()
-        """
-         list_of_tools=["flight_search","car_search","bus_search","hotel_search","flight_weather_forecast"]
-        for tool in list_of_tools:
-            print(f"Available tool: {tool}")
-            result = await MCPUtil.invoke_mcp_tool(server=session.mcp_server, tool = tool, context = None, input_json=None)
-            print(f"Invocation result for {tool}: {result}")   
-        """
-       
-        start_time = asyncio.get_event_loop().time()
-        response = await session.run("istanbuldan ankaraya 3 kasım 2025'de gidiş, 10 kasım 2025'de dönüş uçak bileti, bu tarihler arasında ankarada bir otel bul, bir araba kirala ve bu tatili planla ")
-        end_time = asyncio.get_event_loop().time()
-        print(f"Response time: {end_time - start_time} seconds")
-        print("Final output:", response)
-        await session.close()
+    import asyncio
+    user_input = "10 kasım ankara-istanbul uçuşlarını göster"
+    output = asyncio.run(run_travel_agent(user_input))
+    print(output)
 
-    asyncio.run(main())
+
+
 

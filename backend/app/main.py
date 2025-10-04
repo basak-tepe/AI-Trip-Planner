@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Request
 from fastapi import HTTPException
 from dotenv import load_dotenv
 import os 
@@ -6,7 +6,9 @@ load_dotenv()
 from models.Chat import Chat
 from schemas import RequestMessageSchema, ChatSchema, ResponseMessageSchema
 from typing import List
-
+from logger import app_logger, request_id_ctx, generate_request_id
+from contextvars import ContextVar
+import uuid
 
 app = FastAPI(title="AI Trip Planner API")
 
@@ -24,6 +26,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_request_id(request: Request, call_next):
+    request_id = generate_request_id()
+    request_id_ctx.set(request_id)
+
+    app_logger.info(f"Incoming request: {request.method} {request.url}")
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    app_logger.info(f"Response status: {response.status_code}")
+    return response
 
 MCP_BASE_URL = os.getenv("mcp_base_url")
 

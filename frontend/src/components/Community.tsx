@@ -1,3 +1,4 @@
+import React from "react";
 import { Heart, MessageCircle, Share2, Star, MapPin, Calendar, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
@@ -107,29 +108,80 @@ const getCommunityPosts = (language: string) => {
   ];
 };
 
-const trendingDestinations = [
-  { name: "Santorini", country: "Greece", trips: 1240, trend: "+15%" },
-  { name: "Iceland", country: "Iceland", trips: 980, trend: "+23%" },
-  { name: "Maldives", country: "Maldives", trips: 856, trend: "+8%" },
-  { name: "New Zealand", country: "New Zealand", trips: 734, trend: "+12%" },
-];
+const getTrendingDestinations = (language: string) => {
+  if (language === 'tr') {
+    return [
+      { 
+        name: "Santorini", 
+        country: "Yunanistan", 
+        trips: 1240, 
+        trend: "+15%",
+        image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW50b3JpbmklMjBncmVlY2UlMjB3aGl0ZSUyMGJ1aWxkaW5nc3xlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+      },
+      { 
+        name: "İzlanda", 
+        country: "İzlanda", 
+        trips: 980, 
+        trend: "+23%",
+        image: "/images/iceland.jpg"
+      },
+      { 
+        name: "Maldivler", 
+        country: "Maldivler", 
+        trips: 856, 
+        trend: "+8%",
+        image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWxkaXZlcyUyMHdhdGVyJTIwdmlsbGFzfGVufDB8fHx8MTczMzMxOTkxOXww&ixlib=rb-4.1.0&q=80&w=1080"
+      },
+      { 
+        name: "Yeni Zelanda", 
+        country: "Yeni Zelanda", 
+        trips: 734, 
+        trend: "+12%",
+        image: "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXclMjB6ZWFsYW5kJTIwbW91bnRhaW5zJTIwbGFrZXxlbnwwfHx8fDE3MzMzMTk5MTl8MA&ixlib=rb-4.1.0&q=80&w=1080"
+      },
+    ];
+  }
+  
+  return [
+    { 
+      name: "Santorini", 
+      country: "Greece", 
+      trips: 1240, 
+      trend: "+15%",
+      image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYW50b3JpbmklMjBncmVlY2UlMjB3aGl0ZSUyMGJ1aWxkaW5nc3xlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+    },
+    { 
+      name: "Iceland", 
+      country: "Iceland", 
+      trips: 980, 
+      trend: "+23%",
+      image: "/images/iceland.jpg"
+    },
+    { 
+      name: "Maldives", 
+      country: "Maldives", 
+      trips: 856, 
+      trend: "+8%",
+      image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWxkaXZlcyUyMHdhdGVyJTIwdmlsbGFzfGVufDB8fHx8MTczMzMxOTkxOXww&ixlib=rb-4.1.0&q=80&w=1080"
+    },
+    { 
+      name: "New Zealand", 
+      country: "New Zealand", 
+      trips: 734, 
+      trend: "+12%",
+      image: "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXclMjB6ZWFsYW5kJTIwbW91bnRhaW5zJTIwbGFrZXxlbnwwfHx8fDE3MzMzMTk5MTl8MA&ixlib=rb-4.1.0&q=80&w=1080"
+    },
+  ];
+};
 
 export function Community() {
   const { t, language } = useLanguage();
   const communityPosts = getCommunityPosts(language);
+  const trendingDestinations = getTrendingDestinations(language);
   
   return (
     <section id="community" className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl mb-4 text-foreground">
-            {t('community.title')}
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            {t('community.description')}
-          </p>
-        </div>
-
         <Tabs defaultValue="guides" className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
             <TabsTrigger value="guides">{t('community.travelTips')}</TabsTrigger>
@@ -211,46 +263,45 @@ export function Community() {
           </TabsContent>
 
           <TabsContent value="trending">
-            <div className="max-w-4xl mx-auto">
-              <Card>
-                <CardHeader>
-                  <h3>{t('community.trendingTitle')}</h3>
-                  <p className="text-sm text-muted-foreground">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold mb-2">{t('community.trendingTitle')}</h3>
+                <p className="text-muted-foreground">
                     {t('community.trendingDescription')}
                   </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
+              </div>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     {trendingDestinations.map((destination, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-4 rounded-lg border border-border hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white">
-                            {index + 1}
+                  <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="relative h-48 overflow-hidden">
+                      <ImageWithFallback
+                        src={destination.image}
+                        alt={`${destination.name}, ${destination.country}`}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
+                        <TrendingUp className="w-3 h-3 text-white" />
+                        <span className="text-xs text-white font-medium">{destination.trend}</span>
+                      </div>
                           </div>
-                          <div>
-                            <h4>{destination.name}</h4>
+
+                    <CardContent className="p-4">
+                      <div className="mb-3">
+                        <h4 className="font-semibold text-lg mb-1">{destination.name}</h4>
                             <p className="text-sm text-muted-foreground">{destination.country}</p>
                           </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center gap-2 text-green-600 mb-1">
-                            <TrendingUp className="w-4 h-4" />
-                            <span className="text-sm">{destination.trend}</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{destination.trips} {t('community.trips')}</p>
-                        </div>
+                      
+                      <div className="flex items-center justify-between text-sm text-white">
+                        <span className="text-muted-foreground">{destination.trips} {t('community.trips')}</span>
+                        <Button variant="ghost" size="sm" className="text-primary hover:text-white">
+                          Explore →
+                        </Button>
                       </div>
+                    </CardContent>
+                  </Card>
                     ))}
                   </div>
-
-                  <Button className="w-full mt-6 bg-gradient-to-r from-primary to-secondary">
-                    {t('community.exploreAll')}
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
           </TabsContent>
         </Tabs>

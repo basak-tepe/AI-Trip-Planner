@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, MapPin, Calendar, DollarSign, Loader2, Send, User, Bot } from "lucide-react";
+import { Sparkles, MapPin, Calendar, DollarSign, Loader2, Send, User, Bot, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { ScrollArea } from "./ui/scroll-area";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { ApiService } from "../services/api";
 import { MoodTravel } from "./MoodTravel";
@@ -24,6 +25,8 @@ export function Hero() {
   const [currentMessage, setCurrentMessage] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [previousMessageCount, setPreviousMessageCount] = useState(0);
   const chatEndRef = useRef<HTMLDivElement>(null);
   
   // API state
@@ -40,20 +43,93 @@ export function Hero() {
     }
   };
 
-  // Auto-scroll to bottom of chat
+  // Pagination helpers
+  const messagesPerPage = 4;
+  const totalPages = Math.ceil(messages.length / messagesPerPage);
+  const startIndex = currentPage * messagesPerPage;
+  const endIndex = startIndex + messagesPerPage;
+  const currentMessages = messages.slice(startIndex, endIndex);
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Auto-navigate to next page when new message exceeds current page
+  useEffect(() => {
+    if (messages.length > previousMessageCount && messages.length > 0) {
+      const newTotalPages = Math.ceil(messages.length / messagesPerPage);
+      const newStartIndex = currentPage * messagesPerPage;
+      const newEndIndex = newStartIndex + messagesPerPage;
+      
+      // If the last message is beyond the current page, go to the last page
+      if (messages.length > newEndIndex) {
+        setCurrentPage(newTotalPages - 1);
+      }
+    }
+    setPreviousMessageCount(messages.length);
+  }, [messages.length, currentPage, messagesPerPage, previousMessageCount]);
+
+  // Function to format assistant message content
+  const formatAssistantContent = (content: any): string => {
+    if (typeof content === 'string') {
+      return content;
+    }
+    
+    if (Array.isArray(content)) {
+      return content.map((item: any) => {
+        if (typeof item === 'object' && item.text) {
+          return item.text;
+        }
+        return String(item);
+      }).join('\n\n');
+    }
+    
+    if (typeof content === 'object' && content !== null) {
+      // Handle structured content
+      if (content.text) {
+        return content.text;
+      }
+      // Fallback to JSON string for other objects
+      return JSON.stringify(content, null, 2);
+    }
+    
+    return String(content);
+  };
+
+  // Auto-scroll to show latest message at bottom within chat container
   useEffect(() => {
     if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      const chatContainer = chatEndRef.current.parentElement;
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
     }
   }, [messages]);
 
   const sendChatMessage = async () => {
     if (!currentMessage.trim() || isChatLoading) return;
 
+    // Check if this is the first message and we have a mood prompt to append
+    const isFirstMessage = messages.length === 0;
+    const shouldAppendMoodPrompt = isFirstMessage && prompt && prompt.trim();
+    
+    // Prepare the message content (secretly append mood prompt if needed)
+    const messageContent = shouldAppendMoodPrompt 
+      ? `${currentMessage}\n\n${prompt}` 
+      : currentMessage;
+
     const userMessage = {
       id: Date.now().toString(),
       role: 'user' as const,
-      content: currentMessage,
+      content: currentMessage, // Show only the user's original message in UI
       timestamp: new Date()
     };
 
@@ -70,19 +146,17 @@ export function Hero() {
         setCurrentChatId(newChat.id);
         response = await ApiService.sendMessage(newChat.id, {
           role: 'user',
-          content: currentMessage
+          content: messageContent // Send the combined message to the API
         });
       } else {
         response = await ApiService.sendMessage(currentChatId, {
           role: 'user',
-          content: currentMessage
+          content: messageContent // Send the combined message to the API
         });
       }
       
-      // Use raw response for chat - no formatting needed
-      const assistantContent = typeof response.content === 'string' 
-        ? response.content 
-        : JSON.stringify(response.content, null, 2);
+      // Format the assistant response content
+      const assistantContent = formatAssistantContent(response.content);
 
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
@@ -92,6 +166,11 @@ export function Hero() {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Clear the mood prompt after it's been used once
+      if (shouldAppendMoodPrompt) {
+        setPrompt("");
+      }
     } catch (err) {
       console.error('Error in chat:', err);
       const errorMessage = {
@@ -183,21 +262,23 @@ export function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-screen flex items-center justify-center pt-20">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <ImageWithFallback
-          src="https://images.unsplash.com/photo-1682444944126-9fb22591061e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaGklMjBwaGklMjBpc2xhbmQlMjB0dXJxdW9pc2UlMjBvY2VhbnxlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+          src="https://images.unsplash.com/photo-1682444944126-9fb22591061e"
           alt="Phi Phi Island"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white z-10"></div>
       </div>
+
+
       {/* Content */}
-      <div className="container mx-auto px-4 z-10">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="container mx-auto px-4 z-10 flex items-center justify-center w-full py-8">
+        <div className="max-w-4xl mx-auto text-center w-full">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary backdrop-blur-sm px-4 py-2 rounded-full mb-6 mt-8">
-            <Sparkles className="w-4 h-4 text-primary" />
+            <Sparkles className="w-4 h-4 text-black" />
             <span className="text-sm text-foreground">{t('hero.badge')}</span>
           </div>
 
@@ -217,17 +298,11 @@ export function Hero() {
             <MoodTravel 
               onMoodSelect={(mood, destination) => {
                 setDestination(destination);
-                const initialMessage = `I'm feeling ${mood.toLowerCase()}. Plan a trip for me!`;
-                setPrompt(initialMessage);
                 setUsePrompt(true);
                 
-                // Initialize chat with the mood selection
-                setMessages([{
-                  id: Date.now().toString(),
-                  role: 'user',
-                  content: initialMessage,
-                  timestamp: new Date()
-                }]);
+                // Store the mood prompt for later use (secretly append to first user message)
+                const moodPrompt = t(`prompts.moodPrompts.${mood}`);
+                setPrompt(moodPrompt);
                 
                 // Scroll to quick search after a short delay to allow state updates
                 setTimeout(() => {
@@ -302,19 +377,21 @@ export function Hero() {
             ) : (
               <div className="mb-4">
                 {/* Chat Interface */}
-                <div className="bg-gray-50 rounded-lg border border-gray-200 min-h-[300px] max-h-[400px] flex flex-col">
+                <div className="bg-gray-50 rounded-lg border border-gray-200 h-[400px] flex flex-col relative mx-auto max-w-3xl overflow-hidden">
                   {/* Chat Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.length === 0 ? (
-                      <div className="text-center text-gray-500 py-8">
-                        <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="text-sm">{t('chat.startConversationChat')}</p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          💡 {t('common.try')}: "{t('prompts.examples.adventure')}", "{t('prompts.examples.family')}", "{t('prompts.examples.solo')}"
-                        </p>
-                      </div>
-                    ) : (
-                      messages.map((message) => (
+                  <ScrollArea className="flex-1 p-4">
+                    <div className="space-y-4">
+                      {messages.length === 0 ? (
+                        <div className="text-center text-gray-500 py-8">
+                          <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm">{t('chat.startConversationChat')}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            💡 {t('common.try')}: "{t('prompts.examples.adventure')}", "{t('prompts.examples.family')}", "{t('prompts.examples.solo')}"
+                          </p>
+                        </div>
+                      ) : (
+                        <>
+                          {currentMessages.map((message) => (
                         <div
                           key={message.id}
                           className={`flex gap-3 ${
@@ -326,18 +403,22 @@ export function Hero() {
                               <Bot className="w-4 h-4 text-white" />
                             </div>
                           )}
-                          <div
-                            className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                          <div 
+                            className={`max-w-[80%] rounded-lg px-4 py-3 shadow-sm ${
                               message.role === 'user'
                                 ? 'bg-primary text-white'
                                 : 'bg-white border border-gray-200 text-gray-800'
                             }`}
                           >
-                            <div className="whitespace-pre-wrap text-sm">
+                            <div className={`whitespace-pre-wrap text-sm leading-relaxed mt-2 ${
+                              message.role === 'user' ? 'text-right' : 'text-left'
+                            }`}>
                               {message.content}
                             </div>
-                            <div className={`text-xs mt-1 ${
-                              message.role === 'user' ? 'text-white/70' : 'text-gray-500'
+                            <div className={`text-xs mb-2 ${
+                              message.role === 'user' 
+                                ? 'text-white/70 text-right' 
+                                : 'text-gray-500 text-left'
                             }`}>
                               {message.timestamp.toLocaleTimeString()}
                             </div>
@@ -348,26 +429,57 @@ export function Hero() {
                             </div>
                           )}
                         </div>
-                      ))
-                    )}
-                    {isChatLoading && (
-                      <div className="flex gap-3 justify-start">
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                          <Bot className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
-                          <div className="flex items-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                            <span className="text-sm text-gray-600">{t('chat.thinking')}</span>
+                          ))}
+                          
+                          {/* Navigation Controls */}
+                          {totalPages > 1 && (
+                            <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-gray-200">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={goToPreviousPage}
+                                disabled={currentPage === 0}
+                                className="flex items-center gap-1"
+                              >
+                                <ChevronLeft className="w-4 h-4" />
+                                Previous
+                              </Button>
+                              <span className="text-sm text-gray-500 px-2">
+                                {currentPage + 1} of {totalPages}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={goToNextPage}
+                                disabled={currentPage === totalPages - 1}
+                                className="flex items-center gap-1"
+                              >
+                                Next
+                                <ChevronRight className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </>
+                      )}
+                      {isChatLoading && (
+                        <div className="flex gap-3 justify-start">
+                          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                            <Bot className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="bg-white border border-gray-200 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2">
+                              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                              <span className="text-sm text-gray-600">{t('chat.thinking')}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                    <div ref={chatEndRef} />
-                  </div>
+                      )}
+                      <div ref={chatEndRef} />
+                    </div>
+                  </ScrollArea>
                   
-                  {/* Chat Input */}
-                  <div className="border-t border-gray-200 p-4">
+                  {/* Chat Input - Sticky at bottom */}
+                  <div className="border-t border-gray-200 p-4 bg-gray-50 sticky bottom-0">
                     {messages.length > 0 && (
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-xs text-gray-500">

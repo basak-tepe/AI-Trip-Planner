@@ -9,21 +9,24 @@ import { AIChatbot } from "./components/AIChatbot";
 import { OpenAIChat } from "./components/OpenAIChat";
 import { Footer } from "./components/Footer";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { ChatProvider } from "./contexts/ChatContext";
 
 export default function App() {
   return (
     <LanguageProvider>
-      <div className="min-h-screen">
-        <Header />
-        <main>
-          <Hero />
-          <ItineraryBuilder />
-          <WowFeatures />
-          <Community />
-        </main>
-        <Footer />
-        <AIChatbot />
-      </div>
+      <ChatProvider>
+        <div className="min-h-screen">
+          <Header />
+          <main>
+            <Hero />
+            <ItineraryBuilder />
+            <Community />
+            <WowFeatures />
+          </main>
+          <Footer />
+          <AIChatbot />
+        </div>
+      </ChatProvider>
     </LanguageProvider>
   );
 }

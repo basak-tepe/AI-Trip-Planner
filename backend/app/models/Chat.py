@@ -5,11 +5,11 @@ from .Message import RequestMessage, ResponseMessage
 import json
 import os
 import dotenv
-from travelAgent import MCPAgentRunner
+# from travelAgent import TravelAgent
 from guardianAgent import run_guardian_agent
-from models.Message import Content
 from schemas import RequestMessageSchema, ChatSchema, ResponseMessageSchema
 from models.Message import OutputResponse
+from logger import app_logger
 
 dotenv.load_dotenv()
 DB_FILE = os.getenv("DB_FILE", "db.json")
@@ -46,8 +46,9 @@ class Chat:
         self.updated_at = updated_at or datetime.utcnow()
 
         # runtime-only attribute
-        self._agent = MCPAgentRunner()
-        self.guardian_agent 
+        #self._agent = TravelAgent()
+        #self.guardian_agent = GuardianAgent()
+        app_logger.info(f"Chat initialized with ID={self.id}")
         self._save_to_db()
  
     
@@ -70,10 +71,10 @@ class Chat:
                 conversation_history.append({"role": "assistant", "content": content_str})
         
         # Call the agent with conversation history
-        response = await run_guardian_agent(message.content)
+        response = await run_guardian_agent(message.content, conversation_history)
         response_msg= ResponseMessage(role="assistant", content=response.contents, chat_id=self.id, plan=response.plan if hasattr(response, 'plan') else None)
         self.messages.append(response_msg)
-        print(f"Calling save_to_db from add_message")
+        app_logger.info(f"Message added to chat ID={self.id}. Total messages now: {len(self.messages)}")
         self._save_to_db()
         return response #return the response to the user
     
@@ -112,7 +113,8 @@ class Chat:
                             updated_at=datetime.fromisoformat(chat_data["updated_at"])
                         )
                         # Don't save to DB again since we're loading from DB
-                        chat._agent = MCPAgentRunner()
+                        #chat._agent = TravelAgent()
+                        app_logger.info(f"Chat fetched with ID={chat_id}")
                         return chat
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
             pass
@@ -135,9 +137,12 @@ class Chat:
                 data[CHATS_KEY] = chats
                 with open(DB_FILE, "w") as file:
                     json.dump(data, file, indent=2)
+                app_logger.info(f"Chat deleted with ID={chat_id}")
                 return True
+            app_logger.warning(f"Chat with ID={chat_id} not found for deletion")
             return False
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
+            app_logger.error(f"Error deleting chat with ID={chat_id}")
             return False
 
     @staticmethod
@@ -156,10 +161,12 @@ class Chat:
                         updated_at=datetime.fromisoformat(chat_data["updated_at"])
                     )
                     # Initialize agent for each chat
-                    chat._agent = MCPAgentRunner()
+                    #chat._agent = TravelAgent()
                     chats.append(chat)
+                app_logger.info(f"Total chats fetched: {len(chats)}")
                 return chats
         except (FileNotFoundError, json.JSONDecodeError, KeyError):
+            app_logger.warning("No chats found in database")
             return []
 
     def _save_to_db(self):
@@ -194,7 +201,7 @@ class Chat:
                 json.dump(data, file, indent=2)
                 
         except Exception as e:
-            print(f"Error saving chat to database: {e}")
+            app_logger.error(f"Failed to save chat to database: {e}")
 
 
 
