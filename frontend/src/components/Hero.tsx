@@ -67,10 +67,13 @@ export function Hero() {
     return String(content);
   };
 
-  // Auto-scroll to show latest message at bottom
+  // Auto-scroll to show latest message at bottom within chat container
   useEffect(() => {
     if (chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      const chatContainer = chatEndRef.current.parentElement;
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
     }
   }, [messages]);
 
@@ -222,18 +225,19 @@ export function Hero() {
   };
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-screen flex items-center justify-center pt-20">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <ImageWithFallback
-          src="https://images.unsplash.com/photo-1682444944126-9fb22591061e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaGklMjBwaGklMjBpc2xhbmQlMjB0dXJxdW9pc2UlMjBvY2VhbnxlbnwxfHx8fDE3NTkyNDI2MTZ8MA&ixlib=rb-4.1.0&q=80&w=1080"
+          src="https://images.unsplash.com/photo-1682444944126-9fb22591061e"
           alt="Phi Phi Island"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80"></div>
       </div>
+
+
       {/* Content */}
-      <div className="container mx-auto px-4 z-10 flex items-center justify-center h-full">
+      <div className="container mx-auto px-4 z-10 flex items-center justify-center w-full py-8">
         <div className="max-w-4xl mx-auto text-center w-full">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary backdrop-blur-sm px-4 py-2 rounded-full mb-6 mt-8">
             <Sparkles className="w-4 h-4 text-primary" />
@@ -335,9 +339,9 @@ export function Hero() {
             ) : (
               <div className="mb-4">
                 {/* Chat Interface */}
-                <div className="bg-gray-50 rounded-lg border border-gray-200 h-[400px] flex flex-col relative mx-auto max-w-3xl">
+                <div className="bg-gray-50 rounded-lg border border-gray-200 h-[400px] flex flex-col relative mx-auto max-w-3xl overflow-hidden">
                   {/* Chat Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100" style={{ scrollBehavior: 'smooth' }}>
                     {messages.length === 0 ? (
                       <div className="text-center text-gray-500 py-8">
                         <Bot className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -347,7 +351,7 @@ export function Hero() {
                         </p>
                       </div>
                     ) : (
-                      messages.map((message) => (
+                      messages.slice(-3).map((message) => (
                         <div
                           key={message.id}
                           className={`flex gap-3 ${
