@@ -756,6 +756,296 @@
       ],
       "created_at": "2025-10-04T02:26:16.969832",
       "updated_at": "2025-10-04T05:27:12.237326"
+    },
+    {
+      "id": "172e31ef-2d60-46ce-801d-d34211ebb2fa",
+      "messages": [
+        {
+          "role": "user",
+          "content": "istnbuldn adnaya 6-10 kas\u0131m seyhat edicem",
+          "chat_id": "172e31ef-2d60-46ce-801d-d34211ebb2fa"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Seyahat plan\u0131n\u0131z\u0131 yapabilmem i\u00e7in birka\u00e7 bilgiye daha ihtiyac\u0131m var:\n\n- D\u00f6n\u00fc\u015f tarihinizi 10 Kas\u0131m olarak belirttiniz, te\u015fekk\u00fcrler.\n- Gidi\u015f tarihinizi de 6 Kas\u0131m olarak belirttiniz, te\u015fekk\u00fcrler.\n- \u0130stanbul'dan (istnbul) Adana'ya seyahat edece\u011finizi anlad\u0131m, te\u015fekk\u00fcrler.\n\nL\u00fctfen, \u0130stanbul'dan tam olarak hangi b\u00f6lgeden (havaalan\u0131 veya otogar gibi) \u00e7\u0131k\u0131\u015f yapmak istedi\u011finizi belirtir misiniz? Ayr\u0131ca bu seyahat i\u00e7in gitmek istedi\u011finiz saatle ilgili \u00f6zel bir tercihiniz var m\u0131? Bilgileri payla\u015f\u0131rsan\u0131z, hemen yolculuk plan\u0131n\u0131z\u0131 olu\u015fturabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "172e31ef-2d60-46ce-801d-d34211ebb2fa",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "herhangi biri olur ",
+          "chat_id": "172e31ef-2d60-46ce-801d-d34211ebb2fa"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harika! Seyahat plan\u0131n\u0131z i\u00e7in gerekli t\u00fcm bilgileri ald\u0131m:\n\n- Kalk\u0131\u015f yeri: \u0130stanbul (herhangi bir terminal)\n- Var\u0131\u015f yeri: Adana\n- Gidi\u015f tarihi: 6 Kas\u0131m\n- D\u00f6n\u00fc\u015f tarihi: 10 Kas\u0131m\n\n\u015eimdi seyahat plan\u0131n\u0131z\u0131 haz\u0131rlamak \u00fczere sizi bir \u00fcst uzmana y\u00f6nlendiriyorum.",
+              "link": null
+            }
+          ],
+          "chat_id": "172e31ef-2d60-46ce-801d-d34211ebb2fa",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "plan\u0131 getir ",
+          "chat_id": "172e31ef-2d60-46ce-801d-d34211ebb2fa"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "U\u00c7U\u015e: AJet (AnadoluJet) SAW \u2192 COV (Gidi\u015f: 06.11.2025, 06:20 - 07:50 / D\u00f6n\u00fc\u015f: 10.11.2025, 04:00 - 05:35), Ekonomik paket, toplam: 3.196 TL (gidi\u015f-d\u00f6n\u00fc\u015f).",
+              "link": null
+            },
+            {
+              "text": "OTEL: Park Royal Hotel \u2013 7.400 TL (4 gece), Puan: 9,6 / 10, Merkezi konum (Seyhan), aile ve ekonomik otel. Konfor ve b\u00fct\u00e7e dengesi en uygun se\u00e7enek. ",
+              "link": "https://www.enuygun.com/otel/detay/park-royal-hotel-adana-740647/?autoRequest=1&checkInDate=06.11.2025&checkOutDate=10.11.2025&rooms=1&countryCode=TR&p=hotel_detail&ref=ht-homepage&request_id=236f0bc5a8bc4ad7b8c9e53ae480d039&funnelId=236f0bc5a8bc4ad7b8c9e53ae480d039"
+            },
+            {
+              "text": "ARA\u00c7 K\u0130RALAMA: Mevcut se\u00e7imler aras\u0131nda detay verilmemi\u015f. Yeniden uygun fiyatl\u0131 ara\u00e7 kiralama ara\u015ft\u0131r\u0131lmas\u0131 \u00f6nerilir.",
+              "link": null
+            }
+          ],
+          "chat_id": "172e31ef-2d60-46ce-801d-d34211ebb2fa",
+          "plan": "Adana seyahatiniz i\u00e7in u\u00e7u\u015f ve konaklama detayl\u0131 \u015fekilde planland\u0131 ve g\u00fcn g\u00fcn \u00f6neriler haz\u0131rland\u0131. Ara\u00e7 kiralama se\u00e7ilemedi\u011fi i\u00e7in toplu ta\u015f\u0131ma ve yaya a\u011f\u0131rl\u0131kl\u0131 rota olu\u015fturuldu. Plan\u0131n\u0131zda sabah, \u00f6\u011fleden sonra ve ak\u015fam \u015feklinde detayl\u0131 aktiviteler ve restoran \u00f6nerileri yer al\u0131yor. \n\nYolculu\u011funuzun tad\u0131n\u0131 \u00e7\u0131kar\u0131n! Sorunuz olursa tekrar yard\u0131mc\u0131 olabilirim."
+        }
+      ],
+      "created_at": "2025-10-04T02:50:27.324048",
+      "updated_at": "2025-10-04T05:51:16.009417"
+    },
+    {
+      "id": "d075ba28-6791-4cbe-89bf-6b6504464984",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam bana 5-10 \u015fubat ankara-mersin seyahatim i\u00e7in pln olu\u015ftur ",
+          "chat_id": "d075ba28-6791-4cbe-89bf-6b6504464984"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Merhaba! Seyahat plan\u0131n\u0131z\u0131 olu\u015fturmak i\u00e7in birka\u00e7 bilgiye daha ihtiyac\u0131m var:\n\n- Ankara'dan Mersin'e hangi tarihte gitmek istiyorsunuz? (5 \u015eubat m\u0131?)\n- Mersin'den Ankara'ya hangi tarihte d\u00f6nmek istiyorsunuz? (10 \u015eubat m\u0131?)\n- Seyahat \u015feklini belirtir misiniz? (U\u00e7ak, otob\u00fcs, tren vb.)\n\nL\u00fctfen bu bilgileri payla\u015f\u0131r m\u0131s\u0131n\u0131z? B\u00f6ylece seyahat plan\u0131n\u0131z\u0131 olu\u015fturabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "d075ba28-6791-4cbe-89bf-6b6504464984",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-04T02:59:17.905539",
+      "updated_at": "2025-10-04T05:59:39.545835"
+    },
+    {
+      "id": "f5b6a0f9-d33b-4f92-bfd6-02cb1baeca61",
+      "messages": [
+        {
+          "role": "user",
+          "content": "3-6 \u015fubt 2026 izmir-adana seyahati plan olu\u015ftur ",
+          "chat_id": "f5b6a0f9-d33b-4f92-bfd6-02cb1baeca61"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Seyahat plan\u0131n\u0131 olu\u015fturabilmem i\u00e7in birka\u00e7 bilgiye daha ihtiyac\u0131m var:\n\n- D\u00f6n\u00fc\u015f tarihini \"6 \u015eubat 2026\" olarak belirtti\u011fini varsayd\u0131m. \n- Gidi\u015f i\u00e7in \"3 \u015eubat 2026'da \u0130zmir'den\" yola \u00e7\u0131kacaks\u0131n, var\u0131\u015f lokasyonun Adana olarak belirttin.\n\nDo\u011fru anlam\u0131\u015f m\u0131y\u0131m? Seyahatinin bu tarihlerde \u0130zmir'den Adana'ya gidip, 6 \u015eubat'ta d\u00f6neceksin. D\u00f6n\u00fc\u015f lokasyonun tekrar \u0130zmir mi olacak? Ayr\u0131ca u\u00e7ak, otob\u00fcs ya da \u00f6zel ara\u00e7 gibi ula\u015f\u0131m tercihin var m\u0131?",
+              "link": null
+            }
+          ],
+          "chat_id": "f5b6a0f9-d33b-4f92-bfd6-02cb1baeca61",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "evet plan olu\u015ftur ",
+          "chat_id": "f5b6a0f9-d33b-4f92-bfd6-02cb1baeca61"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "U\u00e7u\u015f: SunExpress - Gidi\u015f: 03.02.2026, 06:45 \u0130zmir \u2013 08:10 Adana & D\u00f6n\u00fc\u015f: 06.02.2026, 08:50 Adana \u2013 10:30 \u0130zmir (1.523 + 1.529 = 3.052 TL, ekonomi, bagaj dahil, uygun saatler).",
+              "link": null
+            },
+            {
+              "text": "Otel: Park Royal Hotel, Puan: 9,6, Fiyat: 10.150 TL (\u015fehre merkezi, y\u00fcksek puan, orta b\u00fct\u00e7e i\u00e7in uygun, konforlu).",
+              "link": null
+            },
+            {
+              "text": "Ara\u00e7: Renault Clio (Budget), fiyat: 5.101 TL, ekonomik s\u0131n\u0131f, otomatik (b\u00fct\u00e7e dostu, konforlu).",
+              "link": null
+            }
+          ],
+          "chat_id": "f5b6a0f9-d33b-4f92-bfd6-02cb1baeca61",
+          "plan": [
+            {
+              "day_number": 1,
+              "hour": "06:45",
+              "activity_title": "Flight Departure",
+              "activity_content": "Depart from Izmir to Adana with SunExpress."
+            },
+            {
+              "day_number": 1,
+              "hour": "08:10",
+              "activity_title": "Arrival in Adana",
+              "activity_content": "Arrive in Adana and pick up the rental car."
+            },
+            {
+              "day_number": 1,
+              "hour": "09:00",
+              "activity_title": "Check-in at Hotel",
+              "activity_content": "Check into Park Royal Hotel and freshen up."
+            },
+            {
+              "day_number": 1,
+              "hour": "10:30",
+              "activity_title": "Breakfast",
+              "activity_content": "Enjoy a traditional Turkish breakfast at a local caf\u00e9."
+            },
+            {
+              "day_number": 1,
+              "hour": "12:00",
+              "activity_title": "Explore Adana",
+              "activity_content": "Visit the Sabanc\u0131 Merkez Camii, one of the largest mosques in Turkey."
+            },
+            {
+              "day_number": 1,
+              "hour": "14:00",
+              "activity_title": "Lunch",
+              "activity_content": "Try Adana Kebab at a reputable restaurant."
+            },
+            {
+              "day_number": 1,
+              "hour": "16:00",
+              "activity_title": "Cultural Visit",
+              "activity_content": "Explore the Adana Archaeological Museum."
+            },
+            {
+              "day_number": 1,
+              "hour": "19:00",
+              "activity_title": "Dinner",
+              "activity_content": "Dine at a local restaurant to experience regional cuisine."
+            },
+            {
+              "day_number": 1,
+              "hour": "21:00",
+              "activity_title": "Relax at Hotel",
+              "activity_content": "Return to the hotel for some rest."
+            },
+            {
+              "day_number": 2,
+              "hour": "08:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Have breakfast at the hotel restaurant."
+            },
+            {
+              "day_number": 2,
+              "hour": "09:30",
+              "activity_title": "Sightseeing Tour",
+              "activity_content": "Visit the historical Stone Bridge and stroll along the Seyhan River."
+            },
+            {
+              "day_number": 2,
+              "hour": "12:00",
+              "activity_title": "Lunch",
+              "activity_content": "Enjoy lunch at a riverside caf\u00e9."
+            },
+            {
+              "day_number": 2,
+              "hour": "14:00",
+              "activity_title": "Visit Tarsus",
+              "activity_content": "Drive to Tarsus and explore the historical sites."
+            },
+            {
+              "day_number": 2,
+              "hour": "17:00",
+              "activity_title": "Coffee Break",
+              "activity_content": "Stop by a local coffee shop for Turkish coffee."
+            },
+            {
+              "day_number": 2,
+              "hour": "19:30",
+              "activity_title": "Dinner",
+              "activity_content": "Return to Adana for dinner at a famous restaurant."
+            },
+            {
+              "day_number": 2,
+              "hour": "21:00",
+              "activity_title": "Evening Walk",
+              "activity_content": "Take an evening walk in the city center."
+            },
+            {
+              "day_number": 3,
+              "hour": "08:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Start your day with breakfast at the hotel."
+            },
+            {
+              "day_number": 3,
+              "hour": "09:30",
+              "activity_title": "Visit Adana's Parks",
+              "activity_content": "Spend the morning in Central Park, enjoying nature."
+            },
+            {
+              "day_number": 3,
+              "hour": "12:00",
+              "activity_title": "Lunch",
+              "activity_content": "Have lunch at a local fast-casual restaurant."
+            },
+            {
+              "day_number": 3,
+              "hour": "14:00",
+              "activity_title": "Explore Local Markets",
+              "activity_content": "Visit local markets for shopping and local handicrafts."
+            },
+            {
+              "day_number": 3,
+              "hour": "17:00",
+              "activity_title": "Rest at Hotel",
+              "activity_content": "Return to hotel to relax and pack."
+            },
+            {
+              "day_number": 3,
+              "hour": "19:00",
+              "activity_title": "Farewell Dinner",
+              "activity_content": "Enjoy a farewell dinner at a rooftop restaurant."
+            },
+            {
+              "day_number": 4,
+              "hour": "06:00",
+              "activity_title": "Check-out from Hotel",
+              "activity_content": "Check out of Park Royal Hotel."
+            },
+            {
+              "day_number": 4,
+              "hour": "06:30",
+              "activity_title": "Return Rental Car",
+              "activity_content": "Return the rental car to Budget."
+            },
+            {
+              "day_number": 4,
+              "hour": "08:50",
+              "activity_title": "Flight Departure",
+              "activity_content": "Depart from Adana to Izmir with SunExpress."
+            },
+            {
+              "day_number": 4,
+              "hour": "10:30",
+              "activity_title": "Arrival in Izmir",
+              "activity_content": "Arrive back in Izmir."
+            }
+          ]
+        }
+      ],
+      "created_at": "2025-10-04T03:12:52.908040",
+      "updated_at": "2025-10-04T06:13:19.375847"
     }
   ]
 }

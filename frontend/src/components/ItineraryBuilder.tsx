@@ -90,19 +90,7 @@ export function ItineraryBuilder() {
   const { t } = useLanguage();
 
 
-  // Check connection on component mount
-  React.useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        await ApiService.healthCheck();
-        setIsConnected(true);
-      } catch (error) {
-        console.error('Backend connection failed:', error);
-        setIsConnected(false);
-      }
-    };
-    checkConnection();
-  }, []);
+  // Connection checks are triggered manually by user action
 
   // State for plan data
   const [planData, setPlanData] = useState<string | null>(null);
@@ -205,88 +193,82 @@ export function ItineraryBuilder() {
     return days.length > 0 ? days : mockItinerary;
   };
 
-  // Get latest chat when currentChatId is null
-  React.useEffect(() => {
-    const getLatestChat = async () => {
-      if (!currentChatId) {
-        try {
-          const chats = await ApiService.getChats();
-          if (chats.length > 0) {
-            // Get the most recent chat
-            const latestChat = chats[chats.length - 1];
-            console.log("Latest chat found:", latestChat.id);
-            // You could set this in the context or use it directly
-            // For now, we'll use it directly in the fetchPlanData function
-            return latestChat.id;
-          }
-        } catch (error) {
-          console.error('Error fetching chats:', error);
-        }
-      }
-      return currentChatId;
-    };
+  // Accept structured plan too: [{day_number, hour, activity_title, activity_content}]
+  const parseStructuredPlan = (items: any[]): { day: number; activities: any[] }[] => {
+    if (!Array.isArray(items)) return mockItinerary;
+    const byDay = new Map<number, any[]>();
+    for (const it of items) {
+      const d = typeof it.day_number === 'number' ? it.day_number : 1;
+      const entry = {
+        time: it.hour || '09:00',
+        name: it.activity_title || 'Activity',
+        location: it.activity_content || '',
+        locked: false,
+      };
+      if (!byDay.has(d)) byDay.set(d, []);
+      byDay.get(d)!.push(entry);
+    }
+    const days: { day: number; activities: any[] }[] = [];
+    [...byDay.keys()].sort((a, b) => a - b).forEach((d) => {
+      days.push({ day: d, activities: byDay.get(d)! });
+    });
+    return days.length ? days : mockItinerary;
+  };
 
-    getLatestChat();
-  }, [currentChatId]);
+  // No automatic chat selection; handled on button click
 
-  // Fetch plan data when currentChatId changes
-  React.useEffect(() => {
-    const fetchPlanData = async () => {
+  // No automatic fetching; handled on button click
+
+  // No polling; updates triggered only by user action
+
+  // Manual fetch handler
+  const handleLoadLatestPlan = async () => {
+    try {
+      // optional: health check when button is clicked
+      await ApiService.healthCheck().catch(() => {});
+
       let chatIdToUse = currentChatId;
-      
-      // If no currentChatId, get the latest chat
       if (!chatIdToUse) {
-        try {
-          const chats = await ApiService.getChats();
-          if (chats.length > 0) {
-            chatIdToUse = chats[chats.length - 1].id;
-            console.log("Using latest chat ID:", chatIdToUse);
-          }
-        } catch (error) {
-          console.error('Error fetching latest chat:', error);
-          return;
+        const chats = await ApiService.getChats();
+        if (chats.length > 0) {
+          const latest = [...chats].sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())[0];
+          chatIdToUse = latest.id;
         }
       }
+      if (!chatIdToUse) return;
 
-      if (chatIdToUse) {
-        try {
-          const response = await ApiService.getChat(chatIdToUse);
-          const messages = response.messages || [];
-          // Find the most recent assistant message that contains a non-null plan
-          const lastWithPlan = [...messages]
-            .reverse()
-            .find((m: any) => m && m.role === 'assistant' && m.plan);
+      const response = await ApiService.getChat(chatIdToUse);
+      const messages = response.messages || [];
+      const lastWithPlan = [...messages]
+        .reverse()
+        .find((m: any) => m && m.role === 'assistant' && m.plan);
+      if (!lastWithPlan) return;
 
-          if (lastWithPlan) {
-            // Parse content safely (array of {text, link} or JSON string)
-            let content: any = (lastWithPlan as any).content;
-            try {
-              if (typeof content === 'string') {
-                content = JSON.parse(content);
-              }
-            } catch {
-              // keep original content if not JSON
-            }
-
-            setFlightData(content?.[0]?.text || '');
-            setHotelData(content?.[1]?.text || '');
-            setCarRentalData(content?.[2]?.text || '');
-            setFlightLink(content?.[0]?.link || '');
-            setHotelLink(content?.[1]?.link || '');
-            setCarRentalLink(content?.[2]?.link || '');
-            setPlanData((lastWithPlan as any).plan);
-            // Update itinerary with parsed plan data (supports TR/EN)
-            const parsedItinerary = parsePlanData((lastWithPlan as any).plan);
-            setItinerary(parsedItinerary);
-          }
-        } catch (error) {
-          console.error('Error fetching plan data:', error);
+      let content: any = (lastWithPlan as any).content;
+      try {
+        if (typeof content === 'string') {
+          content = JSON.parse(content);
         }
-      }
-    };
+      } catch {}
 
-    fetchPlanData();
-  }, [currentChatId]);
+      setFlightData(content?.[0]?.text || '');
+      setHotelData(content?.[1]?.text || '');
+      setCarRentalData(content?.[2]?.text || '');
+      setFlightLink(content?.[0]?.link || '');
+      setHotelLink(content?.[1]?.link || '');
+      setCarRentalLink(content?.[2]?.link || '');
+      const planField: any = (lastWithPlan as any).plan;
+      if (Array.isArray(planField)) {
+        setPlanData(JSON.stringify(planField));
+        setItinerary(parseStructuredPlan(planField));
+      } else if (typeof planField === 'string') {
+        setPlanData(planField);
+        setItinerary(parsePlanData(planField));
+      }
+    } catch (error) {
+      console.error('Error loading latest plan:', error);
+    }
+  };
 
   console.log("PLAN DATA: ", planData);
   console.log("FLIGHT DATA: ", flightData);
@@ -327,6 +309,11 @@ export function ItineraryBuilder() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Flight, Hotel, and Car Rental Information Cards */}
           <div className="lg:col-span-1 space-y-6">
+            <div className="flex items-center gap-3">
+              <Button variant="default" size="sm" onClick={handleLoadLatestPlan}>
+                Load Latest Plan
+              </Button>
+            </div>
             {/* Flight Information */}
             {flightData && (
               <Card>

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from .Activity import Activity
 from datetime import date
 from typing import List
-from typing import Optional
+from typing import Optional, Union
 
 """
 
@@ -34,10 +34,17 @@ class Content(BaseModel):
 
 
 
+class PlanItem(BaseModel):
+    day_number: int
+    hour: str
+    activity_title: str
+    activity_content: str
+
+
 class ResponseMessage(BaseModel):
     role: str
-    content: List[Content] #this will be  list of each day's plan and each day's plan will be a list of activities
-    plan : Optional[str] = None  # Optional overall plan summary
+    content: List[Content]
+    plan : Optional[Union[str, List[PlanItem]]] = None
     chat_id: str 
 
     def to_json(self):
@@ -45,7 +52,9 @@ class ResponseMessage(BaseModel):
             "role": self.role,
             "content": [content.to_json() for content in self.content],
             "chat_id": self.chat_id,
-            "plan": self.plan
+            "plan": (
+                [item.model_dump() for item in self.plan] if isinstance(self.plan, list) else self.plan
+            )
         }
 
 class RequestMessage(BaseModel):
@@ -63,5 +72,5 @@ class RequestMessage(BaseModel):
     
 
 class OutputResponse(BaseModel):
-    plan: Optional[str] = None # Optional overall plan summary
+    plan: Optional[Union[str, List[PlanItem]]] = None
     contents: List[Content] = [] 

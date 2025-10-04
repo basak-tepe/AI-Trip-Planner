@@ -14,7 +14,7 @@ export function detectAirlineBrand(text?: string | null): AirlineBrand {
   const s = text.toLowerCase();
   if (s.includes('thy')) return 'thy';
   if (s.includes('ajet')) return 'ajet';
-  if (s.includes('pegasus') || s.includes('pegeasus') || s.includes('pg')) return 'pegasus';
+  if (s.includes('pegasus') || s.includes('pegasus') || s.includes('pg')) return 'pegasus';
   return null;
 }
 

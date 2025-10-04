@@ -71,11 +71,16 @@ async def trip_plan(selected_options:str,preferences:str) -> str:
     #TODO: llm based implementation
     agent = Agent(
         name="TripPlannerAgent",
-        instructions="Using the selected options for flight, hotel, and car rental, create a day-by-day trip plan  Divide each day into three parts: morning, afternoon, and evening. Suggest activities and food options for each part of the day, taking into account the flight times on the first and last days. An example format is as follows:  ---\n## Rome, Italy Itinerary (10\u201315 October 2025)\n\n---\n### Selected Options:\n- **Flight:** Direct Pegasus; Istanbul SAW \u2192 Rome FCO, Depart 10 Oct 09:05, Return 15 Oct 14:50, comfort economy with checked bag and meal.\n- **Hotel:** Otivm Hotel (Central Rome, walkable to sites, rooftop views, Italian breakfast, 9.4 score).\n- **Car Rental:** Toyota RAV4 Automatic (National, Fiumicino Airport pickup/dropoff, comfortable for city/country).\n\n---\n## Day 1 (10 Oct): Arrival & City First Bites\n**Morning:**\n- Arrive FCO 10:40, pick up car, drive to Otivm Hotel, check in and freshen up.\n\n**Afternoon:**\n- Walk to Mercato Centrale for lunch (sample Roman street food).\n- Explore Piazza Venezia, Capitoline Hill views, Fori Imperiali.\n- Espresso/pastry break at Antico Caff\u00e8 Greco or Roscioli Caff\u00e8.\n\n**Evening:**\n- Dinner at Trattoria Pennestri (Testaccio, Roman cuisine).\n- Stroll by the illuminated Colosseum.\n- Return to Otivm Hotel for rest.\n\n---\n## Day 2 (11 Oct): Classic Rome & Cuisine\n**Morning:**\n- Rooftop breakfast at hotel, then walk to the Pantheon, Piazza Navona, Trevi Fountain.\n- Gelato at Giolitti.\n\n**Afternoon:**\n- Lunch at Armando al Pantheon (reservations recommended).\n- Visit Galleria Doria Pamphilj, browse Campo de' Fiori market.\n- Coffee at Sant\u2019Eustachio Il Caff\u00e8.\n\n**Evening:**\n- Dinner at Roscioli Salumeria con Cucina (authentic Roman dishes).\n- Evening stroll along the Tiber River.",
+        instructions=(
+            "Using the selected options for flight, hotel, and car rental, create a day-by-day trip plan. "
+            "Divide each day into morning/afternoon/evening and suggest activities and food, taking flight times into account on the first and last day. "
+            "CRITICAL OUTPUT FORMAT: Return ONLY a JSON array where each element has keys day_number (int), hour (HH:MM 24h string), activity_title (string), activity_content (string). "
+            "Do not include markdown or any text outside the JSON. Example: [{\"day_number\":1,\"hour\":\"09:00\",\"activity_title\":\"Check-in\",\"activity_content\":\"Arrive and check into hotel\"}]."
+        ),
         output_type=str,
         model="gpt-4o-mini"
     )
-    response = await Runner.run(agent, input=f"Selected options: {selected_options}\n User preferences and budget: {preferences}")
+    response = await Runner.run(agent, input=f"Selected options: {selected_options}\nUser preferences and budget: {preferences}")
     return response.final_output
 
 load_dotenv(override=True)
