@@ -270,6 +270,7 @@ export function Hero() {
           alt="Phi Phi Island"
           className="w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white z-10"></div>
       </div>
 
 
@@ -277,7 +278,7 @@ export function Hero() {
       <div className="container mx-auto px-4 z-10 flex items-center justify-center w-full py-8">
         <div className="max-w-4xl mx-auto text-center w-full">
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-secondary backdrop-blur-sm px-4 py-2 rounded-full mb-6 mt-8">
-            <Sparkles className="w-4 h-4 text-primary" />
+            <Sparkles className="w-4 h-4 text-black" />
             <span className="text-sm text-foreground">{t('hero.badge')}</span>
           </div>
 

@@ -19,8 +19,8 @@ export default function App() {
           <Header />
           <main>
             <Hero />
-            <Community />
             <ItineraryBuilder />
+            <Community />
             <WowFeatures />
           </main>
           <Footer />

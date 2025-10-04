@@ -1558,6 +1558,238 @@
       ],
       "created_at": "2025-10-04T03:47:56.922153",
       "updated_at": "2025-10-04T06:48:08.741954"
+    },
+    {
+      "id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+      "messages": [
+        {
+          "role": "user",
+          "content": "MERHABA ben 6-10  aral\u0131k i\u00e7in seyahat edece\u011fim \n\nI'm feeling adventurous and ready for excitement. Plan an exciting trip for me!",
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harika! Senin i\u00e7in heyecan verici bir seyahat plan\u0131 olu\u015fturmak i\u00e7in birka\u00e7 bilgiye daha ihtiyac\u0131m var:\n\n- Nereden (hangi \u015fehir/\u00fclke) seyahate ba\u015flayacaks\u0131n? (Departure location)\n- Gidece\u011fin \u015fehir/\u00fclke neresi? (Arrival location)\n\n\u015eu anda elimizde sadece seyahat tarihleri var (6-10 Aral\u0131k). L\u00fctfen kalk\u0131\u015f ve var\u0131\u015f \u015fehirlerini belirtir misin? B\u00f6ylece sana en iyi plan\u0131 haz\u0131rlayabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "manisadan belgrada gidece\u011fim ",
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harikas\u0131n, \u015fimdi neredeyse t\u00fcm bilgiler tamam! H\u0131zl\u0131ca \u00f6zetleyeyim:\n\n- Kalk\u0131\u015f yeri: Manisa\n- Var\u0131\u015f yeri: Belgrad\n- Gidi\u015f tarihi: 6 Aral\u0131k\n- D\u00f6n\u00fc\u015f tarihi: 10 Aral\u0131k\n\nSon olarak, sabah m\u0131 ak\u015fam m\u0131 seyahat etmeyi tercih ediyorsun? B\u00fct\u00e7en veya \u00f6zel bir ula\u015f\u0131m tercihin (u\u00e7ak, tren, otob\u00fcs, araba vs.) var m\u0131? Bunlar\u0131 belirtmek ister misin, yoksa direkt heyecanl\u0131 bir planla ilerlememi ister misin?",
+              "link": null
+            }
+          ],
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "u\u00e7akla gidece\u011fim ",
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Flight: AJet, 06.12.2025, 21:10 from \u0130zmir (ADB) to Istanbul (SAW) with layover, then 07.12.2025 at 12:20 to Belgrade (BEG). Return on 10.12.2025 from Belgrade (BEG) to Ankara (ESB) and then to \u0130zmir (ADB). Economy, baggage included.",
+              "link": null
+            },
+            {
+              "text": "Hotel: Metropol Palace Belgrade \u2013 10/10, romantic, adventurous vibe, airport shuttle, 24,653 TL for 4 nights.",
+              "link": null
+            },
+            {
+              "text": "Car rental: No car rental selected due to unavailability.",
+              "link": null
+            }
+          ],
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+          "plan": [
+            {
+              "day_number": 1,
+              "hour": "21:10",
+              "activity_title": "Departure from \u0130zmir",
+              "activity_content": "Board AJet flight from \u0130zmir (ADB) to Istanbul (SAW)."
+            },
+            {
+              "day_number": 1,
+              "hour": "23:00",
+              "activity_title": "Layover in Istanbul",
+              "activity_content": "Have a quick snack at Istanbul airport before your connecting flight."
+            },
+            {
+              "day_number": 2,
+              "hour": "12:20",
+              "activity_title": "Arrival in Belgrade",
+              "activity_content": "Land in Belgrade (BEG) and take the airport shuttle to Metropol Palace."
+            },
+            {
+              "day_number": 2,
+              "hour": "14:00",
+              "activity_title": "Check-in at Hotel",
+              "activity_content": "Check into Metropol Palace and freshen up."
+            },
+            {
+              "day_number": 2,
+              "hour": "15:30",
+              "activity_title": "Lunch at Skadarlija",
+              "activity_content": "Explore Skadarlija, a bohemian quarter, and enjoy local Serbian dishes at a traditional restaurant."
+            },
+            {
+              "day_number": 2,
+              "hour": "17:00",
+              "activity_title": "Kalemegdan Fortress Visit",
+              "activity_content": "Walk to Kalemegdan Fortress for historical sights and panoramic views of the confluence of the Sava and Danube rivers."
+            },
+            {
+              "day_number": 2,
+              "hour": "19:30",
+              "activity_title": "Dinner at Dogma",
+              "activity_content": "Dine at Dogma, known for its contemporary twist on Serbian cuisine."
+            },
+            {
+              "day_number": 2,
+              "hour": "21:30",
+              "activity_title": "Nightlife in Belgrade",
+              "activity_content": "Experience the vibrant nightlife in the Savamala district, exploring local bars and music venues."
+            },
+            {
+              "day_number": 3,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Enjoy a luxurious breakfast buffet at Metropol Palace."
+            },
+            {
+              "day_number": 3,
+              "hour": "10:30",
+              "activity_title": "Day Trip to Avala Mountain",
+              "activity_content": "Join an organized tour to Avala Mountain for hiking and outdoor activities."
+            },
+            {
+              "day_number": 3,
+              "hour": "13:00",
+              "activity_title": "Lunch at Avala",
+              "activity_content": "Picnic lunch on Avala Mountain with local specialties."
+            },
+            {
+              "day_number": 3,
+              "hour": "15:00",
+              "activity_title": "Explore Avala Tower",
+              "activity_content": "Visit the Avala Tower for breathtaking views and photography."
+            },
+            {
+              "day_number": 3,
+              "hour": "17:00",
+              "activity_title": "Return to Belgrade",
+              "activity_content": "Head back to Belgrade."
+            },
+            {
+              "day_number": 3,
+              "hour": "19:00",
+              "activity_title": "Dinner at Manufaktura",
+              "activity_content": "Enjoy a meal at Manufaktura, famous for its local organic dishes and lively atmosphere."
+            },
+            {
+              "day_number": 3,
+              "hour": "21:00",
+              "activity_title": "Jazz Night",
+              "activity_content": "Attend a live jazz performance at a local jazz club."
+            },
+            {
+              "day_number": 4,
+              "hour": "08:30",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Savor breakfast at Metropol Palace."
+            },
+            {
+              "day_number": 4,
+              "hour": "10:30",
+              "activity_title": "Visit to Nikola Tesla Museum",
+              "activity_content": "Explore the Nikola Tesla Museum for a blend of science, technology, and history."
+            },
+            {
+              "day_number": 4,
+              "hour": "13:00",
+              "activity_title": "Lunch at the Museum Caf\u00e9",
+              "activity_content": "Enjoy light bites and coffee at the museum caf\u00e9."
+            },
+            {
+              "day_number": 4,
+              "hour": "14:30",
+              "activity_title": "Walking Tour of Belgrade",
+              "activity_content": "Join a guided walking tour to uncover hidden gems and stories about Belgrade."
+            },
+            {
+              "day_number": 4,
+              "hour": "17:00",
+              "activity_title": "Relax at Tasmajdan Park",
+              "activity_content": "Unwind at Tasmajdan Park, enjoying the greenery and local atmosphere."
+            },
+            {
+              "day_number": 4,
+              "hour": "19:00",
+              "activity_title": "Dinner at Avala Restaurant",
+              "activity_content": "Experience a fine dining meal with city views at Avala Restaurant."
+            },
+            {
+              "day_number": 4,
+              "hour": "21:00",
+              "activity_title": "Evening River Cruise",
+              "activity_content": "Enjoy a scenic evening cruise along the Danube River to take in the city lights."
+            },
+            {
+              "day_number": 5,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Delicious breakfast at the hotel before check-out."
+            },
+            {
+              "day_number": 5,
+              "hour": "11:00",
+              "activity_title": "Last-minute Shopping",
+              "activity_content": "Spend some time shopping for local crafts and souvenirs."
+            },
+            {
+              "day_number": 5,
+              "hour": "13:00",
+              "activity_title": "Lunch at a Local Bistro",
+              "activity_content": "Enjoy your last meal in Belgrade at a cozy local bistro."
+            },
+            {
+              "day_number": 5,
+              "hour": "15:00",
+              "activity_title": "Check-out and Airport Transfer",
+              "activity_content": "Check out of Metropol Palace and take the airport shuttle to Belgrade airport."
+            },
+            {
+              "day_number": 5,
+              "hour": "18:00",
+              "activity_title": "Flight to Ankara",
+              "activity_content": "Depart from Belgrade (BEG) to Ankara (ESB)."
+            },
+            {
+              "day_number": 5,
+              "hour": "20:00",
+              "activity_title": "Arrival in Ankara",
+              "activity_content": "Arrive in Ankara and continue to \u0130zmir (ADB) if needed."
+            }
+          ]
+        }
+      ],
+      "created_at": "2025-10-04T04:23:31.364635",
+      "updated_at": "2025-10-04T07:24:35.510683"
     }
   ]
 }
