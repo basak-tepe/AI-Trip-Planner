@@ -10,6 +10,8 @@ import { Switch } from "./ui/switch";
 import { Label } from "./ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useChat } from "../contexts/ChatContext";
+import { ApiService } from "../services/api";
 
 const mockItinerary = [
   {
@@ -79,9 +81,194 @@ export function ItineraryBuilder() {
   const [budget, setBudget] = useState([2000]);
   const [tripDays, setTripDays] = useState(5);
   const [itinerary, setItinerary] = useState(mockItinerary);
+  const [isConnected, setIsConnected] = useState(false);
   const [accommodations, setAccommodations] = useState(mockAccommodations);
-  const [modificationPrompt, setModificationPrompt] = useState("");
+  const { currentChatId } = useChat();
+  console.log("CURRENT CHAT ID: ", currentChatId);
   const { t } = useLanguage();
+
+
+  // Check connection on component mount
+  React.useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        await ApiService.healthCheck();
+        setIsConnected(true);
+      } catch (error) {
+        console.error('Backend connection failed:', error);
+        setIsConnected(false);
+      }
+    };
+    checkConnection();
+  }, []);
+
+  // State for plan data
+  const [planData, setPlanData] = useState<string | null>(null);
+  const [flightData, setFlightData] = useState<string | null>(null);
+  const [hotelData, setHotelData] = useState<string | null>(null);
+  const [carRentalData, setCarRentalData] = useState<string | null>(null);
+  const [flightLink, setFlightLink] = useState<string | null>(null);
+  const [hotelLink, setHotelLink] = useState<string | null>(null);
+  const [carRentalLink, setCarRentalLink] = useState<string | null>(null);
+
+  // Function to parse plan data and convert to itinerary format
+  const parsePlanData = (planText: string) => {
+    if (!planText) return mockItinerary;
+
+    const days: { day: number; activities: any[] }[] = [];
+    const lines = planText.split('\n');
+    let currentDay: { day: number; activities: any[] } | null = null;
+    let dayNumber = 1;
+    let currentTimeSlot: string | null = null;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      // Check if this is a day header (supports both formats)
+      if (line.startsWith('Day ') || line.startsWith('## Day ')) {
+        // Save previous day if exists
+        if (currentDay && currentDay.activities.length > 0) {
+          days.push(currentDay);
+        }
+        
+        // Start new day
+        currentDay = {
+          day: dayNumber,
+          activities: []
+        };
+        dayNumber++;
+        currentTimeSlot = null;
+      }
+      
+      // Check for time slot headers
+      if (currentDay && (
+        line.startsWith('**Morning:**') || line.startsWith('**Afternoon:**') || line.startsWith('**Evening:**') ||
+        line.startsWith('- Morning:') || line.startsWith('- Afternoon:') || line.startsWith('- Evening:')
+      )) {
+        const timeMatch = line.match(/^\*\*(Morning|Afternoon|Evening):\*\*/) || 
+                         line.match(/^- (Morning|Afternoon|Evening):/);
+        if (timeMatch) {
+          currentTimeSlot = timeMatch[1];
+        }
+      }
+      
+      // Parse activities under time slots
+      if (currentDay && currentTimeSlot && line.startsWith('- ') && !line.startsWith('- Morning:') && !line.startsWith('- Afternoon:') && !line.startsWith('- Evening:')) {
+        const activity = line.substring(2).trim(); // Remove the "- " prefix
+        
+        // Extract location from activity text
+        let location = "Various locations";
+        const locationPatterns = [
+          /at\s+([A-Z][^,]+)/,
+          /in\s+([A-Z][^,]+)/,
+          /to\s+([A-Z][^,]+)/,
+          /([A-Z][a-z]+\s+[A-Z][a-z]+)/ // General location pattern
+        ];
+        
+        for (const pattern of locationPatterns) {
+          const match = activity.match(pattern);
+          if (match) {
+            location = match[1].trim();
+            break;
+          }
+        }
+        
+        currentDay.activities.push({
+          time: currentTimeSlot === "Morning" ? "09:00" : currentTimeSlot === "Afternoon" ? "14:00" : "19:00",
+          name: activity.split('.')[0].trim(),
+          location: location,
+          locked: false,
+        });
+      }
+    }
+    
+    // Add the last day
+    if (currentDay && currentDay.activities.length > 0) {
+      days.push(currentDay);
+    }
+
+    return days.length > 0 ? days : mockItinerary;
+  };
+
+  // Get latest chat when currentChatId is null
+  React.useEffect(() => {
+    const getLatestChat = async () => {
+      if (!currentChatId) {
+        try {
+          const chats = await ApiService.getChats();
+          if (chats.length > 0) {
+            // Get the most recent chat
+            const latestChat = chats[chats.length - 1];
+            console.log("Latest chat found:", latestChat.id);
+            // You could set this in the context or use it directly
+            // For now, we'll use it directly in the fetchPlanData function
+            return latestChat.id;
+          }
+        } catch (error) {
+          console.error('Error fetching chats:', error);
+        }
+      }
+      return currentChatId;
+    };
+
+    getLatestChat();
+  }, [currentChatId]);
+
+  // Fetch plan data when currentChatId changes
+  React.useEffect(() => {
+    const fetchPlanData = async () => {
+      let chatIdToUse = currentChatId;
+      
+      // If no currentChatId, get the latest chat
+      if (!chatIdToUse) {
+        try {
+          const chats = await ApiService.getChats();
+          if (chats.length > 0) {
+            chatIdToUse = chats[chats.length - 1].id;
+            console.log("Using latest chat ID:", chatIdToUse);
+          }
+        } catch (error) {
+          console.error('Error fetching latest chat:', error);
+          return;
+        }
+      }
+
+      if (chatIdToUse) {
+        try {
+          const response = await ApiService.getChat(chatIdToUse);
+          const latestMessage = response.messages[response.messages.length - 1];
+          if (latestMessage && latestMessage.plan) {
+            // Parse the content if it's a JSON string
+            const content = typeof latestMessage.content === 'string' 
+              ? JSON.parse(latestMessage.content) 
+              : latestMessage.content;
+            setFlightData(content[0]?.text || '');
+            setHotelData(content[1]?.text || '');
+            setCarRentalData(content[2]?.text || '');
+            setFlightLink(content[0]?.link || '');
+            setHotelLink(content[1]?.link || '');
+            setCarRentalLink(content[2]?.link || '');
+            setPlanData(latestMessage.plan);
+            // Update itinerary with parsed plan data
+            const parsedItinerary = parsePlanData(latestMessage.plan);
+            setItinerary(parsedItinerary);
+          }
+        } catch (error) {
+          console.error('Error fetching plan data:', error);
+        }
+      }
+    };
+
+    fetchPlanData();
+  }, [currentChatId]);
+
+  console.log("PLAN DATA: ", planData);
+  console.log("FLIGHT DATA: ", flightData);
+  console.log("HOTEL DATA: ", hotelData);
+  console.log("CAR RENTAL DATA: ", carRentalData);
+  console.log("FLIGHT LINK: ", flightLink);
+  console.log("HOTEL LINK: ", hotelLink);
+  console.log("CAR RENTAL LINK: ", carRentalLink);
 
   const toggleLock = (dayIndex: number, activityIndex: number) => {
     const newItinerary = [...itinerary];
@@ -98,10 +285,6 @@ export function ItineraryBuilder() {
     setAccommodations(newAccommodations);
   };
 
-  const totalCost = itinerary.reduce(
-    (sum, day) => sum + day.activities.reduce((daySum, activity) => daySum + activity.cost, 0),
-    0
-  );
 
   return (
     <section id="itinerary" className="py-20 bg-gradient-to-b from-background to-white">
@@ -116,75 +299,89 @@ export function ItineraryBuilder() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Controls */}
-          <Card className="lg:col-span-1">
+          {/* Flight, Hotel, and Car Rental Information Cards */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Flight Information */}
+            {flightData && (
+              <Card>
             <CardHeader>
-              <CardTitle>{t('itinerary.planDetails')}</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Plane className="w-5 h-5 text-primary" />
+                    Flight Details
+                  </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <Label>{t('itinerary.destination')}</Label>
-                <div className="flex items-center gap-2 mt-2">
-                  <MapPin className="w-5 h-5 text-primary" />
-                  <Input placeholder="Bangkok, Thailand" />
-                </div>
-              </div>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">{flightData}</p>
+                  {flightLink && (
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <a href={flightLink} target="_blank" rel="noopener noreferrer">
+                        View Flight Details
+                      </a>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
-              <div>
-                <Label>{t('itinerary.duration')}: {tripDays} {t('itinerary.day')}s</Label>
-                <Slider
-                  value={[tripDays]}
-                  onValueChange={(value) => setTripDays(value[0])}
-                  max={30}
-                  min={1}
-                  step={1}
-                  className="mt-2"
+            {/* Hotel Information */}
+            {hotelData && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Hotel className="w-5 h-5 text-primary" />
+                    Accommodation
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">{hotelData}</p>
+                  {hotelLink && (
+                    <div className="mt-3">
+                      <img 
+                        src={hotelLink} 
+                        alt="Hotel details" 
+                        className="w-full h-32 object-cover rounded-lg"
                 />
               </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
-              <div>
-                <Label>{t('itinerary.budget')}: ${budget[0]}</Label>
-                <Slider
-                  value={budget}
-                  onValueChange={setBudget}
-                  max={10000}
-                  min={500}
-                  step={100}
-                  className="mt-2"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                  <span>Backpacker</span>
-                  <span>Luxury</span>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t">
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">Current Cost:</span>
-                  <span className="text-sm">${totalCost}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm">Budget:</span>
-                  <span className="text-sm">${budget[0]}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm">Remaining:</span>
-                  <span className={`text-sm ${budget[0] - totalCost >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    ${budget[0] - totalCost}
-                  </span>
-                </div>
-              </div>
-
-              <Button className="w-full bg-primary">
-                {t('itinerary.generate')}
+            {/* Car Rental Information */}
+            {carRentalData && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <DollarSign className="w-5 h-5 text-primary" />
+                    Car Rental
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-3">{carRentalData}</p>
+                  {carRentalLink && (
+                    <Button variant="outline" size="sm" className="w-full" asChild>
+                      <a href={carRentalLink} target="_blank" rel="noopener noreferrer">
+                        View Transportation Options
+                      </a>
               </Button>
+                  )}
             </CardContent>
           </Card>
+            )}
+          </div>
 
           {/* Itinerary */}
           <Card className="lg:col-span-2">
             <CardHeader>
+              <div className="flex items-center justify-between">
               <CardTitle>Your Itinerary</CardTitle>
+                {planData && (
+                  <Badge variant="default" className="bg-green-100 text-green-800">
+                    <Sparkles className="w-3 h-3 mr-1" />
+                    AI Generated
+                  </Badge>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
@@ -216,7 +413,7 @@ export function ItineraryBuilder() {
                                 <Clock className="w-4 h-4 text-primary" />
                                 <span className="text-sm">{activity.time}</span>
                                 <Badge variant="outline" className="ml-2">
-                                  ${activity.cost}
+                                  $$$
                                 </Badge>
                               </div>
                               <h4 className="mb-1">{activity.name}</h4>
@@ -244,144 +441,9 @@ export function ItineraryBuilder() {
                     </div>
                   </div>
                 ))}
-
-                <Button variant="outline" className="w-full">
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t('itinerary.activities')}
-                </Button>
               </div>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Alternative Options Section */}
-        <div className="mt-12">
-          <h3 className="text-center mb-8">
-            Explore
-            <span className="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Alternative Options
-            </span>
-          </h3>
-
-          <Tabs defaultValue="accommodation" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-              <TabsTrigger value="accommodation">
-                <Hotel className="w-4 h-4 mr-2" />
-                Accommodation
-              </TabsTrigger>
-              <TabsTrigger value="activities">
-                <MapPin className="w-4 h-4 mr-2" />
-                Activities
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="accommodation">
-              <div className="grid md:grid-cols-3 gap-6">
-                {accommodations.map((acc, index) => (
-                  <Card
-                    key={index}
-                    className={`cursor-pointer transition-all ${
-                      acc.selected
-                        ? "ring-2 ring-primary shadow-lg"
-                        : "hover:shadow-md"
-                    }`}
-                    onClick={() => selectAccommodation(index)}
-                  >
-                    <CardHeader>
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <CardTitle className="text-lg">{acc.name}</CardTitle>
-                          <CardDescription>{acc.type}</CardDescription>
-                        </div>
-                        {acc.selected && (
-                          <Badge className="bg-gradient-to-r from-primary to-secondary">
-                            Selected
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                        <span className="text-sm">{acc.rating}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                        <MapPin className="w-4 h-4" />
-                        {acc.location}
-                      </div>
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {acc.amenities.map((amenity, i) => (
-                          <Badge key={i} variant="secondary" className="text-xs">
-                            {amenity}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-baseline gap-1 text-primary">
-                        <span className="text-2xl">${acc.price}</span>
-                        <span className="text-sm text-muted-foreground">/night</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        via Booking.com API
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              <div className="text-center mt-6">
-                <Button variant="outline">
-                  <Plus className="w-4 h-4 mr-2" />
-                  View More Options
-                </Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="activities">
-              <div className="space-y-6">
-                {itinerary.map((day) => (
-                  <Card key={day.day}>
-                    <CardHeader>
-                      <CardTitle>Day {day.day} - Alternative Activities</CardTitle>
-                      <CardDescription>
-                        Swap any activity with these alternatives
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {mockAlternativeActivities[day.day as keyof typeof mockAlternativeActivities]?.map(
-                          (activity, index) => (
-                            <div
-                              key={index}
-                              className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow cursor-pointer hover:border-primary"
-                            >
-                              <div className="flex items-center gap-2 mb-2">
-                                <Clock className="w-4 h-4 text-primary" />
-                                <span className="text-sm">{activity.time}</span>
-                                <Badge variant="outline" className="ml-auto">
-                                  ${activity.cost}
-                                </Badge>
-                              </div>
-                              <h4 className="text-sm mb-1">{activity.name}</h4>
-                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                <MapPin className="w-3 h-3" />
-                                {activity.location}
-                              </div>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="w-full mt-3 text-primary"
-                              >
-                                Swap Activity
-                              </Button>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
         </div>
       </div>
     </section>
