@@ -135,7 +135,12 @@
     "carRental": "Araç Kiralama",
     "yourItinerary": "Güzergahınız",
     "loadLatestPlan": "Son Planı Yükle",
-    "loading": "Yükleniyor..."
+    "loading": "Yükleniyor...",
+    "downloadExcel": "Excel olarak İndir",
+    "downloadPDF": "PDF olarak İndir",
+    "downloadItinerary": "Güzergahı İndir",
+    "exportToGoogleCalendar": "Google Takvim'e Aktar",
+    "example": "Örnek"
   },
   "footer": {
     "company": "TravAI",

@@ -135,7 +135,12 @@
     "carRental": "Car Rental",
     "yourItinerary": "Your Itinerary",
     "loadLatestPlan": "Load Latest Plan",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "downloadExcel": "Download as Excel",
+    "downloadPDF": "Download as PDF",
+    "downloadItinerary": "Download Itinerary",
+    "exportToGoogleCalendar": "Export to Google Calendar",
+    "example": "Example"
   },
   "footer": {
     "company": "TravAI",

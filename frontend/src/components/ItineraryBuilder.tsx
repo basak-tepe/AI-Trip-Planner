@@ -714,6 +714,11 @@ export function ItineraryBuilder() {
                 <CardTitle className="flex items-center gap-2">
                   <Plane className="w-5 h-5 text-primary" />
                   {t("itinerary.flightDetails")}
+                  {!flightData && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {t("itinerary.example")}
+                    </Badge>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -802,6 +807,11 @@ export function ItineraryBuilder() {
                 <CardTitle className="flex items-center gap-2">
                   <Hotel className="w-5 h-5 text-primary" />
                   {t("itinerary.accommodation")}
+                  {!hotelData && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {t("itinerary.example")}
+                    </Badge>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -882,6 +892,11 @@ export function ItineraryBuilder() {
                 <CardTitle className="flex items-center gap-2">
                   <DollarSign className="w-5 h-5 text-primary" />
                   {t("itinerary.carRental")}
+                  {!carRentalData && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {t("itinerary.example")}
+                    </Badge>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -956,7 +971,14 @@ export function ItineraryBuilder() {
           <Card className="lg:col-span-2">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>{t("itinerary.yourItinerary")}</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  {t("itinerary.yourItinerary")}
+                  {!planData && (
+                    <Badge variant="secondary" className="text-xs">
+                      {t("itinerary.example")}
+                    </Badge>
+                  )}
+                </CardTitle>
                 <div className="flex items-center gap-2">
                   {planData && (
                     <Badge variant="default" className="bg-green-100 text-green-800">
