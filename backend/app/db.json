@@ -1046,6 +1046,750 @@
       ],
       "created_at": "2025-10-04T03:12:52.908040",
       "updated_at": "2025-10-04T06:13:19.375847"
+    },
+    {
+      "id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam",
+          "chat_id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Merhaba! Size bir seyahat plan\u0131 olu\u015fturmama yard\u0131mc\u0131 olur musunuz? Ba\u015flamak i\u00e7in l\u00fctfen a\u015fa\u011f\u0131daki bilgileri payla\u015f\u0131r m\u0131s\u0131n\u0131z:\n\n- Nereden (\u00e7\u0131k\u0131\u015f/ba\u015flang\u0131\u00e7 noktas\u0131) seyahat edeceksiniz?\n- Hangi tarihte yola \u00e7\u0131kmak istiyorsunuz?\n- Ne zaman geri d\u00f6nmek istiyorsunuz?\n- Hangi \u015fehre/\u00fclkeye (var\u0131\u015f noktas\u0131) gitmek istersiniz?\n\nT\u00fcm bu bilgileri ald\u0131ktan sonra size en iyi yolculuk plan\u0131n\u0131 haz\u0131rlayabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "naber",
+          "chat_id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Merhaba! Size yard\u0131mc\u0131 olabilmem i\u00e7in seyahat plan\u0131 ile ilgili baz\u0131 bilgilere ihtiyac\u0131m var. L\u00fctfen a\u015fa\u011f\u0131daki bilgileri payla\u015f\u0131r m\u0131s\u0131n\u0131z:\n\n- Nereden (\u015fehir/\u00fclke) seyahat edeceksiniz?\n- Hangi tarihte yola \u00e7\u0131kmak istiyorsunuz?\n- Ne zaman geri d\u00f6nmek istiyorsunuz?\n- Hangi \u015fehre/\u00fclkeye gitmek istersiniz?\n\nBu bilgileri verdi\u011finizde hemen planlamaya ba\u015flayabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "h\u0131mmm",
+          "chat_id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Hala seyahat plan\u0131n\u0131z i\u00e7in a\u015fa\u011f\u0131daki bilgilere ihtiyac\u0131m var:\n\n- Nereden (\u015fehir veya \u00fclke) yola \u00e7\u0131kacaks\u0131n\u0131z?\n- Hangi tarihte gitmek istiyorsunuz?\n- Ne zaman geri d\u00f6neceksiniz?\n- Hangi \u015fehre veya \u00fclkeye gitmek istiyorsunuz?\n\nBu bilgileri benimle payla\u015ft\u0131\u011f\u0131n\u0131zda, sizin i\u00e7in yolculuk plan\u0131n\u0131z\u0131 olu\u015fturmaya hemen ba\u015flayabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "66c9fd7c-2bcd-4a4b-9a00-a162720f1933",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-04T03:20:33.823898",
+      "updated_at": "2025-10-04T06:20:49.998990"
+    },
+    {
+      "id": "342b6c55-4bed-4900-84f7-03b62998bd7f",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam",
+          "chat_id": "342b6c55-4bed-4900-84f7-03b62998bd7f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Merhaba! Size nas\u0131l yard\u0131mc\u0131 olabilirim? E\u011fer bir seyahat plan\u0131 yapmak istiyorsan\u0131z, l\u00fctfen a\u015fa\u011f\u0131daki bilgileri payla\u015f\u0131r m\u0131s\u0131n\u0131z:\n\n- Nereden (kalk\u0131\u015f yeri) seyahat edeceksiniz?\n- Nereye (var\u0131\u015f yeri) gitmek istiyorsunuz?\n- Hangi tarihte yola \u00e7\u0131kmak istersiniz?\n- Ne zaman d\u00f6nmek istersiniz?\n\nBu bilgileri payla\u015f\u0131rsan\u0131z, seyahatinizi planlamaya yard\u0131mc\u0131 olabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "342b6c55-4bed-4900-84f7-03b62998bd7f",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "naber",
+          "chat_id": "342b6c55-4bed-4900-84f7-03b62998bd7f"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "\u0130yiyim, te\u015fekk\u00fcrler! Size nas\u0131l yard\u0131mc\u0131 olabilirim? Bir seyahat plan\u0131 yapmak isterseniz, l\u00fctfen bana a\u015fa\u011f\u0131daki bilgileri iletebilir misiniz:\n\n- Kalk\u0131\u015f yeriniz\n- Var\u0131\u015f yeriniz\n- Kalk\u0131\u015f tarihiniz\n- D\u00f6n\u00fc\u015f tarihiniz\n\nBu bilgileri payla\u015ft\u0131\u011f\u0131n\u0131zda seyahat plan\u0131n\u0131z\u0131 olu\u015fturabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "342b6c55-4bed-4900-84f7-03b62998bd7f",
+          "plan": null
+        }
+      ],
+      "created_at": "2025-10-04T03:22:19.878535",
+      "updated_at": "2025-10-04T06:22:28.950678"
+    },
+    {
+      "id": "519c3703-379c-436e-9318-3aac7cfcd785",
+      "messages": [
+        {
+          "role": "user",
+          "content": "5-10 ks\u0131m aras\u0131 istanbul londra seyhati",
+          "chat_id": "519c3703-379c-436e-9318-3aac7cfcd785"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harika, \u0130stanbul'dan Londra'ya 5-10 Kas\u0131m aras\u0131 bir seyahat planlamak istiyorsunuz. Hemen ba\u015flamak i\u00e7in birka\u00e7 bilgiye daha ihtiyac\u0131m olacak:\n\n1. D\u00f6n\u00fc\u015f tarihiniz 10 Kas\u0131m olarak m\u0131 belirlenmeli, yoksa farkl\u0131 bir g\u00fcn m\u00fc d\u00f6nmek istiyorsunuz?\n2. \u0130stanbul'dan hangi havaalan\u0131ndan (yeni havaliman\u0131 veya Sabiha G\u00f6k\u00e7en) kalkmay\u0131 tercih ediyorsunuz?\n3. B\u00fct\u00e7e veya \u00f6zel tercihleriniz (u\u00e7u\u015f s\u0131n\u0131f\u0131, otel tipi vs.) var m\u0131?\n\nBu bilgileri verdi\u011finizde seyahatiniz i\u00e7in planlama a\u015famas\u0131na ge\u00e7ebilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "519c3703-379c-436e-9318-3aac7cfcd785",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "sabiha g\u00f6k\u00e7en ve pln\u0131m\u0131 olu\u015ftur ",
+          "chat_id": "519c3703-379c-436e-9318-3aac7cfcd785"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Te\u015fekk\u00fcrler! \u015eu ana kadar verdi\u011finiz bilgiler:\n- Gidi\u015f tarihi: 5 Kas\u0131m\n- D\u00f6n\u00fc\u015f tarihi: 10 Kas\u0131m (olarak varsayd\u0131m, e\u011fer farkl\u0131ysa l\u00fctfen belirtin)\n- Kalk\u0131\u015f havaalan\u0131: Sabiha G\u00f6k\u00e7en\n- Var\u0131\u015f \u015fehri: Londra\n\nPlanlamaya ge\u00e7ebilmem i\u00e7in hen\u00fcz belirtmedi\u011finiz bir bilgi var m\u0131, kontrol ediyorum... Evet, t\u00fcm gerekli bilgileri sa\u011flad\u0131n\u0131z! \u015eimdi seyahatinizi olu\u015fturmak i\u00e7in detaylar\u0131 planlama a\u015famas\u0131na ge\u00e7iyorum. L\u00fctfen birka\u00e7 saniye bekleyin.",
+              "link": null
+            }
+          ],
+          "chat_id": "519c3703-379c-436e-9318-3aac7cfcd785",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "plan olu\u015ftur ",
+          "chat_id": "519c3703-379c-436e-9318-3aac7cfcd785"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "U\u00e7u\u015f: AJet VF1987 (Gidi\u015f: 05.11.2025 10:35, D\u00f6n\u00fc\u015f: Pegasus PC1164 10.11.2025 09:30), 5.431 TL (ekonomi ve uygun fiyatl\u0131).",
+              "link": null
+            },
+            {
+              "text": "Otel: DoubleTree by Hilton Hotel London ExCel, 48.427 TL, puan 9.3, merkezi say\u0131labilecek konumda ve rahat.",
+              "link": null
+            },
+            {
+              "text": "Ara\u00e7: Toyota Yaris Otomatik National, 7.372 TL, havaliman\u0131ndan al\u0131n\u0131yor (otomatik vites ve havaliman\u0131 teslimi tercihine uygun).",
+              "link": null
+            }
+          ],
+          "chat_id": "519c3703-379c-436e-9318-3aac7cfcd785",
+          "plan": [
+            {
+              "day_number": 1,
+              "hour": "10:35",
+              "activity_title": "Arrival in London",
+              "activity_content": "Land at London and proceed to collect your rental car."
+            },
+            {
+              "day_number": 1,
+              "hour": "11:30",
+              "activity_title": "Check-in at Hotel",
+              "activity_content": "Arrive at DoubleTree by Hilton Hotel London ExCel and check-in."
+            },
+            {
+              "day_number": 1,
+              "hour": "12:30",
+              "activity_title": "Lunch",
+              "activity_content": "Enjoy lunch at a nearby cafe, try the Fish and Chips."
+            },
+            {
+              "day_number": 1,
+              "hour": "14:00",
+              "activity_title": "Visit the British Museum",
+              "activity_content": "Explore the vast collections of art and antiquities."
+            },
+            {
+              "day_number": 1,
+              "hour": "17:00",
+              "activity_title": "Stroll through Covent Garden",
+              "activity_content": "Visit shops and perhaps catch some street performances."
+            },
+            {
+              "day_number": 1,
+              "hour": "19:00",
+              "activity_title": "Dinner",
+              "activity_content": "Dine at a local pub, sample some British ales and a hearty burger."
+            },
+            {
+              "day_number": 2,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Start the day with a hearty breakfast at the hotel."
+            },
+            {
+              "day_number": 2,
+              "hour": "10:00",
+              "activity_title": "Visit the Tower of London",
+              "activity_content": "Explore this historic castle and learn about its history."
+            },
+            {
+              "day_number": 2,
+              "hour": "13:00",
+              "activity_title": "Lunch",
+              "activity_content": "Have lunch at a nearby cafe, try a traditional Ploughman's lunch."
+            },
+            {
+              "day_number": 2,
+              "hour": "15:00",
+              "activity_title": "Visit the Houses of Parliament",
+              "activity_content": "Take a guided tour of the iconic building."
+            },
+            {
+              "day_number": 2,
+              "hour": "18:00",
+              "activity_title": "Dinner",
+              "activity_content": "Enjoy dinner at a local Indian restaurant, savor delicious curry."
+            },
+            {
+              "day_number": 3,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Enjoy breakfast and prepare for the day's activities."
+            },
+            {
+              "day_number": 3,
+              "hour": "10:00",
+              "activity_title": "Explore the Natural History Museum",
+              "activity_content": "Discover fascinating exhibits ranging from dinosaurs to human evolution."
+            },
+            {
+              "day_number": 3,
+              "hour": "13:00",
+              "activity_title": "Lunch",
+              "activity_content": "Grab a bite at the museum caf\u00e9 or a local sandwich shop."
+            },
+            {
+              "day_number": 3,
+              "hour": "15:00",
+              "activity_title": "Shopping at Oxford Street",
+              "activity_content": "Explore numerous shops and department stores."
+            },
+            {
+              "day_number": 3,
+              "hour": "19:00",
+              "activity_title": "Dinner",
+              "activity_content": "Dine at a trendy bistro in Soho, try locally sourced dishes."
+            },
+            {
+              "day_number": 4,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Have breakfast and check out of the hotel."
+            },
+            {
+              "day_number": 4,
+              "hour": "10:00",
+              "activity_title": "Visit Hyde Park",
+              "activity_content": "Enjoy a leisurely walk or rent a bike to explore the park."
+            },
+            {
+              "day_number": 4,
+              "hour": "12:00",
+              "activity_title": "Lunch",
+              "activity_content": "Picnic in the park with local takeout."
+            },
+            {
+              "day_number": 4,
+              "hour": "14:00",
+              "activity_title": "Return Car at Airport",
+              "activity_content": "Drive to the airport and return your rental car."
+            },
+            {
+              "day_number": 4,
+              "hour": "09:30",
+              "activity_title": "Flight Departure",
+              "activity_content": "Board your flight back home."
+            }
+          ]
+        }
+      ],
+      "created_at": "2025-10-04T03:41:50.107107",
+      "updated_at": "2025-10-04T06:42:41.446369"
+    },
+    {
+      "id": "524a3e2e-1fe1-42be-a386-bd10b68a26a2",
+      "messages": [
+        {
+          "role": "user",
+          "content": "selam 6-10 kas\u0131m aras\u0131 istanbuldan antalyaya gidece\u011fim plan olu\u015ftur ",
+          "chat_id": "524a3e2e-1fe1-42be-a386-bd10b68a26a2"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "S\u00fcper, seyahatiniz i\u00e7in bilgilere a\u015fa\u011f\u0131da g\u00f6z at\u0131yorum:\n\n- Kalk\u0131\u015f yeri: \u0130stanbul\n- Var\u0131\u015f yeri: Antalya\n- Kalk\u0131\u015f tarihi: 6 Kas\u0131m\n- D\u00f6n\u00fc\u015f tarihi: 10 Kas\u0131m\n\nSon bir do\u011frulama: \u0130stanbul\u2019dan Antalya\u2019ya 6 Kas\u0131m\u2019da gidip, 10 Kas\u0131m\u2019da d\u00f6neceksiniz; do\u011fru mu? E\u011fer farkl\u0131 bir saatte ya da farkl\u0131 bir ayr\u0131nt\u0131 varsa belirtmek ister misiniz? Onay verirseniz hemen seyahat plan\u0131n\u0131z\u0131 olu\u015fturmaya ge\u00e7ece\u011fim!",
+              "link": null
+            }
+          ],
+          "chat_id": "524a3e2e-1fe1-42be-a386-bd10b68a26a2",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "onay ",
+          "chat_id": "524a3e2e-1fe1-42be-a386-bd10b68a26a2"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "U\u00e7u\u015f: AJet VF3028 (gidi\u015f: 06:55 Sabiha G\u00f6k\u00e7en - 08:15 Antalya), AJet VF3039 (d\u00f6n\u00fc\u015f: 23:00 Antalya - 00:20 \u0130stanbul SG, 11 Kas\u0131m)",
+              "link": null
+            },
+            {
+              "text": "Otel: Elips Royal Hotel & Spa, Muratpa\u015fa - Spa & a\u00e7\u0131k havuz, merkezi konum, 4 gece, 9.554 TL",
+              "link": null
+            },
+            {
+              "text": "Ara\u00e7: Citroen C3, ekonomik, otomatik, Antalya Havaalan\u0131 teslim, 4 g\u00fcn, 4.750 TL",
+              "link": null
+            }
+          ],
+          "chat_id": "524a3e2e-1fe1-42be-a386-bd10b68a26a2",
+          "plan": [
+            {
+              "day_number": 1,
+              "hour": "06:55",
+              "activity_title": "Departure from Istanbul",
+              "activity_content": "Flight AJet VF3028 departs from Sabiha G\u00f6k\u00e7en Airport."
+            },
+            {
+              "day_number": 1,
+              "hour": "08:15",
+              "activity_title": "Arrival in Antalya",
+              "activity_content": "Arrive at Antalya Airport and pick up rented Citroen C3."
+            },
+            {
+              "day_number": 1,
+              "hour": "09:30",
+              "activity_title": "Check-in at Hotel",
+              "activity_content": "Check-in at Elips Royal Hotel & Spa and freshen up."
+            },
+            {
+              "day_number": 1,
+              "hour": "10:30",
+              "activity_title": "Brunch",
+              "activity_content": "Enjoy a leisurely brunch at the hotel's restaurant."
+            },
+            {
+              "day_number": 1,
+              "hour": "12:00",
+              "activity_title": "Relax by the Pool",
+              "activity_content": "Spend time relaxing by the hotel pool."
+            },
+            {
+              "day_number": 1,
+              "hour": "15:00",
+              "activity_title": "Visit Konyaalt\u0131 Beach",
+              "activity_content": "Head to Konyaalt\u0131 Beach for sunbathing and swimming."
+            },
+            {
+              "day_number": 1,
+              "hour": "18:00",
+              "activity_title": "Evening Stroll",
+              "activity_content": "Take a stroll along the beach and enjoy the sunset."
+            },
+            {
+              "day_number": 1,
+              "hour": "19:30",
+              "activity_title": "Dinner",
+              "activity_content": "Dine at a nearby seafood restaurant to enjoy local flavors."
+            },
+            {
+              "day_number": 2,
+              "hour": "09:00",
+              "activity_title": "Spa Morning",
+              "activity_content": "Indulge in a spa treatment at the hotel."
+            },
+            {
+              "day_number": 2,
+              "hour": "11:30",
+              "activity_title": "Explore Old Town (Kalei\u00e7i)",
+              "activity_content": "Visit the historic area of Kalei\u00e7i and explore its charming streets."
+            },
+            {
+              "day_number": 2,
+              "hour": "13:00",
+              "activity_title": "Lunch",
+              "activity_content": "Lunch at a traditional Turkish restaurant in Kalei\u00e7i."
+            },
+            {
+              "day_number": 2,
+              "hour": "15:00",
+              "activity_title": "Visit Hadrian's Gate",
+              "activity_content": "Take pictures and learn about the history of Hadrian's Gate."
+            },
+            {
+              "day_number": 2,
+              "hour": "17:00",
+              "activity_title": "Relax at the Hotel",
+              "activity_content": "Return to the hotel and relax by the pool."
+            },
+            {
+              "day_number": 2,
+              "hour": "20:00",
+              "activity_title": "Dinner",
+              "activity_content": "Enjoy dinner at a local steakhouse."
+            },
+            {
+              "day_number": 3,
+              "hour": "09:00",
+              "activity_title": "Day Trip to Perge",
+              "activity_content": "Drive to the ancient city of Perge and explore the ruins."
+            },
+            {
+              "day_number": 3,
+              "hour": "12:00",
+              "activity_title": "Lunch",
+              "activity_content": "Lunch at a nearby caf\u00e9 with a view of the ruins."
+            },
+            {
+              "day_number": 3,
+              "hour": "14:00",
+              "activity_title": "Visit Aspendos Theatre",
+              "activity_content": "Explore the well-preserved Roman theatre at Aspendos."
+            },
+            {
+              "day_number": 3,
+              "hour": "17:00",
+              "activity_title": "Return to Hotel",
+              "activity_content": "Head back to the hotel and unwind."
+            },
+            {
+              "day_number": 3,
+              "hour": "19:30",
+              "activity_title": "Dinner",
+              "activity_content": "Enjoy dinner at a modern restaurant offering local cuisine."
+            },
+            {
+              "day_number": 4,
+              "hour": "09:00",
+              "activity_title": "Beach Day",
+              "activity_content": "Spend the day relaxing at Lara Beach."
+            },
+            {
+              "day_number": 4,
+              "hour": "12:00",
+              "activity_title": "Lunch on the Beach",
+              "activity_content": "Grab a light lunch at a beachside caf\u00e9."
+            },
+            {
+              "day_number": 4,
+              "hour": "15:00",
+              "activity_title": "Water Sports",
+              "activity_content": "Try some light water sports like paddleboarding or jet skiing."
+            },
+            {
+              "day_number": 4,
+              "hour": "18:00",
+              "activity_title": "Return to Hotel",
+              "activity_content": "Return to the hotel and freshen up."
+            },
+            {
+              "day_number": 4,
+              "hour": "20:00",
+              "activity_title": "Farewell Dinner",
+              "activity_content": "Enjoy a farewell dinner at a gourmet restaurant."
+            },
+            {
+              "day_number": 5,
+              "hour": "10:00",
+              "activity_title": "Check-out from Hotel",
+              "activity_content": "Check out of Elips Royal Hotel & Spa."
+            },
+            {
+              "day_number": 5,
+              "hour": "11:00",
+              "activity_title": "Explore Shopping Streets",
+              "activity_content": "Do some last-minute shopping in Antalya's shopping districts."
+            },
+            {
+              "day_number": 5,
+              "hour": "14:00",
+              "activity_title": "Lunch",
+              "activity_content": "Have lunch at a caf\u00e9 with local delicacies."
+            },
+            {
+              "day_number": 5,
+              "hour": "18:00",
+              "activity_title": "Return Car",
+              "activity_content": "Return the rented car at Antalya Airport."
+            },
+            {
+              "day_number": 5,
+              "hour": "23:00",
+              "activity_title": "Departure to Istanbul",
+              "activity_content": "Flight AJet VF3039 departs from Antalya Airport."
+            },
+            {
+              "day_number": 5,
+              "hour": "00:20",
+              "activity_title": "Arrival in Istanbul",
+              "activity_content": "Arrive at Istanbul Sabiha G\u00f6k\u00e7en Airport."
+            }
+          ]
+        }
+      ],
+      "created_at": "2025-10-04T03:47:56.922153",
+      "updated_at": "2025-10-04T06:48:08.741954"
+    },
+    {
+      "id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+      "messages": [
+        {
+          "role": "user",
+          "content": "MERHABA ben 6-10  aral\u0131k i\u00e7in seyahat edece\u011fim \n\nI'm feeling adventurous and ready for excitement. Plan an exciting trip for me!",
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harika! Senin i\u00e7in heyecan verici bir seyahat plan\u0131 olu\u015fturmak i\u00e7in birka\u00e7 bilgiye daha ihtiyac\u0131m var:\n\n- Nereden (hangi \u015fehir/\u00fclke) seyahate ba\u015flayacaks\u0131n? (Departure location)\n- Gidece\u011fin \u015fehir/\u00fclke neresi? (Arrival location)\n\n\u015eu anda elimizde sadece seyahat tarihleri var (6-10 Aral\u0131k). L\u00fctfen kalk\u0131\u015f ve var\u0131\u015f \u015fehirlerini belirtir misin? B\u00f6ylece sana en iyi plan\u0131 haz\u0131rlayabilirim!",
+              "link": null
+            }
+          ],
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "manisadan belgrada gidece\u011fim ",
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Harikas\u0131n, \u015fimdi neredeyse t\u00fcm bilgiler tamam! H\u0131zl\u0131ca \u00f6zetleyeyim:\n\n- Kalk\u0131\u015f yeri: Manisa\n- Var\u0131\u015f yeri: Belgrad\n- Gidi\u015f tarihi: 6 Aral\u0131k\n- D\u00f6n\u00fc\u015f tarihi: 10 Aral\u0131k\n\nSon olarak, sabah m\u0131 ak\u015fam m\u0131 seyahat etmeyi tercih ediyorsun? B\u00fct\u00e7en veya \u00f6zel bir ula\u015f\u0131m tercihin (u\u00e7ak, tren, otob\u00fcs, araba vs.) var m\u0131? Bunlar\u0131 belirtmek ister misin, yoksa direkt heyecanl\u0131 bir planla ilerlememi ister misin?",
+              "link": null
+            }
+          ],
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+          "plan": null
+        },
+        {
+          "role": "user",
+          "content": "u\u00e7akla gidece\u011fim ",
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9"
+        },
+        {
+          "role": "assistant",
+          "content": [
+            {
+              "text": "Flight: AJet, 06.12.2025, 21:10 from \u0130zmir (ADB) to Istanbul (SAW) with layover, then 07.12.2025 at 12:20 to Belgrade (BEG). Return on 10.12.2025 from Belgrade (BEG) to Ankara (ESB) and then to \u0130zmir (ADB). Economy, baggage included.",
+              "link": null
+            },
+            {
+              "text": "Hotel: Metropol Palace Belgrade \u2013 10/10, romantic, adventurous vibe, airport shuttle, 24,653 TL for 4 nights.",
+              "link": null
+            },
+            {
+              "text": "Car rental: No car rental selected due to unavailability.",
+              "link": null
+            }
+          ],
+          "chat_id": "f8d63fe4-81bb-4b0b-a4c9-c9bd5745a7c9",
+          "plan": [
+            {
+              "day_number": 1,
+              "hour": "21:10",
+              "activity_title": "Departure from \u0130zmir",
+              "activity_content": "Board AJet flight from \u0130zmir (ADB) to Istanbul (SAW)."
+            },
+            {
+              "day_number": 1,
+              "hour": "23:00",
+              "activity_title": "Layover in Istanbul",
+              "activity_content": "Have a quick snack at Istanbul airport before your connecting flight."
+            },
+            {
+              "day_number": 2,
+              "hour": "12:20",
+              "activity_title": "Arrival in Belgrade",
+              "activity_content": "Land in Belgrade (BEG) and take the airport shuttle to Metropol Palace."
+            },
+            {
+              "day_number": 2,
+              "hour": "14:00",
+              "activity_title": "Check-in at Hotel",
+              "activity_content": "Check into Metropol Palace and freshen up."
+            },
+            {
+              "day_number": 2,
+              "hour": "15:30",
+              "activity_title": "Lunch at Skadarlija",
+              "activity_content": "Explore Skadarlija, a bohemian quarter, and enjoy local Serbian dishes at a traditional restaurant."
+            },
+            {
+              "day_number": 2,
+              "hour": "17:00",
+              "activity_title": "Kalemegdan Fortress Visit",
+              "activity_content": "Walk to Kalemegdan Fortress for historical sights and panoramic views of the confluence of the Sava and Danube rivers."
+            },
+            {
+              "day_number": 2,
+              "hour": "19:30",
+              "activity_title": "Dinner at Dogma",
+              "activity_content": "Dine at Dogma, known for its contemporary twist on Serbian cuisine."
+            },
+            {
+              "day_number": 2,
+              "hour": "21:30",
+              "activity_title": "Nightlife in Belgrade",
+              "activity_content": "Experience the vibrant nightlife in the Savamala district, exploring local bars and music venues."
+            },
+            {
+              "day_number": 3,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Enjoy a luxurious breakfast buffet at Metropol Palace."
+            },
+            {
+              "day_number": 3,
+              "hour": "10:30",
+              "activity_title": "Day Trip to Avala Mountain",
+              "activity_content": "Join an organized tour to Avala Mountain for hiking and outdoor activities."
+            },
+            {
+              "day_number": 3,
+              "hour": "13:00",
+              "activity_title": "Lunch at Avala",
+              "activity_content": "Picnic lunch on Avala Mountain with local specialties."
+            },
+            {
+              "day_number": 3,
+              "hour": "15:00",
+              "activity_title": "Explore Avala Tower",
+              "activity_content": "Visit the Avala Tower for breathtaking views and photography."
+            },
+            {
+              "day_number": 3,
+              "hour": "17:00",
+              "activity_title": "Return to Belgrade",
+              "activity_content": "Head back to Belgrade."
+            },
+            {
+              "day_number": 3,
+              "hour": "19:00",
+              "activity_title": "Dinner at Manufaktura",
+              "activity_content": "Enjoy a meal at Manufaktura, famous for its local organic dishes and lively atmosphere."
+            },
+            {
+              "day_number": 3,
+              "hour": "21:00",
+              "activity_title": "Jazz Night",
+              "activity_content": "Attend a live jazz performance at a local jazz club."
+            },
+            {
+              "day_number": 4,
+              "hour": "08:30",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Savor breakfast at Metropol Palace."
+            },
+            {
+              "day_number": 4,
+              "hour": "10:30",
+              "activity_title": "Visit to Nikola Tesla Museum",
+              "activity_content": "Explore the Nikola Tesla Museum for a blend of science, technology, and history."
+            },
+            {
+              "day_number": 4,
+              "hour": "13:00",
+              "activity_title": "Lunch at the Museum Caf\u00e9",
+              "activity_content": "Enjoy light bites and coffee at the museum caf\u00e9."
+            },
+            {
+              "day_number": 4,
+              "hour": "14:30",
+              "activity_title": "Walking Tour of Belgrade",
+              "activity_content": "Join a guided walking tour to uncover hidden gems and stories about Belgrade."
+            },
+            {
+              "day_number": 4,
+              "hour": "17:00",
+              "activity_title": "Relax at Tasmajdan Park",
+              "activity_content": "Unwind at Tasmajdan Park, enjoying the greenery and local atmosphere."
+            },
+            {
+              "day_number": 4,
+              "hour": "19:00",
+              "activity_title": "Dinner at Avala Restaurant",
+              "activity_content": "Experience a fine dining meal with city views at Avala Restaurant."
+            },
+            {
+              "day_number": 4,
+              "hour": "21:00",
+              "activity_title": "Evening River Cruise",
+              "activity_content": "Enjoy a scenic evening cruise along the Danube River to take in the city lights."
+            },
+            {
+              "day_number": 5,
+              "hour": "09:00",
+              "activity_title": "Breakfast at Hotel",
+              "activity_content": "Delicious breakfast at the hotel before check-out."
+            },
+            {
+              "day_number": 5,
+              "hour": "11:00",
+              "activity_title": "Last-minute Shopping",
+              "activity_content": "Spend some time shopping for local crafts and souvenirs."
+            },
+            {
+              "day_number": 5,
+              "hour": "13:00",
+              "activity_title": "Lunch at a Local Bistro",
+              "activity_content": "Enjoy your last meal in Belgrade at a cozy local bistro."
+            },
+            {
+              "day_number": 5,
+              "hour": "15:00",
+              "activity_title": "Check-out and Airport Transfer",
+              "activity_content": "Check out of Metropol Palace and take the airport shuttle to Belgrade airport."
+            },
+            {
+              "day_number": 5,
+              "hour": "18:00",
+              "activity_title": "Flight to Ankara",
+              "activity_content": "Depart from Belgrade (BEG) to Ankara (ESB)."
+            },
+            {
+              "day_number": 5,
+              "hour": "20:00",
+              "activity_title": "Arrival in Ankara",
+              "activity_content": "Arrive in Ankara and continue to \u0130zmir (ADB) if needed."
+            }
+          ]
+        }
+      ],
+      "created_at": "2025-10-04T04:23:31.364635",
+      "updated_at": "2025-10-04T07:24:35.510683"
     }
   ]
 }
